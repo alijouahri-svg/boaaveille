@@ -17,7 +17,7 @@ ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
 EMAIL_EXPEDITEUR    = os.environ["EMAIL_EXPEDITEUR"]
 EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
-MODELE              = "claude-sonnet-4-20250514"
+MODELE              = "claude-sonnet-4-6"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s — %(message)s")
 log = logging.getLogger(__name__)

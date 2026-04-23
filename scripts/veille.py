@@ -1,7 +1,6 @@
 """
-VEILLE STRATÉGIQUE — Script Python pour GitHub Actions (v3 - finale)
-Formation Bancaire · IA · Fintech · RSE · Maroc & Monde
-18 domaines · 36 actualités · Envoi automatique 7h00
+VEILLE STRATEGIQUE — Script Python pour GitHub Actions (v4 - definitive)
+3 appels API : Maroc (8) + International partie 1 (5) + partie 2 (5)
 """
 
 import os
@@ -19,35 +18,8 @@ EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
 MODELE              = "claude-sonnet-4-6"
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s — %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 log = logging.getLogger(__name__)
-
-# ============================================================
-# DOMAINES
-# ============================================================
-DOMAINES_MAROC = [
-    {"id": "M1", "label": "Formation Bancaire Maroc",        "keywords": ["GPBM formation", "Institut Bancaire Marocain", "OFPPT banque"]},
-    {"id": "M2", "label": "Réglementation BAM & ACAPS",      "keywords": ["Bank Al-Maghrib circulaire", "ACAPS réglementation", "conformité bancaire Maroc"]},
-    {"id": "M3", "label": "Fintech & Startups Maroc",        "keywords": ["fintech Maroc", "startup financière Maroc", "mobile payment Maroc"]},
-    {"id": "M4", "label": "Transformation Digitale Banques", "keywords": ["Attijariwafa digital", "CIH Bank innovation", "néobanque Maroc"]},
-    {"id": "M5", "label": "Politiques Formation & Emploi",   "keywords": ["OFPPT Maroc", "formation continue Maroc", "Anapec emploi"]},
-    {"id": "M6", "label": "IA & Tech Banques Marocaines",    "keywords": ["intelligence artificielle banque Maroc", "chatbot banque Maroc"]},
-    {"id": "M7", "label": "RSE & Finance Durable Maroc",     "keywords": ["finance verte Maroc", "ESG banque Maroc", "green bonds Maroc"]},
-    {"id": "M8", "label": "Compétences du Futur Maroc",      "keywords": ["future skills Maroc", "compétences 2030 Maroc", "reskilling Maroc"]},
-]
-
-DOMAINES_INTL = [
-    {"id": "I1",  "label": "Innovation Pédagogique & Learning", "keywords": ["microlearning corporate", "adaptive learning LXP"]},
-    {"id": "I2",  "label": "IA dans la Formation",              "keywords": ["AI in learning", "generative AI training"]},
-    {"id": "I3",  "label": "Fintech Mondiale & Open Banking",   "keywords": ["open banking international", "embedded finance"]},
-    {"id": "I4",  "label": "IA en Banque — Cas d'Usage",        "keywords": ["AI banking use cases", "fraud detection AI"]},
-    {"id": "I5",  "label": "Réglementation Financière Intl",    "keywords": ["Bâle IV", "DORA digital resilience", "AML compliance"]},
-    {"id": "I6",  "label": "Certifications & Standards",        "keywords": ["CISI certification", "CFA banking", "ACAMS"]},
-    {"id": "I7",  "label": "Benchmarks Pédagogiques Banque",    "keywords": ["bank training best practices", "learning ROI"]},
-    {"id": "I8",  "label": "IA Générale — Tendances Mondiales", "keywords": ["large language models", "AI Act Europe", "AGI"]},
-    {"id": "I9",  "label": "RSE & Finance Durable Mondiale",    "keywords": ["ESG investing", "sustainable banking", "CSRD"]},
-    {"id": "I10", "label": "Future Skills — International",     "keywords": ["future of work WEF", "skills 2030", "reskilling global"]},
-]
 
 COULEURS = {
     "M1":"#1a3a5c","M2":"#8b1a2f","M3":"#c04a00","M4":"#0e5c8b",
@@ -58,267 +30,206 @@ COULEURS = {
 }
 
 # ============================================================
-# PROMPTS
-# ============================================================
-def build_prompt_maroc(date):
-    domaines_str = "\n".join(
-        f"{d['id']} — {d['label']}: {', '.join(d['keywords'])}"
-        for d in DOMAINES_MAROC
-    )
-    return f"""Tu es un analyste expert en veille stratégique bancaire au Maroc.
-Date du rapport : {date}
-
-Domaines à couvrir :
-{domaines_str}
-
-INSTRUCTIONS STRICTES :
-- Pour chaque domaine, génère exactement 2 actualités récentes et pertinentes
-- Chaque actualité doit avoir : titre, source, resume, analyse, implication
-- Réponds UNIQUEMENT avec du JSON valide, sans aucun texte avant ou après
-- Ne mets pas de backticks, pas de markdown, juste le JSON brut
-
-Format JSON exact à respecter :
-{{
-  "resume": "Résumé exécutif en 2-3 phrases sur les tendances Maroc du jour",
-  "signal": "La tendance la plus importante du jour en 1 phrase",
-  "chiffre": "Un chiffre clé avec son contexte",
-  "vigilance": "Un risque ou opportunité à surveiller",
-  "domaines": [
-    {{
-      "id": "M1",
-      "label": "Formation Bancaire Maroc",
-      "actualites": [
-        {{
-          "titre": "Titre de la première actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }},
-        {{
-          "titre": "Titre de la deuxième actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }}
-      ]
-    }},
-    {{
-      "id": "M2",
-      "label": "Réglementation BAM & ACAPS",
-      "actualites": [
-        {{
-          "titre": "Titre de la première actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }},
-        {{
-          "titre": "Titre de la deuxième actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }}
-      ]
-    }},
-    {{
-      "id": "M3",
-      "label": "Fintech & Startups Maroc",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "M4",
-      "label": "Transformation Digitale Banques",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "M5",
-      "label": "Politiques Formation & Emploi",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "M6",
-      "label": "IA & Tech Banques Marocaines",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "M7",
-      "label": "RSE & Finance Durable Maroc",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "M8",
-      "label": "Compétences du Futur Maroc",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }}
-  ]
-}}"""
-
-
-def build_prompt_intl(date):
-    domaines_str = "\n".join(
-        f"{d['id']} — {d['label']}: {', '.join(d['keywords'])}"
-        for d in DOMAINES_INTL
-    )
-    return f"""Tu es un analyste expert en veille stratégique internationale, spécialisé en banque, formation et IA.
-Date du rapport : {date}
-
-Domaines à couvrir :
-{domaines_str}
-
-INSTRUCTIONS STRICTES :
-- Pour chaque domaine, génère exactement 2 actualités récentes et pertinentes
-- Chaque actualité doit avoir : titre, source, resume, analyse, implication
-- Réponds UNIQUEMENT avec du JSON valide, sans aucun texte avant ou après
-- Ne mets pas de backticks, pas de markdown, juste le JSON brut
-
-Format JSON exact à respecter :
-{{
-  "convergences": "2 phrases sur les liens entre tendances Maroc et International",
-  "opportunites": ["Opportunité concrète 1 pour le responsable formation", "Opportunité concrète 2"],
-  "actions": ["Action prioritaire à faire cette semaine", "Action 2", "Action 3"],
-  "agenda": "Événements ou publications importants à venir cette semaine",
-  "domaines": [
-    {{
-      "id": "I1",
-      "label": "Innovation Pédagogique & Learning",
-      "actualites": [
-        {{
-          "titre": "Titre de la première actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }},
-        {{
-          "titre": "Titre de la deuxième actualité",
-          "source": "Nom de la source",
-          "resume": "Résumé factuel en 2 phrases",
-          "analyse": "Interprétation analytique en 1 phrase",
-          "implication": "Impact concret pour le responsable formation"
-        }}
-      ]
-    }},
-    {{
-      "id": "I2",
-      "label": "IA dans la Formation",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I3",
-      "label": "Fintech Mondiale & Open Banking",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I4",
-      "label": "IA en Banque — Cas d'Usage",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I5",
-      "label": "Réglementation Financière Intl",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I6",
-      "label": "Certifications & Standards",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I7",
-      "label": "Benchmarks Pédagogiques Banque",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I8",
-      "label": "IA Générale — Tendances Mondiales",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I9",
-      "label": "RSE & Finance Durable Mondiale",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }},
-    {{
-      "id": "I10",
-      "label": "Future Skills — International",
-      "actualites": [
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}},
-        {{"titre": "...", "source": "...", "resume": "...", "analyse": "...", "implication": "..."}}
-      ]
-    }}
-  ]
-}}"""
-
-
-# ============================================================
-# APPEL API CLAUDE
+# APPEL API
 # ============================================================
 def appeler_claude(client, prompt):
     message = client.messages.create(
         model=MODELE,
-        max_tokens=6000,
+        max_tokens=5000,
         messages=[{"role": "user", "content": prompt}],
     )
     raw = message.content[0].text.strip()
-    # Nettoyer tout ce qui précède le premier {
-    idx = raw.find("{")
-    if idx > 0:
-        raw = raw[idx:]
-    # Nettoyer tout ce qui suit le dernier }
-    idx_end = raw.rfind("}")
-    if idx_end >= 0:
-        raw = raw[:idx_end + 1]
+    debut = raw.find("{")
+    fin = raw.rfind("}")
+    if debut >= 0 and fin >= 0:
+        raw = raw[debut:fin+1]
     return json.loads(raw)
 
+# ============================================================
+# PROMPT MAROC
+# ============================================================
+def prompt_maroc(date):
+    return f"""Tu es un analyste en veille strategique bancaire au Maroc. Date : {date}
+
+Genere un rapport JSON sur ces 8 domaines. Pour chaque domaine : 2 actualites.
+Reponds UNIQUEMENT avec le JSON brut, sans backticks ni texte autour.
+
+{{
+  "resume": "Resume executif Maroc en 2 phrases",
+  "signal": "Tendance principale en 1 phrase",
+  "chiffre": "Un chiffre cle avec contexte",
+  "vigilance": "Un risque a surveiller",
+  "domaines": [
+    {{
+      "id": "M1", "label": "Formation Bancaire Maroc",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M2", "label": "Reglementation BAM et ACAPS",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M3", "label": "Fintech et Startups Maroc",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M4", "label": "Transformation Digitale Banques",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M5", "label": "Politiques Formation et Emploi",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M6", "label": "IA et Tech Banques Marocaines",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M7", "label": "RSE et Finance Durable Maroc",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "M8", "label": "Competences du Futur Maroc",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }}
+  ]
+}}
+
+Remplace chaque valeur entre guillemets par le vrai contenu. Garde exactement cette structure JSON."""
 
 # ============================================================
-# GÉNÉRATION HTML
+# PROMPT INTERNATIONAL PARTIE 1 (I1 a I5)
+# ============================================================
+def prompt_intl1(date):
+    return f"""Tu es un analyste en veille strategique internationale, expert en banque, formation et IA. Date : {date}
+
+Genere un rapport JSON sur ces 5 domaines internationaux. Pour chaque domaine : 2 actualites.
+Reponds UNIQUEMENT avec le JSON brut, sans backticks ni texte autour.
+
+{{
+  "domaines": [
+    {{
+      "id": "I1", "label": "Innovation Pedagogique et Learning",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I2", "label": "IA dans la Formation",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I3", "label": "Fintech Mondiale et Open Banking",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I4", "label": "IA en Banque Cas Usage",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I5", "label": "Reglementation Financiere Internationale",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }}
+  ]
+}}
+
+Remplace chaque valeur entre guillemets par le vrai contenu. Garde exactement cette structure JSON."""
+
+# ============================================================
+# PROMPT INTERNATIONAL PARTIE 2 (I6 a I10)
+# ============================================================
+def prompt_intl2(date):
+    return f"""Tu es un analyste en veille strategique internationale, expert en banque, formation et IA. Date : {date}
+
+Genere un rapport JSON sur ces 5 domaines internationaux. Pour chaque domaine : 2 actualites.
+Inclus aussi les sections analyse et actions.
+Reponds UNIQUEMENT avec le JSON brut, sans backticks ni texte autour.
+
+{{
+  "convergences": "2 phrases sur les liens entre tendances Maroc et International",
+  "opportunites": ["Opportunite concrete 1 pour le responsable formation", "Opportunite concrete 2"],
+  "actions": ["Action prioritaire a faire cette semaine", "Action 2", "Action 3"],
+  "agenda": "Evenements ou publications importants a venir cette semaine",
+  "domaines": [
+    {{
+      "id": "I6", "label": "Certifications et Standards Bancaires",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I7", "label": "Benchmarks Pedagogiques Banque",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I8", "label": "IA Generale Tendances Mondiales",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I9", "label": "RSE et Finance Durable Mondiale",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }},
+    {{
+      "id": "I10", "label": "Future Skills International",
+      "actualites": [
+        {{"titre": "titre1", "source": "source1", "resume": "resume1", "analyse": "analyse1", "implication": "implication1"}},
+        {{"titre": "titre2", "source": "source2", "resume": "resume2", "analyse": "analyse2", "implication": "implication2"}}
+      ]
+    }}
+  ]
+}}
+
+Remplace chaque valeur entre guillemets par le vrai contenu. Garde exactement cette structure JSON."""
+
+# ============================================================
+# GENERATION HTML
 # ============================================================
 def domain_html(domaine):
     color = COULEURS.get(domaine.get("id", ""), "#1a3a5c")
@@ -329,28 +240,29 @@ def domain_html(domaine):
         <div style="{sep}">
           <table width="100%" cellpadding="0" cellspacing="0"><tr>
             <td style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.4;">{a.get('titre','')}</td>
-            <td width="130" align="right" valign="top"><span style="font-size:10px;background:#f0ece4;color:#888;padding:2px 6px;white-space:nowrap;">{a.get('source','')}</span></td>
+            <td width="120" align="right" valign="top"><span style="font-size:10px;background:#f0ece4;color:#888;padding:2px 6px;">{a.get('source','')}</span></td>
           </tr></table>
           <p style="font-size:12px;color:#555;line-height:1.65;margin:7px 0;">{a.get('resume','')}</p>
-          <p style="font-size:12px;color:#333;line-height:1.6;margin:0 0 7px;"><span style="color:{color};font-weight:700;">Analyse · </span>{a.get('analyse','')}</p>
-          <div style="padding:6px 10px;background:{color}18;border-left:3px solid {color};font-size:11px;color:#444;"><span style="color:{color};font-weight:700;">→ </span>{a.get('implication','')}</div>
+          <p style="font-size:12px;color:#333;line-height:1.6;margin:0 0 7px;"><span style="color:{color};font-weight:700;">Analyse : </span>{a.get('analyse','')}</p>
+          <div style="padding:6px 10px;background:{color}18;border-left:3px solid {color};font-size:11px;color:#444;">-> {a.get('implication','')}</div>
         </div>"""
     return f"""
     <div style="margin-bottom:12px;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
       <div style="background:{color};padding:9px 15px;">
-        <span style="font-size:10px;color:rgba(255,255,255,0.65);letter-spacing:1.5px;text-transform:uppercase;">{domaine.get('id','')} &nbsp;</span>
+        <span style="font-size:10px;color:rgba(255,255,255,0.65);letter-spacing:1.5px;text-transform:uppercase;">{domaine.get('id','')} </span>
         <span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:white;">{domaine.get('label','')}</span>
       </div>
       <div style="padding:14px 16px;">{actus}</div>
     </div>"""
 
 
-def build_email_html(date, maroc, intl):
-    maroc_sections = "".join(domain_html(d) for d in maroc.get("domaines", []))
-    intl_sections  = "".join(domain_html(d) for d in intl.get("domaines", []))
-    opps    = "".join(f'<div style="font-size:12px;color:#333;margin-bottom:6px;"><span style="color:#c8a96e;font-weight:700;">→ </span>{o}</div>' for o in intl.get("opportunites", []))
-    actions = "".join(f'<div style="font-size:12px;color:#333;margin-bottom:6px;">☐ {a}</div>' for a in intl.get("actions", []))
-    agenda_html = f'<div style="background:#0f2540;color:white;padding:10px 15px;margin-bottom:12px;"><span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c8a96e;font-weight:600;">📅 Agenda · </span><span style="font-size:11px;color:rgba(255,255,255,0.8);">{intl.get("agenda","")}</span></div>' if intl.get("agenda") else ""
+def build_email_html(date, maroc, intl1, intl2):
+    maroc_html  = "".join(domain_html(d) for d in maroc.get("domaines", []))
+    intl1_html  = "".join(domain_html(d) for d in intl1.get("domaines", []))
+    intl2_html  = "".join(domain_html(d) for d in intl2.get("domaines", []))
+    opps        = "".join(f'<div style="font-size:12px;color:#333;margin-bottom:6px;"><span style="color:#c8a96e;font-weight:700;">-> </span>{o}</div>' for o in intl2.get("opportunites", []))
+    actions     = "".join(f'<div style="font-size:12px;color:#333;margin-bottom:6px;">[] {a}</div>' for a in intl2.get("actions", []))
+    agenda_html = f'<div style="background:#0f2540;color:white;padding:10px 15px;margin-bottom:12px;"><span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c8a96e;font-weight:600;">Agenda : </span><span style="font-size:11px;color:rgba(255,255,255,0.8);">{intl2.get("agenda","")}</span></div>' if intl2.get("agenda") else ""
 
     return f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
@@ -358,16 +270,16 @@ def build_email_html(date, maroc, intl):
 <div style="max-width:680px;margin:0 auto;">
 
   <div style="background:#0f2540;padding:22px 28px;">
-    <div style="font-family:Georgia,serif;font-size:26px;font-weight:900;color:white;line-height:1;">VEILLE STRATÉGIQUE</div>
-    <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#c8a96e;margin-top:3px;">Rapport Quotidien</div>
-    <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:6px;text-transform:uppercase;letter-spacing:2px;">Banque · Formation · IA · RSE · Maroc & Monde</div>
+    <div style="font-family:Georgia,serif;font-size:26px;font-weight:900;color:white;">VEILLE STRATEGIQUE</div>
+    <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#c8a96e;">Rapport Quotidien</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:6px;text-transform:uppercase;letter-spacing:2px;">Banque · Formation · IA · RSE · Maroc et Monde</div>
     <div style="font-size:12px;color:#c8a96e;margin-top:5px;font-weight:600;">{date}</div>
   </div>
 
   <div style="padding:20px 28px;">
 
     <div style="background:#0f2540;padding:18px 22px;margin-bottom:14px;">
-      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#c8a96e;margin-bottom:9px;font-weight:600;">Résumé Exécutif — Maroc</div>
+      <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#c8a96e;margin-bottom:9px;font-weight:600;">Resume Executif Maroc</div>
       <p style="font-family:Georgia,serif;font-size:14px;line-height:1.75;color:rgba(255,255,255,0.92);margin:0;">{maroc.get("resume","")}</p>
     </div>
 
@@ -377,44 +289,45 @@ def build_email_html(date, maroc, intl):
         <div style="font-family:Georgia,serif;font-size:11px;font-weight:700;color:#c8a96e;line-height:1.4;">{maroc.get("signal","")}</div>
       </div></td>
       <td width="33%" style="padding:0 3px;vertical-align:top;"><div style="background:white;padding:12px 14px;border-top:3px solid #1a3a5c;">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:5px;">Chiffre Clé</div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:5px;">Chiffre Cle</div>
         <div style="font-family:Georgia,serif;font-size:11px;font-weight:700;color:#1a3a5c;line-height:1.4;">{maroc.get("chiffre","")}</div>
       </div></td>
       <td width="33%" style="padding-left:5px;vertical-align:top;"><div style="background:white;padding:12px 14px;border-top:3px solid #8b1a2f;">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:5px;">À Surveiller</div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:5px;">A Surveiller</div>
         <div style="font-family:Georgia,serif;font-size:11px;font-weight:700;color:#8b1a2f;line-height:1.4;">{maroc.get("vigilance","")}</div>
       </div></td>
     </tr></table>
 
     <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #0f2540;margin-bottom:14px;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">🇲🇦 VEILLE MAROC</span>
+      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">VEILLE MAROC</span>
     </div>
-    {maroc_sections}
+    {maroc_html}
 
     <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #0f2540;margin:14px 0;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">🌍 VEILLE INTERNATIONALE</span>
+      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">VEILLE INTERNATIONALE</span>
     </div>
-    {intl_sections}
+    {intl1_html}
+    {intl2_html}
 
     <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #c8a96e;margin:14px 0;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#c8a96e;">ANALYSE & ACTIONS</span>
+      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#c8a96e;">ANALYSE ET ACTIONS</span>
     </div>
 
     <div style="background:white;padding:16px 18px;margin-bottom:12px;border-top:3px solid #0f2540;">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Convergences Maroc × International</div>
-      <p style="font-family:Georgia,serif;font-size:12px;line-height:1.7;color:#333;font-style:italic;margin:0;">{intl.get("convergences","")}</p>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Convergences Maroc x International</div>
+      <p style="font-family:Georgia,serif;font-size:12px;line-height:1.7;color:#333;font-style:italic;margin:0;">{intl2.get("convergences","")}</p>
     </div>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;"><tr>
       <td width="49%" style="padding-right:6px;vertical-align:top;">
         <div style="background:white;padding:14px 16px;border-top:3px solid #c8a96e;">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Opportunités Détectées</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Opportunites Detectees</div>
           {opps}
         </div>
       </td>
       <td width="49%" style="padding-left:6px;vertical-align:top;">
         <div style="background:#f0f7ff;padding:14px 16px;border-left:4px solid #1a3a5c;">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1a3a5c;margin-bottom:8px;">☐ Actions Cette Semaine</div>
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1a3a5c;margin-bottom:8px;">Actions Cette Semaine</div>
           {actions}
         </div>
       </td>
@@ -424,8 +337,8 @@ def build_email_html(date, maroc, intl):
 
     <div style="border-top:2px solid #0f2540;padding-top:12px;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">Veille Stratégique · {date}</td>
-        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">18 domaines · 36 actualités · Confidentiel</td>
+        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">Veille Strategique · {date}</td>
+        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">18 domaines · 36 actualites · Confidentiel</td>
       </tr></table>
     </div>
 
@@ -437,10 +350,10 @@ def build_email_html(date, maroc, intl):
 # ============================================================
 # ENVOI EMAIL
 # ============================================================
-def envoyer_email(date, maroc, intl):
-    html = build_email_html(date, maroc, intl)
+def envoyer_email(date, maroc, intl1, intl2):
+    html = build_email_html(date, maroc, intl1, intl2)
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"Veille Strategique — {date}"
+    msg["Subject"] = f"Veille Strategique - {date}"
     msg["From"]    = f"Veille Strategique <{EMAIL_EXPEDITEUR}>"
     msg["To"]      = ", ".join(EMAIL_DESTINATAIRES)
     msg.attach(MIMEText(html, "html", "utf-8"))
@@ -459,16 +372,20 @@ def main():
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    log.info("Appel API — Veille Maroc...")
-    maroc = appeler_claude(client, build_prompt_maroc(date))
-    log.info(f"Maroc OK — {len(maroc.get('domaines', []))} domaines")
+    log.info("Appel 1/3 - Veille Maroc...")
+    maroc = appeler_claude(client, prompt_maroc(date))
+    log.info(f"Maroc OK - {len(maroc.get('domaines', []))} domaines")
 
-    log.info("Appel API — Veille Internationale...")
-    intl = appeler_claude(client, build_prompt_intl(date))
-    log.info(f"International OK — {len(intl.get('domaines', []))} domaines")
+    log.info("Appel 2/3 - Veille Internationale partie 1 (I1-I5)...")
+    intl1 = appeler_claude(client, prompt_intl1(date))
+    log.info(f"International 1 OK - {len(intl1.get('domaines', []))} domaines")
+
+    log.info("Appel 3/3 - Veille Internationale partie 2 (I6-I10)...")
+    intl2 = appeler_claude(client, prompt_intl2(date))
+    log.info(f"International 2 OK - {len(intl2.get('domaines', []))} domaines")
 
     log.info("Envoi email...")
-    envoyer_email(date, maroc, intl)
+    envoyer_email(date, maroc, intl1, intl2)
     log.info("Veille terminee avec succes !")
 
 

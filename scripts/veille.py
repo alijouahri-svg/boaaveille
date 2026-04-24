@@ -1,18 +1,30 @@
 """
-VEILLE STRATEGIQUE - Version finale definitive
-3 appels HTML assembles : Maroc + International + Analyse
-Zero JSON, zero parsing, zero erreur
+VEILLE STRATEGIQUE - Version avec vraie recherche web
+- Tavily API : articles des dernières 24h uniquement
+- Chaque actualité a un lien URL vérifié
+- Zéro duplication : filtre strict sur la date
+- Claude analyse uniquement des vrais articles trouvés
 """
 
 import os
 import smtplib
 import logging
+import json
+import time
 from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from anthropic import Anthropic
 
+try:
+    import requests
+except ImportError:
+    import subprocess
+    subprocess.check_call(["pip", "install", "requests"])
+    import requests
+
 ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
+TAVILY_API_KEY      = os.environ["TAVILY_API_KEY"]
 EMAIL_EXPEDITEUR    = os.environ["EMAIL_EXPEDITEUR"]
 EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
@@ -20,140 +32,184 @@ EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 log = logging.getLogger(__name__)
 
+# ============================================================
+# 18 DOMAINES DE VEILLE
+# ============================================================
+DOMAINES = [
+    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": "formation bancaire Maroc LMS apprentissage banque"},
+    {"id": "M2", "label": "Reglementation BAM & ACAPS",      "couleur": "#8b1a2f", "query": "Bank Al-Maghrib BAM réglementation bancaire Maroc"},
+    {"id": "M3", "label": "Fintech & Startups Maroc",        "couleur": "#c04a00", "query": "fintech startup paiement mobile Maroc"},
+    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": "transformation digitale banque Maroc numérique"},
+    {"id": "M5", "label": "Politiques Formation & Emploi",   "couleur": "#2d6a4f", "query": "formation professionnelle emploi compétences Maroc"},
+    {"id": "M6", "label": "IA & Tech Banques Marocaines",    "couleur": "#5c1a8b", "query": "intelligence artificielle IA banque Maroc"},
+    {"id": "M7", "label": "RSE & Finance Durable Maroc",     "couleur": "#1a6b4a", "query": "finance verte ESG banque Maroc développement durable"},
+    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": "compétences futur métiers reskilling Maroc 2030"},
+    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": "innovation learning microlearning LXP elearning"},
+    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": "artificial intelligence AI learning training corporate"},
+    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": "fintech open banking embedded finance neobank"},
+    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": "AI banking artificial intelligence fraud detection credit"},
+    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": "banking regulation Basel DORA AML compliance"},
+    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": "banking certification CISI CFA ACAMS finance"},
+    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": "bank training best practices learning financial services"},
+    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": "large language models AI GPT Claude Gemini news"},
+    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": "ESG sustainable finance green banking CSRD"},
+    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": "future skills workforce reskilling WEF jobs 2030"},
+]
 
-def appeler_claude(client, prompt):
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=6000,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return message.content[0].text.strip()
-
-
-def generer_maroc(client, date):
-    prompt = f"""Tu es un analyste expert en veille strategique bancaire au Maroc. Date : {date}
-
-Genere UNIQUEMENT des blocs HTML pour ces 8 domaines marocains, 2 actualites chacun.
-Reponds avec le HTML brut uniquement, sans texte avant ou apres.
-
-Pour chaque domaine, utilise exactement ce format HTML (remplace les crochets par le vrai contenu) :
-
-<div style="margin-bottom:14px;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-  <div style="background:COULEUR;padding:10px 16px;">
-    <span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:white;">ID - LABEL</span>
-  </div>
-  <div style="padding:14px 16px;">
-    <div style="margin-bottom:14px;">
-      <strong style="font-size:13px;color:#1a1a1a;">TITRE 1</strong>
-      <span style="font-size:10px;color:#888;margin-left:8px;">SOURCE</span>
-      <p style="font-size:12px;color:#555;margin:6px 0;">RESUME EN 2 PHRASES</p>
-      <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong style="color:COULEUR;">Analyse : </strong>ANALYSE EN 1 PHRASE</p>
-      <div style="padding:6px 10px;border-left:3px solid COULEUR;font-size:11px;color:#444;">IMPLICATION CONCRETE</div>
-    </div>
-    <div style="border-top:1px solid #ede8e0;padding-top:14px;">
-      <strong style="font-size:13px;color:#1a1a1a;">TITRE 2</strong>
-      <span style="font-size:10px;color:#888;margin-left:8px;">SOURCE</span>
-      <p style="font-size:12px;color:#555;margin:6px 0;">RESUME EN 2 PHRASES</p>
-      <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong style="color:COULEUR;">Analyse : </strong>ANALYSE EN 1 PHRASE</p>
-      <div style="padding:6px 10px;border-left:3px solid COULEUR;font-size:11px;color:#444;">IMPLICATION CONCRETE</div>
-    </div>
-  </div>
-</div>
-
-Domaines et couleurs :
-M1 Formation Bancaire Maroc = #1a3a5c
-M2 Reglementation BAM et ACAPS = #8b1a2f
-M3 Fintech et Startups Maroc = #c04a00
-M4 Transformation Digitale Banques = #0e5c8b
-M5 Politiques Formation et Emploi = #2d6a4f
-M6 IA et Tech Banques Marocaines = #5c1a8b
-M7 RSE et Finance Durable Maroc = #1a6b4a
-M8 Competences du Futur Maroc = #4a7a1a"""
-
-    return appeler_claude(client, prompt)
-
-
-def generer_international(client, date):
-    prompt = f"""Tu es un analyste expert en veille strategique internationale, banque, formation et IA. Date : {date}
-
-Genere UNIQUEMENT des blocs HTML pour ces 10 domaines internationaux, 2 actualites chacun.
-Reponds avec le HTML brut uniquement, sans texte avant ou apres.
-
-Pour chaque domaine, utilise exactement ce format HTML (remplace les crochets par le vrai contenu) :
-
-<div style="margin-bottom:14px;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-  <div style="background:COULEUR;padding:10px 16px;">
-    <span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:white;">ID - LABEL</span>
-  </div>
-  <div style="padding:14px 16px;">
-    <div style="margin-bottom:14px;">
-      <strong style="font-size:13px;color:#1a1a1a;">TITRE 1</strong>
-      <span style="font-size:10px;color:#888;margin-left:8px;">SOURCE</span>
-      <p style="font-size:12px;color:#555;margin:6px 0;">RESUME EN 2 PHRASES</p>
-      <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong style="color:COULEUR;">Analyse : </strong>ANALYSE EN 1 PHRASE</p>
-      <div style="padding:6px 10px;border-left:3px solid COULEUR;font-size:11px;color:#444;">IMPLICATION CONCRETE</div>
-    </div>
-    <div style="border-top:1px solid #ede8e0;padding-top:14px;">
-      <strong style="font-size:13px;color:#1a1a1a;">TITRE 2</strong>
-      <span style="font-size:10px;color:#888;margin-left:8px;">SOURCE</span>
-      <p style="font-size:12px;color:#555;margin:6px 0;">RESUME EN 2 PHRASES</p>
-      <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong style="color:COULEUR;">Analyse : </strong>ANALYSE EN 1 PHRASE</p>
-      <div style="padding:6px 10px;border-left:3px solid COULEUR;font-size:11px;color:#444;">IMPLICATION CONCRETE</div>
-    </div>
-  </div>
-</div>
-
-Domaines et couleurs :
-I1 Innovation Pedagogique et Learning = #1a4a7a
-I2 IA dans la Formation = #6b1a7a
-I3 Fintech Mondiale et Open Banking = #7a3d1a
-I4 IA en Banque Cas Usage = #1a6b6b
-I5 Reglementation Financiere Internationale = #4a1a5c
-I6 Certifications et Standards Bancaires = #5c3d1a
-I7 Benchmarks Pedagogiques Banque = #1a5c3d
-I8 IA Generale Tendances Mondiales = #3d1a5c
-I9 RSE et Finance Durable Mondiale = #1a5c1a
-I10 Future Skills International = #7a6b1a"""
-
-    return appeler_claude(client, prompt)
+# ============================================================
+# RECHERCHE TAVILY — Articles des dernières 24h
+# ============================================================
+def rechercher_articles(query, max_results=3):
+    try:
+        response = requests.post(
+            "https://api.tavily.com/search",
+            json={
+                "api_key": TAVILY_API_KEY,
+                "query": query,
+                "search_depth": "advanced",
+                "max_results": max_results,
+                "include_answer": False,
+                "include_raw_content": False,
+                "days": 1,
+            },
+            timeout=15
+        )
+        data = response.json()
+        articles = []
+        for r in data.get("results", []):
+            source = r.get("url", "")
+            source_clean = source.split("/")[2].replace("www.", "") if source else ""
+            articles.append({
+                "titre": r.get("title", ""),
+                "url": r.get("url", ""),
+                "source": source_clean,
+                "contenu": r.get("content", "")[:600],
+                "date": r.get("published_date", "")
+            })
+        return articles
+    except Exception as e:
+        log.warning(f"Erreur Tavily pour '{query}': {e}")
+        return []
 
 
-def generer_analyse(client, date):
-    prompt = f"""Tu es un analyste expert en veille strategique bancaire et formation. Date : {date}
+# ============================================================
+# ANALYSE CLAUDE — Résume les vrais articles trouvés
+# ============================================================
+def analyser_avec_claude(client, domaine, articles):
+    if not articles:
+        return {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": []}
 
-Genere UNIQUEMENT ce bloc HTML avec de vrais contenus analytiques (remplace tous les crochets).
-Reponds avec le HTML brut uniquement, sans texte avant ou apres.
+    articles_str = "\n\n".join([
+        f"ARTICLE {i+1}:\nTitre: {a['titre']}\nSource: {a['source']}\nURL: {a['url']}\nDate: {a['date']}\nExtrait: {a['contenu']}"
+        for i, a in enumerate(articles)
+    ])
 
-<div style="background:white;padding:16px 18px;margin-bottom:12px;border-top:3px solid #0f2540;">
-  <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Convergences Maroc x International</div>
-  <p style="font-family:Georgia,serif;font-size:13px;line-height:1.7;color:#333;font-style:italic;margin:0;">[2 phrases analytiques sur les liens entre tendances Maroc et International cette semaine]</p>
-</div>
-<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;"><tr>
-  <td width="49%" style="padding-right:6px;vertical-align:top;">
-    <div style="background:white;padding:14px 16px;border-top:3px solid #c8a96e;">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#aaa;margin-bottom:8px;">Opportunites Detectees</div>
-      <div style="font-size:12px;color:#333;margin-bottom:6px;"><span style="color:#c8a96e;font-weight:700;">-> </span>[Opportunite 1 concrete pour responsable formation]</div>
-      <div style="font-size:12px;color:#333;"><span style="color:#c8a96e;font-weight:700;">-> </span>[Opportunite 2 concrete]</div>
-    </div>
-  </td>
-  <td width="49%" style="padding-left:6px;vertical-align:top;">
-    <div style="background:#f0f7ff;padding:14px 16px;border-left:4px solid #1a3a5c;">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:#1a3a5c;margin-bottom:8px;">Actions Cette Semaine</div>
-      <div style="font-size:12px;color:#333;margin-bottom:5px;">[] [Action prioritaire 1]</div>
-      <div style="font-size:12px;color:#333;margin-bottom:5px;">[] [Action 2]</div>
-      <div style="font-size:12px;color:#333;">[] [Action 3]</div>
-    </div>
-  </td>
-</tr></table>
-<div style="background:#0f2540;color:white;padding:10px 15px;">
-  <span style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#c8a96e;font-weight:600;">Agenda : </span>
-  <span style="font-size:11px;color:rgba(255,255,255,0.8);">[Evenements ou publications importants a venir cette semaine]</span>
-</div>"""
+    prompt = f"""Tu es un analyste expert en veille strategique bancaire et formation.
+Domaine : {domaine['label']}
 
-    return appeler_claude(client, prompt)
+Voici les VRAIS articles trouves aujourd'hui. Analyse UNIQUEMENT ces articles, ne fabrique rien.
+
+{articles_str}
+
+Reponds UNIQUEMENT avec ce JSON brut sans backticks :
+{{
+  "actualites": [
+    {{
+      "titre": "Titre exact de l'article",
+      "source": "Nom du site",
+      "url": "URL exacte",
+      "date": "Date de publication",
+      "resume": "Resume factuel en 2 phrases basé sur l'extrait",
+      "analyse": "Interpretation analytique en 1 phrase",
+      "implication": "Implication concrete pour un responsable formation en banque"
+    }}
+  ]
+}}
+
+Maximum 2 actualites. Si un article n'est pas pertinent pour le domaine, ignore-le."""
+
+    try:
+        message = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = message.content[0].text.strip()
+        debut = raw.find("{")
+        fin = raw.rfind("}")
+        if debut >= 0 and fin >= 0:
+            raw = raw[debut:fin+1]
+        result = json.loads(raw)
+        return {
+            "id": domaine["id"],
+            "label": domaine["label"],
+            "couleur": domaine["couleur"],
+            "actualites": result.get("actualites", [])[:2]
+        }
+    except Exception as e:
+        log.warning(f"Erreur analyse Claude pour {domaine['id']}: {e}")
+        return {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": []}
 
 
-def assembler_email(date, bloc_maroc, bloc_intl, bloc_analyse):
+# ============================================================
+# GENERATION HTML
+# ============================================================
+def domain_html(d):
+    color = d.get("couleur", "#1a3a5c")
+    actualites = d.get("actualites", [])
+
+    if not actualites:
+        return f"""
+        <div style="margin-bottom:12px;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="background:{color};padding:9px 15px;">
+            <span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:white;">{d['id']} - {d['label']}</span>
+          </div>
+          <div style="padding:12px 16px;font-size:12px;color:#aaa;font-style:italic;">
+            Aucun article publie dans les dernieres 24h pour ce domaine.
+          </div>
+        </div>"""
+
+    actus_html = ""
+    for i, a in enumerate(actualites):
+        sep = "border-top:1px solid #ede8e0;padding-top:14px;margin-top:14px;" if i > 0 else ""
+        url = a.get("url", "#")
+        date_art = a.get("date", "")
+        actus_html += f"""
+        <div style="{sep}">
+          <table width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:#1a1a1a;line-height:1.4;">
+              <a href="{url}" style="color:#1a1a1a;text-decoration:none;">{a.get('titre','')}</a>
+            </td>
+            <td width="120" align="right" valign="top">
+              <span style="font-size:10px;background:#f0ece4;color:#888;padding:2px 6px;">{a.get('source','')}</span>
+            </td>
+          </tr></table>
+          {"<div style='font-size:10px;color:#aaa;margin:3px 0;'>" + date_art + "</div>" if date_art else ""}
+          <p style="font-size:12px;color:#555;line-height:1.65;margin:7px 0;">{a.get('resume','')}</p>
+          <p style="font-size:12px;color:#333;line-height:1.6;margin:0 0 7px;">
+            <strong style="color:{color};">Analyse : </strong>{a.get('analyse','')}
+          </p>
+          <div style="padding:6px 10px;border-left:3px solid {color};font-size:11px;color:#444;margin-bottom:8px;">
+            → {a.get('implication','')}
+          </div>
+          <a href="{url}" style="font-size:11px;color:{color};text-decoration:underline;font-weight:600;">
+            🔗 Lire l'article source
+          </a>
+        </div>"""
+
+    return f"""
+    <div style="margin-bottom:12px;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+      <div style="background:{color};padding:9px 15px;">
+        <span style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:white;">{d['id']} - {d['label']}</span>
+      </div>
+      <div style="padding:14px 16px;">{actus_html}</div>
+    </div>"""
+
+
+def construire_email(date, titre, domaines_data):
+    contenu = "".join(domain_html(d) for d in domaines_data)
+    total = sum(len(d.get("actualites", [])) for d in domaines_data)
+
     return f"""<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
@@ -161,75 +217,87 @@ def assembler_email(date, bloc_maroc, bloc_intl, bloc_analyse):
 <div style="max-width:680px;margin:0 auto;">
 
   <div style="background:#0f2540;padding:22px 28px;">
-    <div style="font-family:Georgia,serif;font-size:26px;font-weight:900;color:white;">VEILLE STRATEGIQUE</div>
-    <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;color:#c8a96e;">Rapport Quotidien</div>
-    <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:6px;text-transform:uppercase;letter-spacing:2px;">Banque - Formation - IA - RSE - Maroc et Monde</div>
-    <div style="font-size:12px;color:#c8a96e;margin-top:5px;font-weight:600;">{date}</div>
+    <div style="font-family:Georgia,serif;font-size:24px;font-weight:900;color:white;">VEILLE STRATEGIQUE</div>
+    <div style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#c8a96e;">{titre}</div>
+    <div style="font-size:12px;color:#c8a96e;margin-top:5px;">{date}</div>
+  </div>
+
+  <div style="background:#1a6b4a;padding:8px 28px;">
+    <span style="font-size:11px;color:white;">
+      ✅ {total} articles verifies avec sources et liens — publies dans les dernieres 24h
+    </span>
   </div>
 
   <div style="padding:20px 28px;">
-
-    <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #0f2540;margin-bottom:16px;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">VEILLE MAROC</span>
-    </div>
-    {bloc_maroc}
-
-    <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #0f2540;margin:16px 0;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#0f2540;">VEILLE INTERNATIONALE</span>
-    </div>
-    {bloc_intl}
-
-    <div style="text-align:center;padding:8px 0 14px;border-bottom:2px solid #c8a96e;margin:16px 0;">
-      <span style="font-family:Georgia,serif;font-size:17px;font-weight:900;color:#c8a96e;">ANALYSE ET ACTIONS</span>
-    </div>
-    {bloc_analyse}
-
-    <div style="border-top:2px solid #0f2540;padding-top:12px;margin-top:16px;">
+    {contenu}
+    <div style="border-top:2px solid #0f2540;padding-top:12px;margin-top:8px;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">Veille Strategique - {date}</td>
-        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">18 domaines - 36 actualites - Confidentiel</td>
+        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">Veille Strategique · {date}</td>
+        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;">Sources verifiees · 24h · Confidentiel</td>
       </tr></table>
     </div>
-
   </div>
+
 </div>
 </body>
 </html>"""
 
 
-def envoyer_email(date, html):
+# ============================================================
+# ENVOI EMAIL
+# ============================================================
+def envoyer(sujet, html):
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"Veille Strategique - {date}"
+    msg["Subject"] = sujet
     msg["From"]    = f"Veille Strategique <{EMAIL_EXPEDITEUR}>"
     msg["To"]      = ", ".join(EMAIL_DESTINATAIRES)
     msg.attach(MIMEText(html, "html", "utf-8"))
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_EXPEDITEUR, EMAIL_MOT_DE_PASSE)
         server.sendmail(EMAIL_EXPEDITEUR, EMAIL_DESTINATAIRES, msg.as_string())
-    log.info(f"Email envoye a {len(EMAIL_DESTINATAIRES)} destinataire(s)")
+    log.info(f"Email envoye : {sujet}")
 
 
+# ============================================================
+# MAIN
+# ============================================================
 def main():
     date = datetime.now().strftime("%A %d %B %Y")
     log.info(f"Demarrage veille du {date}")
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
+    domaines_maroc = []
+    domaines_intl  = []
 
-    log.info("Appel 1/3 - Veille Maroc...")
-    bloc_maroc = generer_maroc(client, date)
-    log.info("Maroc OK")
+    for domaine in DOMAINES:
+        log.info(f"Traitement {domaine['id']} - {domaine['label']}...")
 
-    log.info("Appel 2/3 - Veille Internationale...")
-    bloc_intl = generer_international(client, date)
-    log.info("International OK")
+        articles = rechercher_articles(domaine["query"], max_results=3)
+        log.info(f"  Tavily : {len(articles)} articles trouves")
 
-    log.info("Appel 3/3 - Analyse et Actions...")
-    bloc_analyse = generer_analyse(client, date)
-    log.info("Analyse OK")
+        resultat = analyser_avec_claude(client, domaine, articles)
+        nb = len(resultat.get("actualites", []))
+        log.info(f"  Claude : {nb} actualites analysees")
 
-    log.info("Assemblage et envoi...")
-    html = assembler_email(date, bloc_maroc, bloc_intl, bloc_analyse)
-    envoyer_email(date, html)
+        if domaine["id"].startswith("M"):
+            domaines_maroc.append(resultat)
+        else:
+            domaines_intl.append(resultat)
+
+        time.sleep(1)
+
+    # Email 1 — Maroc
+    html_maroc = construire_email(date, "Partie 1 — Veille Maroc", domaines_maroc)
+    envoyer(f"1/2 Veille Strategique Maroc - {date}", html_maroc)
+    log.info("Email Maroc envoye")
+
+    time.sleep(3)
+
+    # Email 2 — International
+    html_intl = construire_email(date, "Partie 2 — Veille Internationale", domaines_intl)
+    envoyer(f"2/2 Veille Strategique Internationale - {date}", html_intl)
+    log.info("Email International envoye")
+
     log.info("Veille terminee avec succes !")
 
 

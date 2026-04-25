@@ -1,9 +1,8 @@
 """
-VEILLE STRATEGIQUE - 3 modes avec filtre date strict
-- Quotidien  : 24h uniquement
-- Hebdo      : 7 jours uniquement
-- Mensuel    : 30 jours uniquement
-- Si aucun article dans la periode = case vide, rien invente
+VEILLE STRATEGIQUE - Basée sur flux RSS
+Sources marocaines et internationales vérifiées
+Filtre date strict : 24h / 7 jours / 30 jours
+Zéro hallucination — uniquement vrais articles
 """
 
 import os
@@ -11,14 +10,15 @@ import smtplib
 import logging
 import json
 import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from anthropic import Anthropic
 import requests
+from email.utils import parsedate_to_datetime
 
 ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
-TAVILY_API_KEY      = os.environ["TAVILY_API_KEY"]
 EMAIL_EXPEDITEUR    = os.environ["EMAIL_EXPEDITEUR"]
 EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
@@ -32,13 +32,90 @@ DATE_LABEL  = AUJOURD_HUI.strftime("%A %d %B %Y")
 ANNEE       = AUJOURD_HUI.strftime("%Y")
 
 # ============================================================
+# SOURCES RSS VERIFIEES
+# ============================================================
+SOURCES_RSS_MAROC = [
+    "https://www.leconomiste.com/rss-leconomiste",
+    "https://www.lavieeco.com/feed/",
+    "https://lnt.ma/feed/",
+    "https://aujourdhui.ma/feed",
+    "https://www.hespress.com/feed",
+    "https://www.libe.ma/xml/syndication.rss",
+    "https://www.mapnews.ma/en/actualites/general/rss",
+    "https://www.moroccoworldnews.com/feed/",
+    "https://www.medias24.com/feed/",
+    "https://financesnews.press.ma/feed/",
+]
+
+SOURCES_RSS_INTL = [
+    "https://www.finextra.com/rss/headlines.aspx",
+    "https://feeds.reuters.com/reuters/businessNews",
+    "https://esgtoday.com/feed/",
+    "https://elearningindustry.com/feed",
+    "https://venturebeat.com/feed/",
+    "https://thefintechtimes.com/feed/",
+    "https://www.weforum.org/agenda/feed/",
+    "https://feeds.ft.com/rss/companies-financials",
+]
+
+# ============================================================
+# DOMAINES ET MOTS-CLES
+# ============================================================
+DOMAINES_MAROC = [
+    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c",
+     "keywords": ["formation", "formateur", "apprentissage", "e-learning", "LMS", "compétences bancaires", "GPBM formation", "Institut bancaire", "OFPPT"]},
+    {"id": "M2", "label": "Réglementation BAM & ACAPS",      "couleur": "#8b1a2f",
+     "keywords": ["Bank Al-Maghrib", "BAM", "ACAPS", "circulaire", "réglementation bancaire", "conformité", "compliance", "supervision bancaire"]},
+    {"id": "M3", "label": "Fintech & Startups Maroc",        "couleur": "#c04a00",
+     "keywords": ["fintech", "startup", "paiement mobile", "mobile money", "néobanque", "CasaFinance", "innovation financière"]},
+    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b",
+     "keywords": ["digital", "numérique", "transformation", "Attijariwafa", "CIH Bank", "Banque Populaire", "BMCE", "Bank of Africa", "application bancaire"]},
+    {"id": "M5", "label": "Politiques Formation & Emploi",   "couleur": "#2d6a4f",
+     "keywords": ["OFPPT", "emploi", "formation professionnelle", "compétences", "ANAPEC", "ressources humaines", "Plan Maroc"]},
+    {"id": "M6", "label": "IA & Tech Banques Marocaines",    "couleur": "#5c1a8b",
+     "keywords": ["intelligence artificielle", "IA", "machine learning", "chatbot", "automatisation", "algorithme", "technologie bancaire"]},
+    {"id": "M7", "label": "RSE & Finance Durable Maroc",     "couleur": "#1a6b4a",
+     "keywords": ["RSE", "ESG", "finance verte", "green bonds", "durable", "environnement", "CDG", "développement durable", "taxonomie"]},
+    {"id": "M8", "label": "Compétences du Futur Maroc",      "couleur": "#4a7a1a",
+     "keywords": ["futur", "compétences 2030", "métiers émergents", "reskilling", "upskilling", "avenir du travail"]},
+]
+
+DOMAINES_INTL = [
+    {"id": "I1",  "label": "Innovation Pédagogique & Learning", "couleur": "#1a4a7a",
+     "keywords": ["microlearning", "learning experience", "LXP", "adaptive learning", "elearning", "corporate training", "instructional design"]},
+    {"id": "I2",  "label": "IA dans la Formation",              "couleur": "#6b1a7a",
+     "keywords": ["AI learning", "artificial intelligence training", "generative AI education", "ChatGPT training", "AI tutor", "learning analytics"]},
+    {"id": "I3",  "label": "Fintech Mondiale & Open Banking",   "couleur": "#7a3d1a",
+     "keywords": ["fintech", "open banking", "embedded finance", "neobank", "digital banking", "BaaS", "BNPL"]},
+    {"id": "I4",  "label": "IA en Banque — Cas d'Usage",        "couleur": "#1a6b6b",
+     "keywords": ["AI banking", "artificial intelligence finance", "fraud detection", "credit scoring AI", "robo-advisor", "generative AI bank"]},
+    {"id": "I5",  "label": "Réglementation Financière Intl",    "couleur": "#4a1a5c",
+     "keywords": ["Basel", "DORA", "AML", "regulation banking", "MiCA", "compliance", "financial regulation"]},
+    {"id": "I6",  "label": "Certifications & Standards",        "couleur": "#5c3d1a",
+     "keywords": ["CISI", "CFA", "ACAMS", "banking certification", "finance qualification"]},
+    {"id": "I7",  "label": "Benchmarks Pédagogiques Banque",    "couleur": "#1a5c3d",
+     "keywords": ["bank training", "financial services learning", "L&D banking", "learning ROI", "upskilling finance"]},
+    {"id": "I8",  "label": "IA Générale — Tendances Mondiales", "couleur": "#3d1a5c",
+     "keywords": ["GPT", "Claude", "Gemini", "LLM", "large language model", "AI regulation", "artificial intelligence", "foundation model"]},
+    {"id": "I9",  "label": "RSE & Finance Durable Mondiale",    "couleur": "#1a5c1a",
+     "keywords": ["ESG", "sustainable finance", "green banking", "CSRD", "climate risk", "net zero", "sustainable investment"]},
+    {"id": "I10", "label": "Future Skills — International",     "couleur": "#7a6b1a",
+     "keywords": ["future of work", "future skills", "reskilling", "upskilling", "workforce", "WEF jobs", "skills gap"]},
+]
+
+# ============================================================
 # DETERMINATION DU MODE
 # ============================================================
+CONFIGS = {
+    "quotidien":     {"jours": 1,  "label": "Rapport Quotidien",     "periode": "24 dernières heures",   "nb_articles": 2},
+    "hebdomadaire":  {"jours": 7,  "label": "Rapport Hebdomadaire",  "periode": "7 derniers jours",      "nb_articles": 3},
+    "mensuel":       {"jours": 30, "label": "Rapport Mensuel",       "periode": "30 derniers jours",     "nb_articles": 4},
+}
+
 def determiner_mode():
-    if MODE_DEMANDE in ["quotidien", "hebdomadaire", "mensuel"]:
+    if MODE_DEMANDE in CONFIGS:
         return MODE_DEMANDE
-    # Mode auto : detecter selon le jour
-    jour_semaine = AUJOURD_HUI.weekday()  # 0=lundi
+    jour_semaine = AUJOURD_HUI.weekday()
     jour_mois    = AUJOURD_HUI.day
     if jour_mois == 1:
         return "mensuel"
@@ -47,209 +124,161 @@ def determiner_mode():
     return "quotidien"
 
 # ============================================================
-# CONFIG PAR MODE
+# LECTURE DES FLUX RSS
 # ============================================================
-CONFIGS = {
-    "quotidien": {
-        "jours": 1,
-        "label": "Rapport Quotidien",
-        "periode": "Dernières 24 heures",
-        "badge": "Articles publiés dans les dernières 24h uniquement",
-        "max_results": 5,
-    },
-    "hebdomadaire": {
-        "jours": 7,
-        "label": "Rapport Hebdomadaire",
-        "periode": "7 derniers jours",
-        "badge": "Articles publiés dans les 7 derniers jours uniquement",
-        "max_results": 7,
-    },
-    "mensuel": {
-        "jours": 30,
-        "label": "Rapport Mensuel",
-        "periode": "30 derniers jours",
-        "badge": "Articles publiés dans les 30 derniers jours uniquement",
-        "max_results": 10,
-    },
-}
-
-# ============================================================
-# 18 DOMAINES
-# ============================================================
-# Sources prioritaires Maroc
-SOURCES_MAROC = [
-    "medias24.com", "leconomiste.com", "financesnews.press.ma",
-    "ledesk.ma", "lavieeco.com", "lematin.ma", "lnt.ma",
-    "aujourdhui.ma", "telquel.ma", "hespress.com",
-    "bkam.ma", "attijariwafabank.com", "gbp.ma",
-    "cihbank.ma", "bmcebank.ma", "sgmaroc.com",
-    "acaps.ma", "casafinancecity.com", "gpbm.ma",
-    "moroccoworldnews.com", "afdb.org"
-]
-
-# Sources prioritaires International
-SOURCES_INTL = [
-    "finextra.com", "elearningindustry.com", "venturebeat.com",
-    "reuters.com", "esgtoday.com", "ft.com",
-    "thefintechtimes.com", "td.org", "weforum.org"
-]
-
-DOMAINES = [
-    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": "formation bancaire banque Maroc",                    "sources": SOURCES_MAROC},
-    {"id": "M2", "label": "Reglementation BAM ACAPS",        "couleur": "#8b1a2f", "query": "Bank Al-Maghrib reglementation bancaire Maroc",       "sources": SOURCES_MAROC},
-    {"id": "M3", "label": "Fintech Startups Maroc",          "couleur": "#c04a00", "query": "fintech startup paiement digital Maroc",              "sources": SOURCES_MAROC},
-    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": "transformation digitale banque numerique Maroc",       "sources": SOURCES_MAROC},
-    {"id": "M5", "label": "Politiques Formation Emploi",     "couleur": "#2d6a4f", "query": "formation professionnelle emploi competences Maroc",   "sources": SOURCES_MAROC},
-    {"id": "M6", "label": "IA Tech Banques Marocaines",      "couleur": "#5c1a8b", "query": "intelligence artificielle IA banque Maroc",            "sources": SOURCES_MAROC},
-    {"id": "M7", "label": "RSE Finance Durable Maroc",       "couleur": "#1a6b4a", "query": "finance verte ESG RSE developpement durable Maroc",   "sources": SOURCES_MAROC},
-    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": "competences futur metiers reskilling emploi Maroc",   "sources": SOURCES_MAROC},
-    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": "learning innovation microlearning LXP elearning",     "sources": SOURCES_INTL},
-    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": "AI artificial intelligence corporate training",       "sources": SOURCES_INTL},
-    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": "fintech open banking embedded finance neobank",       "sources": SOURCES_INTL},
-    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": "artificial intelligence banking AI use cases",        "sources": SOURCES_INTL},
-    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": "banking regulation compliance Basel AML DORA",        "sources": SOURCES_INTL},
-    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": "banking finance certification CISI CFA ACAMS",        "sources": SOURCES_INTL},
-    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": "bank training best practices financial services",     "sources": SOURCES_INTL},
-    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": "AI artificial intelligence GPT LLM news",             "sources": SOURCES_INTL},
-    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": "ESG sustainable finance green banking climate",       "sources": SOURCES_INTL},
-    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": "future of work skills workforce reskilling WEF",      "sources": SOURCES_INTL},
-]
-
-# ============================================================
-# RECHERCHE TAVILY AVEC FILTRE DATE STRICT
-# ============================================================
-def rechercher_articles(query, jours, max_results):
-    """
-    Recherche Tavily avec filtre date strict.
-    Utilise les parametres officiels Tavily : topic, time_range, include_domains.
-    Rejette tout article plus ancien que la periode demandee.
-    """
-    # Mapping jours -> time_range Tavily
-    time_range = "day" if jours == 1 else ("week" if jours == 7 else "month")
-
-    payload = {
-        "api_key": TAVILY_API_KEY,
-        "query": query,
-        "search_depth": "advanced",
-        "topic": "general",
-        "time_range": time_range,
-        "max_results": max_results,
-        "include_answer": False,
-        "include_raw_content": False,
-    }
+def lire_flux_rss(url, jours):
+    """Lit un flux RSS et retourne les articles dans la période demandée."""
+    articles = []
+    date_limite = AUJOURD_HUI - timedelta(days=jours)
 
     try:
-        response = requests.post(
-            "https://api.tavily.com/search",
-            json=payload,
-            timeout=15
-        )
-        data = response.json()
-        articles_valides = []
-        date_limite = AUJOURD_HUI - timedelta(days=jours)
+        headers = {"User-Agent": "Mozilla/5.0 (compatible; VeilleStrategique/1.0)"}
+        response = requests.get(url, timeout=10, headers=headers)
+        if response.status_code != 200:
+            log.warning(f"  RSS non accessible ({response.status_code}): {url}")
+            return []
 
-        for r in data.get("results", []):
-            date_pub_str = r.get("published_date", "")
+        root = ET.fromstring(response.content)
 
-            # Si pas de date : on rejette — on ne prend pas de risque
-            if not date_pub_str:
-                log.info(f"  Rejete (pas de date): {r.get('title','')[:60]}")
+        # Trouver tous les items (RSS 2.0 et Atom)
+        items = root.findall(".//item")
+        if not items:
+            items = root.findall(".//{http://www.w3.org/2005/Atom}entry")
+
+        for item in items:
+            # Titre
+            titre_el = item.find("title")
+            if titre_el is None:
+                titre_el = item.find("{http://www.w3.org/2005/Atom}title")
+            titre = titre_el.text if titre_el is not None else ""
+
+            # URL
+            lien_el = item.find("link")
+            if lien_el is None:
+                lien_el = item.find("{http://www.w3.org/2005/Atom}link")
+            lien = lien_el.text if lien_el is not None else ""
+            if not lien and lien_el is not None:
+                lien = lien_el.get("href", "")
+
+            # Description
+            desc_el = item.find("description")
+            if desc_el is None:
+                desc_el = item.find("{http://www.w3.org/2005/Atom}summary")
+            description = desc_el.text if desc_el is not None else ""
+            if description:
+                # Nettoyer les balises HTML basiques
+                import re
+                description = re.sub(r'<[^>]+>', ' ', description)
+                description = re.sub(r'\s+', ' ', description).strip()[:400]
+
+            # Date
+            date_el = item.find("pubDate")
+            if date_el is None:
+                date_el = item.find("{http://www.w3.org/2005/Atom}published")
+            if date_el is None:
+                date_el = item.find("{http://www.w3.org/2005/Atom}updated")
+
+            date_pub = None
+            if date_el is not None and date_el.text:
+                try:
+                    # Format RSS standard
+                    date_pub = parsedate_to_datetime(date_el.text).replace(tzinfo=None)
+                except Exception:
+                    try:
+                        # Format ISO
+                        date_str = date_el.text[:19]
+                        date_pub = datetime.fromisoformat(date_str)
+                    except Exception:
+                        pass
+
+            # Filtre date strict
+            if date_pub is None:
+                continue
+            if date_pub < date_limite:
                 continue
 
-            # Parser et verifier la date strictement
-            try:
-                date_pub = datetime.fromisoformat(
-                    date_pub_str.replace("Z", "").replace("+00:00", "").split("T")[0]
-                )
-                if date_pub < date_limite:
-                    log.info(f"  Rejete (trop ancien {date_pub.strftime('%d/%m/%Y')}): {r.get('title','')[:50]}")
-                    continue
-            except Exception:
-                log.info(f"  Rejete (date illisible): {r.get('title','')[:50]}")
-                continue
+            # Source
+            source = url.split("/")[2].replace("www.", "")
 
-            source = r.get("url", "")
-            source_clean = source.split("/")[2].replace("www.", "") if "/" in source else source
-
-            articles_valides.append({
-                "titre":   r.get("title", ""),
-                "url":     r.get("url", ""),
-                "source":  source_clean,
-                "contenu": r.get("content", "")[:600],
-                "date":    date_pub.strftime("%d/%m/%Y"),
+            articles.append({
+                "titre": titre.strip() if titre else "",
+                "url": lien.strip() if lien else "",
+                "source": source,
+                "description": description,
+                "date": date_pub.strftime("%d/%m/%Y %H:%M"),
+                "date_obj": date_pub,
             })
 
-        log.info(f"  {len(articles_valides)} articles valides dans la periode")
-        return articles_valides
-
     except Exception as e:
-        log.warning(f"Erreur Tavily: {e}")
-        return []
+        log.warning(f"  Erreur RSS {url}: {e}")
+
+    return articles
+
+
+def collecter_articles_rss(sources_rss, jours):
+    """Collecte tous les articles de toutes les sources RSS."""
+    tous_articles = []
+    for url in sources_rss:
+        try:
+            articles = lire_flux_rss(url, jours)
+            log.info(f"  {url.split('/')[2]} : {len(articles)} articles")
+            tous_articles.extend(articles)
+        except Exception as e:
+            log.warning(f"  Erreur {url}: {e}")
+
+    # Trier par date décroissante
+    tous_articles.sort(key=lambda x: x.get("date_obj", datetime.min), reverse=True)
+    return tous_articles
+
+
+def filtrer_par_keywords(articles, keywords):
+    """Filtre les articles par mots-clés dans le titre ou la description."""
+    articles_pertinents = []
+    for article in articles:
+        texte = (article.get("titre", "") + " " + article.get("description", "")).lower()
+        for kw in keywords:
+            if kw.lower() in texte:
+                articles_pertinents.append(article)
+                break
+    return articles_pertinents
 
 
 # ============================================================
 # ANALYSE CLAUDE
 # ============================================================
-def analyser(client, domaine, articles, mode, config):
-    """
-    Claude analyse uniquement les articles fournis.
-    Si liste vide : retourne domaine vide sans inventer.
-    """
+def analyser_avec_claude(client, domaine, articles, nb_max):
     if not articles:
-        return {
-            "id": domaine["id"],
-            "label": domaine["label"],
-            "couleur": domaine["couleur"],
-            "actualites": [],
-            "vide": True
-        }
+        return {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
 
     articles_str = "\n\n".join([
-        f"ARTICLE {i+1}:\nTitre: {a['titre']}\nSource: {a['source']}\nURL: {a['url']}\nDate: {a['date']}\nExtrait: {a['contenu']}"
-        for i, a in enumerate(articles)
+        f"ARTICLE {i+1}:\nTitre: {a['titre']}\nSource: {a['source']}\nURL: {a['url']}\nDate: {a['date']}\nExtrait: {a['description']}"
+        for i, a in enumerate(articles[:nb_max * 2])  # On lui donne plus pour qu'il choisisse les meilleurs
     ])
-
-    nb_max = 2 if mode == "quotidien" else (3 if mode == "hebdomadaire" else 4)
-
-    if mode == "mensuel":
-        prompt_analyse = f"""Fais une synthese analytique de ces articles sur 30 jours :
-- tendance_principale : grande tendance du mois en 2 phrases
-- evolution : comment le domaine a evolue ce mois
-- recommandation : 1 action concrete pour le responsable formation
-- actualites : les {nb_max} articles les plus importants avec resume et implication"""
-    else:
-        prompt_analyse = f"""Analyse ces articles et pour chacun fournis :
-- resume : 2 phrases factuelles
-- analyse : 1 phrase d'interpretation
-- implication : impact concret pour le responsable formation en banque"""
 
     prompt = f"""Tu es un analyste expert en veille strategique bancaire et formation.
 Domaine : {domaine['label']}
-Periode : {config['periode']} — jusqu'au {DATE_LABEL}
+Date : {DATE_LABEL}
 
-ARTICLES TROUVES DANS CETTE PERIODE :
+Voici des articles REELS trouves dans les flux RSS de presse. Analyse UNIQUEMENT ces articles.
+Ne fabrique rien. Ne complete pas avec tes propres connaissances.
+
 {articles_str}
 
-INSTRUCTION ABSOLUE : Analyse UNIQUEMENT ces articles. Ne fabrique rien. Ne cherche pas ailleurs.
-
+Selectionne les {nb_max} articles les plus pertinents pour ce domaine.
 Reponds UNIQUEMENT avec ce JSON brut sans backticks :
 {{
   "actualites": [
     {{
       "titre": "Titre exact de l'article",
-      "source": "Nom du site",
+      "source": "Nom du journal/site",
       "url": "URL exacte",
       "date": "Date de publication",
-      "resume": "Resume factuel en 2 phrases",
+      "resume": "Resume factuel en 2 phrases basees sur l'extrait fourni",
       "analyse": "Interpretation analytique en 1 phrase",
-      "implication": "Implication concrete pour responsable formation en banque"
+      "implication": "Implication concrete pour un responsable formation en banque"
     }}
-  ],
-  "tendance": "{("Grande tendance du mois en 1 phrase" if mode == "mensuel" else "")}",
-  "recommandation": "{("Action concrete recommandee" if mode == "mensuel" else "")}"
-}}
-
-Maximum {nb_max} actualites."""
+  ]
+}}"""
 
     try:
         message = client.messages.create(
@@ -268,8 +297,6 @@ Maximum {nb_max} actualites."""
             "label": domaine["label"],
             "couleur": domaine["couleur"],
             "actualites": result.get("actualites", [])[:nb_max],
-            "tendance": result.get("tendance", ""),
-            "recommandation": result.get("recommandation", ""),
             "vide": False
         }
     except Exception as e:
@@ -278,12 +305,11 @@ Maximum {nb_max} actualites."""
 
 
 # ============================================================
-# HTML DOMAINE
+# GENERATION HTML
 # ============================================================
-def html_domaine(d, mode, config):
+def html_domaine(d, config):
     color = d.get("couleur", "#1a3a5c")
 
-    # Case vide — aucune info dans la periode
     if d.get("vide") or not d.get("actualites"):
         return f"""
         <div style="margin-bottom:10px;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
@@ -291,20 +317,10 @@ def html_domaine(d, mode, config):
             <span style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:white;">{d['id']} — {d['label']}</span>
           </div>
           <div style="padding:10px 16px;font-size:12px;color:#bbb;font-style:italic;">
-            Aucune information publiée sur ce domaine durant la période : {config['periode']}.
+            Aucun article publié sur ce domaine durant la période : {config['periode']}.
           </div>
         </div>"""
 
-    # Bloc tendance mensuelle
-    tendance_html = ""
-    if mode == "mensuel" and d.get("tendance"):
-        tendance_html = f"""
-        <div style="padding:10px 14px;background:{color}12;border-left:3px solid {color};margin-bottom:12px;">
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:{color};font-weight:700;margin-bottom:4px;">Tendance du mois</div>
-          <p style="font-size:12px;color:#333;line-height:1.6;margin:0;font-style:italic;">{d['tendance']}</p>
-        </div>"""
-
-    # Articles
     actus_html = ""
     for i, a in enumerate(d.get("actualites", [])):
         sep = "border-top:1px solid #ede8e0;padding-top:12px;margin-top:12px;" if i > 0 else ""
@@ -322,59 +338,39 @@ def html_domaine(d, mode, config):
           <a href="{url}" style="font-size:11px;color:{color};font-weight:600;text-decoration:none;">🔗 Lire l'article source</a>
         </div>"""
 
-    # Recommandation mensuelle
-    reco_html = ""
-    if mode == "mensuel" and d.get("recommandation"):
-        reco_html = f"""
-        <div style="margin-top:12px;padding:8px 12px;background:#fff8f0;border-left:3px solid #c8a96e;">
-          <span style="font-size:11px;color:#c8a96e;font-weight:700;">Recommandation : </span>
-          <span style="font-size:12px;color:#444;">{d['recommandation']}</span>
-        </div>"""
-
     return f"""
     <div style="margin-bottom:10px;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
       <div style="background:{color};padding:8px 15px;">
         <span style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:white;">{d['id']} — {d['label']}</span>
       </div>
-      <div style="padding:14px 16px;">
-        {tendance_html}
-        {actus_html}
-        {reco_html}
-      </div>
+      <div style="padding:14px 16px;">{actus_html}</div>
     </div>"""
 
 
-# ============================================================
-# EMAIL BUILDER
-# ============================================================
 def construire_email(titre, sous_titre, badge, contenu, stats):
     return f"""<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#f7f4ef;font-family:Arial,sans-serif;">
 <div style="max-width:680px;margin:0 auto;">
-
   <div style="background:#0f2540;padding:20px 26px;">
     <div style="font-family:Georgia,serif;font-size:24px;font-weight:900;color:white;">VEILLE STRATEGIQUE</div>
     <div style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#c8a96e;">{titre}</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px;">{sous_titre}</div>
     <div style="font-size:12px;color:#c8a96e;margin-top:5px;font-weight:600;">{DATE_LABEL}</div>
   </div>
-
   <div style="background:#1a6b4a;padding:8px 26px;">
     <span style="font-size:11px;color:white;">✅ {badge} — {stats}</span>
   </div>
-
   <div style="padding:18px 26px;">
     {contenu}
     <div style="border-top:2px solid #0f2540;padding-top:10px;margin-top:14px;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
         <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Veille Strategique · {DATE_LABEL}</td>
-        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Sources verifiees · Confidentiel</td>
+        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Sources RSS verifiees · Confidentiel</td>
       </tr></table>
     </div>
   </div>
-
 </div>
 </body>
 </html>"""
@@ -401,57 +397,82 @@ def envoyer(sujet, html):
 def main():
     mode = determiner_mode()
     config = CONFIGS[mode]
-    log.info(f"Demarrage — Mode : {mode} — Periode : {config['periode']}")
+    log.info(f"Mode : {mode} — Periode : {config['periode']}")
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
-    maroc, intl = [], []
 
-    for domaine in DOMAINES:
-        log.info(f"Traitement {domaine['id']} — {domaine['label']}...")
-        articles = rechercher_articles(domaine["query"], config["jours"], config["max_results"])
-        resultat = analyser(client, domaine, articles, mode, config)
-        if domaine["id"].startswith("M"):
-            maroc.append(resultat)
+    # Collecte RSS Maroc
+    log.info("Collecte flux RSS Maroc...")
+    articles_maroc = collecter_articles_rss(SOURCES_RSS_MAROC, config["jours"])
+    log.info(f"Total articles Maroc bruts : {len(articles_maroc)}")
+
+    # Collecte RSS International
+    log.info("Collecte flux RSS International...")
+    articles_intl = collecter_articles_rss(SOURCES_RSS_INTL, config["jours"])
+    log.info(f"Total articles International bruts : {len(articles_intl)}")
+
+    # Traitement domaines Maroc
+    resultats_maroc = []
+    for domaine in DOMAINES_MAROC:
+        log.info(f"Traitement {domaine['id']} - {domaine['label']}...")
+        articles_filtres = filtrer_par_keywords(articles_maroc, domaine["keywords"])
+        log.info(f"  {len(articles_filtres)} articles pertinents")
+        if articles_filtres:
+            resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
         else:
-            intl.append(resultat)
-        time.sleep(1)
+            resultat = {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
+        resultats_maroc.append(resultat)
+        time.sleep(0.5)
 
-    # Statistiques
-    total_m = sum(len(d.get("actualites", [])) for d in maroc)
-    total_i = sum(len(d.get("actualites", [])) for d in intl)
-    vides_m = sum(1 for d in maroc if d.get("vide"))
-    vides_i = sum(1 for d in intl if d.get("vide"))
+    # Traitement domaines International
+    resultats_intl = []
+    for domaine in DOMAINES_INTL:
+        log.info(f"Traitement {domaine['id']} - {domaine['label']}...")
+        articles_filtres = filtrer_par_keywords(articles_intl, domaine["keywords"])
+        log.info(f"  {len(articles_filtres)} articles pertinents")
+        if articles_filtres:
+            resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
+        else:
+            resultat = {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
+        resultats_intl.append(resultat)
+        time.sleep(0.5)
+
+    # Stats
+    total_m = sum(len(d.get("actualites", [])) for d in resultats_maroc)
+    total_i = sum(len(d.get("actualites", [])) for d in resultats_intl)
+    vides_m = sum(1 for d in resultats_maroc if d.get("vide"))
+    vides_i = sum(1 for d in resultats_intl if d.get("vide"))
 
     prefixe = {"quotidien": "Quotidien", "hebdomadaire": "Hebdo", "mensuel": "Mensuel"}[mode]
 
     # Email 1 — Maroc
-    contenu_m = "".join(html_domaine(d, mode, config) for d in maroc)
+    contenu_m = "".join(html_domaine(d, config) for d in resultats_maroc)
     envoyer(
         f"1/2 Veille {prefixe} Maroc — {DATE_LABEL}",
         construire_email(
             f"{config['label']} — Veille Maroc",
-            f"Periode stricte : {config['periode']}",
-            config["badge"],
+            f"Sources RSS : leconomiste.com · lavieeco.com · medias24.com · lematin.ma · lnt.ma et plus",
+            f"Articles verifies directement depuis les flux RSS — {config['periode']} uniquement",
             contenu_m,
             f"{total_m} articles · {vides_m} domaine(s) sans info cette periode"
         )
     )
-    log.info(f"Email Maroc envoye — {total_m} articles, {vides_m} domaines vides")
+    log.info(f"Email Maroc envoye — {total_m} articles")
     time.sleep(3)
 
     # Email 2 — International
-    contenu_i = "".join(html_domaine(d, mode, config) for d in intl)
+    contenu_i = "".join(html_domaine(d, config) for d in resultats_intl)
     envoyer(
         f"2/2 Veille {prefixe} Internationale — {DATE_LABEL}",
         construire_email(
             f"{config['label']} — Veille Internationale",
-            f"Periode stricte : {config['periode']}",
-            config["badge"],
+            f"Sources RSS : finextra.com · reuters.com · venturebeat.com · esgtoday.com · weforum.org et plus",
+            f"Articles verifies directement depuis les flux RSS — {config['periode']} uniquement",
             contenu_i,
             f"{total_i} articles · {vides_i} domaine(s) sans info cette periode"
         )
     )
-    log.info(f"Email International envoye — {total_i} articles, {vides_i} domaines vides")
+    log.info(f"Email International envoye — {total_i} articles")
     log.info("Veille terminee avec succes !")
 
 

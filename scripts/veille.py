@@ -35,8 +35,7 @@ ANNEE       = AUJOURD_HUI.strftime("%Y")
 # SOURCES RSS VERIFIEES
 # ============================================================
 SOURCES_RSS_MAROC = [
-    # Google News RSS - couvre TOUS les sites marocains indexes par Google
-    # Un flux par domaine pour cibler precisement
+    # ── GOOGLE NEWS MAROC - THEMES CIBLES ──
     "https://news.google.com/rss/search?q=banque+Maroc&hl=fr&gl=MA&ceid=MA:fr",
     "https://news.google.com/rss/search?q=formation+bancaire+Maroc&hl=fr&gl=MA&ceid=MA:fr",
     "https://news.google.com/rss/search?q=Bank+Al-Maghrib+BAM&hl=fr&gl=MA&ceid=MA:fr",
@@ -49,11 +48,54 @@ SOURCES_RSS_MAROC = [
     "https://news.google.com/rss/search?q=ACAPS+reglementation+bancaire+Maroc&hl=fr&gl=MA&ceid=MA:fr",
     "https://news.google.com/rss/search?q=e-learning+formation+Maroc&hl=fr&gl=MA&ceid=MA:fr",
     "https://news.google.com/rss/search?q=future+skills+competences+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Yabiladi+economie+banque+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Jeune+Afrique+Maroc+finance+banque&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Credit+Agricole+Maroc+actualite&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Maroc+startup+innovation+technologie&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=RSE+developpement+durable+Maroc+entreprise&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=IA+technologie+numerique+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=formation+professionnelle+emploi+competences+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=finance+economie+Maroc+actualite&hl=fr&gl=MA&ceid=MA:fr",
+
+    # ── FLUX RSS DIRECTS - PRESSE MAROCAINE ──
+    "https://www.leconomiste.com/rss-leconomiste",
+    "https://www.lavieeco.com/feed/",
+    "https://lnt.ma/feed/",
+    "https://aujourdhui.ma/feed",
+    "https://www.hespress.com/feed",
+    "https://www.libe.ma/xml/syndication.rss",
+    "https://www.mapnews.ma/en/actualites/general/rss",
+    "https://www.moroccoworldnews.com/feed/",
+    "https://www.medias24.com/feed/",
+    "https://financesnews.press.ma/feed/",
+    "https://lematin.ma/rss",
+    "https://challenge.ma/feed/",
+    "https://ledesk.ma/feed/",
+    "https://telquel.ma/feed/",
+    "https://lopinion.ma/feed/",
+    "https://ecoactu.com/feed/",
+    "https://www.akhbarona.com/feed/index.rss",
+    "https://alyaoum24.com/feed",
+    "https://maroc-diplomatique.net/feed/",
+    "https://www.yabiladi.com/articles/rss.xml",
+    "https://www.marochhebdo.net/feed/",
+    "https://goud.ma/feed/",
+    "https://barlamane.com/feed/",
+    "https://leseco.ma/feed/",
+    "https://consonews.com/feed/",
+    "https://boursier.ma/feed/",
+    "https://boursenews.ma/feed/",
+    "https://fnh.ma/feed/",
+
+    # ── AFRIQUE & MAROC - FINANCE ──
+    "https://www.agenceecofin.com/rss",
+    "https://www.jeuneafrique.com/rss/economie",
+    "https://african.business/feed",
 ]
 
 
 SOURCES_RSS_INTL = [
-    # Fintech & Banque
+    # ── FINTECH & BANQUE INTERNATIONALE ──
     "https://www.finextra.com/rss/headlines.aspx",
     "https://feeds.reuters.com/reuters/businessNews",
     "https://thefintechtimes.com/feed",
@@ -63,52 +105,80 @@ SOURCES_RSS_INTL = [
     "https://bankingtech.com/feed/",
     "https://www.financemagnates.com/fintech/feed/",
     "https://paymentscardsandmobile.com/feed/",
-    "https://techbullion.com/feed",
-    "https://www.bobsguide.com/feed/",
     "https://globalbankingandfinance.com/feed/",
     "https://bankingjournal.aba.com/feed/",
-    # Formation & L&D
+
+    # ── FINANCE & BANQUE FRANCE ──
+    "https://www.lesechos.fr/rss/rss_finance.xml",
+    "https://www.lemonde.fr/economie/rss_full.xml",
+    "https://finyear.com/feed/",
+    "https://www.lafinancepourtous.com/feed",
+    "https://www.optionfinance.fr/rss",
+    "https://revue-banque.fr/feed",
+    "https://finance-innovation.org/feed",
+    "https://news.google.com/rss/search?q=banque+formation+finance+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=formation+bancaire+banque+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=banque+innovation+digitale+France&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── IA & TECH FRANCE ──
+    "https://www.lebigdata.fr/feed",
+    "https://www.siecledigital.fr/feed",
+    "https://www.ladn.eu/feed",
+    "https://www.numerama.com/feed",
+    "https://theconversation.com/fr/rss",
+    "https://aibusiness.com/rss.xml",
+    "https://towardsdatascience.com/feed",
+    "https://news.google.com/rss/search?q=intelligence+artificielle+IA+banque+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=AI+artificial+intelligence+banking+2026&hl=en&gl=US&ceid=US:en",
+
+    # ── RSE & FINANCE DURABLE ──
+    "https://esgtoday.com/feed/",
+    "https://www.responsible-investor.com/feed/",
+    "https://www.greenbiz.com/feed",
+    "https://www.novethic.fr/rss.xml",
+    "https://youmatter.world/fr/feed",
+    "https://www.alternatives-economiques.fr/rss",
+    "https://news.google.com/rss/search?q=RSE+finance+durable+ESG+banque&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=green+finance+sustainable+banking+ESG&hl=en&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=finance+responsable+impact+investing&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── FORMATION & L&D ──
     "https://feeds.feedburner.com/elearningindustry",
     "https://trainingindustry.com/feed/",
-    "https://talentlms.com/blog/feed",
     "https://www.clomedia.com/feed/",
     "https://hrdive.com/feeds/news/",
     "https://joshbersin.com/feed/",
     "https://trainingjournal.com/feed/",
-    "https://elearning.adobe.com/feed",
-    "https://charteredbanker.com/feed/",
-    # IA & Tech
+    "https://www.centre-inffo.fr/rss.xml",
+    "https://www.rhinfo.com/feed",
+    "https://hrvoice.org/feed",
+    "https://news.google.com/rss/search?q=formation+professionnelle+competences+futur&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=elearning+formation+digitale+LMS&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=corporate+training+learning+development+2026&hl=en&gl=US&ceid=US:en",
+
+    # ── IA GENERALE ──
     "https://venturebeat.com/feed/",
     "https://technologyreview.com/topnews.rss",
     "https://openai.com/blog/rss/",
     "https://huggingface.co/blog/feed.xml",
-    # RSE & Finance Durable
-    "https://esgtoday.com/feed/",
-    "https://www.responsible-investor.com/feed/",
-    "https://www.greenbiz.com/feed",
-    # Institutions & Réglementation
+    "https://news.google.com/rss/search?q=large+language+model+LLM+AI+GPT&hl=en&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=intelligence+artificielle+generative+IA&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── FUTURES SKILLS & TRAVAIL ──
     "https://www.weforum.org/agenda/feed/",
+    "https://news.google.com/rss/search?q=future+skills+reskilling+upskilling+workforce&hl=en&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=competences+futur+travail+reskilling&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── GRANDES BANQUES - ACTUALITES ──
+    "https://news.google.com/rss/search?q=BNP+Paribas+formation+IA+RSE&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=JPMorgan+Goldman+HSBC+training+AI&hl=en&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=Societe+Generale+Credit+Agricole+formation+digital&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── INSTITUTIONS ──
     "https://feeds.ft.com/rss/companies-financials",
     "https://www.fsb.org/feed/",
     "https://www.afdb.org/en/rss/news-events",
     "https://www.cgap.org/rss/",
-    "https://ifc.org/rss/",
-    # Grandes banques - blogs et newsrooms
-    "https://newsroom.bnpparibas.com/rss/",
-    "https://www.jpmorgan.com/insights/rss.xml",
-    "https://www.goldmansachs.com/insights/rss.xml",
-    "https://www.hsbc.com/news-and-media/rss",
-    "https://home.barclays/news/rss.xml",
-    "https://www.db.com/news/rss",
-    "https://www.societegenerale.com/en/rss",
-    "https://www.credit-agricole.com/en/rss.xml",
-    "https://www.ubs.com/rss",
-    "https://www.standardchartered.com/rss",
-    # Formation bancaire specialisee
-    "https://charteredbanker.com/feed/",
-    "https://bankingjournal.aba.com/feed/",
-    "https://www.efma.com/rss/",
-    "https://iob.ie/rss/",
 ]
 
 

@@ -47,16 +47,87 @@ SOURCES_RSS_MAROC = [
     "https://financesnews.press.ma/feed/",
 ]
 
+SOURCES_RSS_MAROC = [
+    "https://www.leconomiste.com/rss-leconomiste",
+    "https://www.lavieeco.com/feed/",
+    "https://lnt.ma/feed/",
+    "https://aujourdhui.ma/feed",
+    "https://www.hespress.com/feed",
+    "https://www.libe.ma/xml/syndication.rss",
+    "https://www.mapnews.ma/en/actualites/general/rss",
+    "https://www.moroccoworldnews.com/feed/",
+    "https://www.medias24.com/feed/",
+    "https://financesnews.press.ma/feed/",
+    "https://lematin.ma/rss",
+    "https://challenge.ma/feed/",
+    "https://ledesk.ma/feed/",
+    "https://telquel.ma/feed/",
+    "https://lopinion.ma/feed/",
+    "https://ecoactu.com/feed/",
+    "https://www.akhbarona.com/feed/index.rss",
+    "https://alyaoum24.com/feed",
+    "https://maroc-diplomatique.net/feed/",
+]
+
 SOURCES_RSS_INTL = [
+    # Fintech & Banque
     "https://www.finextra.com/rss/headlines.aspx",
     "https://feeds.reuters.com/reuters/businessNews",
-    "https://esgtoday.com/feed/",
-    "https://elearningindustry.com/feed",
+    "https://thefintechtimes.com/feed",
+    "https://finovate.com/feed",
+    "https://bankingexchange.com/feed/",
+    "https://thefinancialbrand.com/feed/",
+    "https://bankingtech.com/feed/",
+    "https://www.financemagnates.com/fintech/feed/",
+    "https://paymentscardsandmobile.com/feed/",
+    "https://techbullion.com/feed",
+    "https://www.bobsguide.com/feed/",
+    "https://globalbankingandfinance.com/feed/",
+    "https://bankingjournal.aba.com/feed/",
+    # Formation & L&D
+    "https://feeds.feedburner.com/elearningindustry",
+    "https://trainingindustry.com/feed/",
+    "https://talentlms.com/blog/feed",
+    "https://www.clomedia.com/feed/",
+    "https://hrdive.com/feeds/news/",
+    "https://joshbersin.com/feed/",
+    "https://trainingjournal.com/feed/",
+    "https://elearning.adobe.com/feed",
+    "https://charteredbanker.com/feed/",
+    # IA & Tech
     "https://venturebeat.com/feed/",
-    "https://thefintechtimes.com/feed/",
+    "https://technologyreview.com/topnews.rss",
+    "https://openai.com/blog/rss/",
+    "https://huggingface.co/blog/feed.xml",
+    # RSE & Finance Durable
+    "https://esgtoday.com/feed/",
+    "https://www.responsible-investor.com/feed/",
+    "https://www.greenbiz.com/feed",
+    # Institutions & Réglementation
     "https://www.weforum.org/agenda/feed/",
     "https://feeds.ft.com/rss/companies-financials",
+    "https://www.fsb.org/feed/",
+    "https://www.afdb.org/en/rss/news-events",
+    "https://www.cgap.org/rss/",
+    "https://ifc.org/rss/",
+    # Grandes banques - blogs et newsrooms
+    "https://newsroom.bnpparibas.com/rss/",
+    "https://www.jpmorgan.com/insights/rss.xml",
+    "https://www.goldmansachs.com/insights/rss.xml",
+    "https://www.hsbc.com/news-and-media/rss",
+    "https://home.barclays/news/rss.xml",
+    "https://www.db.com/news/rss",
+    "https://www.societegenerale.com/en/rss",
+    "https://www.credit-agricole.com/en/rss.xml",
+    "https://www.ubs.com/rss",
+    "https://www.standardchartered.com/rss",
+    # Formation bancaire specialisee
+    "https://charteredbanker.com/feed/",
+    "https://bankingjournal.aba.com/feed/",
+    "https://www.efma.com/rss/",
+    "https://iob.ie/rss/",
 ]
+
 
 # ============================================================
 # DOMAINES ET MOTS-CLES
@@ -81,27 +152,60 @@ DOMAINES_MAROC = [
 ]
 
 DOMAINES_INTL = [
-    {"id": "I1",  "label": "Innovation Pédagogique & Learning", "couleur": "#1a4a7a",
-     "keywords": ["microlearning", "learning experience", "LXP", "adaptive learning", "elearning", "corporate training", "instructional design"]},
-    {"id": "I2",  "label": "IA dans la Formation",              "couleur": "#6b1a7a",
-     "keywords": ["AI learning", "artificial intelligence training", "generative AI education", "ChatGPT training", "AI tutor", "learning analytics"]},
-    {"id": "I3",  "label": "Fintech Mondiale & Open Banking",   "couleur": "#7a3d1a",
-     "keywords": ["fintech", "open banking", "embedded finance", "neobank", "digital banking", "BaaS", "BNPL"]},
-    {"id": "I4",  "label": "IA en Banque — Cas d'Usage",        "couleur": "#1a6b6b",
-     "keywords": ["AI banking", "artificial intelligence finance", "fraud detection", "credit scoring AI", "robo-advisor", "generative AI bank"]},
-    {"id": "I5",  "label": "Réglementation Financière Intl",    "couleur": "#4a1a5c",
-     "keywords": ["Basel", "DORA", "AML", "regulation banking", "MiCA", "compliance", "financial regulation"]},
-    {"id": "I6",  "label": "Certifications & Standards",        "couleur": "#5c3d1a",
-     "keywords": ["CISI", "CFA", "ACAMS", "banking certification", "finance qualification"]},
-    {"id": "I7",  "label": "Benchmarks Pédagogiques Banque",    "couleur": "#1a5c3d",
-     "keywords": ["bank training", "financial services learning", "L&D banking", "learning ROI", "upskilling finance"]},
-    {"id": "I8",  "label": "IA Générale — Tendances Mondiales", "couleur": "#3d1a5c",
-     "keywords": ["GPT", "Claude", "Gemini", "LLM", "large language model", "AI regulation", "artificial intelligence", "foundation model"]},
-    {"id": "I9",  "label": "RSE & Finance Durable Mondiale",    "couleur": "#1a5c1a",
-     "keywords": ["ESG", "sustainable finance", "green banking", "CSRD", "climate risk", "net zero", "sustainable investment"]},
-    {"id": "I10", "label": "Future Skills — International",     "couleur": "#7a6b1a",
-     "keywords": ["future of work", "future skills", "reskilling", "upskilling", "workforce", "WEF jobs", "skills gap"]},
+    {"id": "I1", "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a",
+     "keywords": ["microlearning", "LXP", "adaptive learning", "elearning", "corporate training", "instructional design", "blended learning", "gamification", "learning management", "social learning", "mobile learning", "learning design", "SCORM", "xAPI"]},
+    {"id": "I2", "label": "IA dans la Formation", "couleur": "#6b1a7a",
+     "keywords": ["AI learning", "generative AI training", "AI corporate training", "AI tutor", "AI coaching", "intelligent tutoring", "learning analytics AI", "AI instructional design", "machine learning education", "AI assessment"]},
+    {"id": "I3", "label": "Fintech Mondiale Open Banking", "couleur": "#7a3d1a",
+     "keywords": ["open banking", "embedded finance", "neobank", "BaaS", "BNPL", "digital payments", "mobile banking", "API banking", "payments innovation", "digital wallet"]},
+    {"id": "I4", "label": "IA en Banque Cas Usage", "couleur": "#1a6b6b",
+     "keywords": ["AI banking", "artificial intelligence banking", "fraud detection AI", "credit scoring AI", "generative AI finance", "AI risk management", "AI compliance", "chatbot banking", "predictive banking", "AI wealth management"]},
+    {"id": "I5", "label": "Reglementation Financiere Intl", "couleur": "#4a1a5c",
+     "keywords": ["Basel IV", "DORA regulation", "AML compliance", "banking regulation", "MiCA", "RegTech", "KYC", "financial compliance", "banking supervision", "FATF", "prudential regulation"]},
+    {"id": "I6", "label": "Certifications Standards Bancaires", "couleur": "#5c3d1a",
+     "keywords": ["CISI certification", "CFA exam", "ACAMS", "banking qualification", "FRM certification", "banking diploma", "finance certification", "professional banking", "ICA qualification", "chartered banker"]},
+    {"id": "I7", "label": "Benchmarks Pedagogiques Banque", "couleur": "#1a5c3d",
+     "keywords": ["bank training", "financial services learning", "L&D banking", "learning ROI finance", "banking academy", "financial training program", "bank upskilling", "compliance training", "banking e-learning", "financial services training"]},
+    {"id": "I8", "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c",
+     "keywords": ["large language model", "GPT", "Claude AI", "Gemini", "AI regulation", "LLM", "foundation model", "AI Act", "AGI", "AI governance", "AI ethics", "Mistral", "AI safety", "multimodal AI"]},
+    {"id": "I9", "label": "RSE Finance Durable Mondiale", "couleur": "#1a5c1a",
+     "keywords": ["ESG banking", "sustainable finance", "green banking", "CSRD", "climate risk banking", "net zero bank", "impact investing", "green bond", "taxonomy finance", "ESG reporting", "climate finance", "sustainable investment"]},
+    {"id": "I10", "label": "Future Skills International", "couleur": "#7a6b1a",
+     "keywords": ["future of work", "reskilling", "upskilling", "WEF skills", "skills gap", "workforce transformation", "talent development", "skills of the future", "digital skills", "human skills", "21st century skills", "workforce 2030"]},
+    {"id": "I11", "label": "Formation dans les Grandes Banques Mondiales", "couleur": "#2a4a7a",
+     "keywords": [
+        # France
+        "BNP Paribas training", "BNP Paribas formation", "BNP Paribas learning",
+        "Societe Generale training", "Societe Generale formation",
+        "Credit Agricole training", "Credit Agricole formation",
+        "Natixis training", "BPCE formation",
+        # USA
+        "JPMorgan training", "JPMorgan learning", "JPMorgan Chase upskilling",
+        "Bank of America training", "Goldman Sachs learning", "Goldman Sachs training",
+        "Citibank training", "Wells Fargo training", "Morgan Stanley learning",
+        # UK
+        "HSBC training", "HSBC learning", "HSBC formation",
+        "Barclays training", "Standard Chartered training",
+        "Lloyds Bank training", "NatWest training",
+        # Allemagne
+        "Deutsche Bank training", "Deutsche Bank learning",
+        "Commerzbank training",
+        # Chine
+        "ICBC training", "Bank of China learning",
+        "Ping An training", "Ping An AI",
+        # Japon
+        "Mitsubishi UFJ training", "MUFG learning",
+        # Suisse
+        "UBS training", "UBS learning",
+        # Golfe
+        "Al Rajhi training", "Emirates NBD training", "QNB training",
+        # Mots-cles generiques grandes banques
+        "global bank training", "investment bank learning", "tier 1 bank upskilling",
+        "bank AI training", "bank ESG training", "bank reskilling",
+        "bank future skills", "bank digital training",
+     ]},
 ]
+
 
 # ============================================================
 # DETERMINATION DU MODE

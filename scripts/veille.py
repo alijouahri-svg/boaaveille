@@ -336,12 +336,11 @@ def collecter_articles_rss(sources_rss, jours):
 
 
 def filtrer_par_keywords(articles, keywords):
-    """Filtre les articles par mots-cles dans titre ET description.
-    Priorite au titre : un match titre compte double."""
+    """Filtre les articles par mots-cles dans titre ET description."""
     articles_pertinents = []
     for article in articles:
-        titre = article.get("titre", "").lower()
-        description = article.get("description", "").lower()
+        titre = (article.get("titre") or "").lower()
+        description = (article.get("description") or "").lower()
         for kw in keywords:
             kw_lower = kw.lower()
             if kw_lower in titre or kw_lower in description:

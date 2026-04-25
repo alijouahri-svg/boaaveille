@@ -117,7 +117,7 @@ DOMAINES = [
 # ============================================================
 # RECHERCHE TAVILY AVEC FILTRE DATE STRICT
 # ============================================================
-def rechercher_articles(query, jours, max_results, include_domains=None):
+def rechercher_articles(query, jours, max_results):
     """
     Recherche Tavily avec filtre date strict.
     Utilise les parametres officiels Tavily : topic, time_range, include_domains.
@@ -129,15 +129,13 @@ def rechercher_articles(query, jours, max_results, include_domains=None):
     payload = {
         "api_key": TAVILY_API_KEY,
         "query": query,
-        "search_depth": "basic",
+        "search_depth": "advanced",
         "topic": "news",
         "time_range": time_range,
         "max_results": max_results,
         "include_answer": False,
         "include_raw_content": False,
     }
-    if include_domains:
-        payload["include_domains"] = include_domains
 
     try:
         response = requests.post(
@@ -409,7 +407,7 @@ def main():
 
     for domaine in DOMAINES:
         log.info(f"Traitement {domaine['id']} — {domaine['label']}...")
-        articles = rechercher_articles(domaine["query"], config["jours"], config["max_results"], domaine.get("sources"))
+        articles = rechercher_articles(domaine["query"], config["jours"], config["max_results"])
         resultat = analyser(client, domaine, articles, mode, config)
         if domaine["id"].startswith("M"):
             maroc.append(resultat)

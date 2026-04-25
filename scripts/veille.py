@@ -83,7 +83,8 @@ SOURCES_MAROC = [
     "aujourdhui.ma", "telquel.ma", "hespress.com",
     "bkam.ma", "attijariwafabank.com", "gbp.ma",
     "cihbank.ma", "bmcebank.ma", "sgmaroc.com",
-    "acaps.ma", "casafinancecity.com", "gpbm.ma"
+    "acaps.ma", "casafinancecity.com", "gpbm.ma",
+    "moroccoworldnews.com", "afdb.org"
 ]
 
 # Sources prioritaires International
@@ -130,7 +131,7 @@ def rechercher_articles(query, jours, max_results):
         "api_key": TAVILY_API_KEY,
         "query": query,
         "search_depth": "advanced",
-        "topic": "news",
+        "topic": "general",
         "time_range": time_range,
         "max_results": max_results,
         "include_answer": False,

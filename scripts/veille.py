@@ -76,54 +76,73 @@ CONFIGS = {
 # ============================================================
 # 18 DOMAINES
 # ============================================================
-# Sources Maroc
-SOURCES_MAROC = "site:medias24.com OR site:leconomiste.com OR site:financesnews.press.ma OR site:ledesk.ma OR site:lavieeco.com OR site:lematin.ma OR site:lnt.ma OR site:aujourdhui.ma OR site:telquel.ma OR site:hespress.com OR site:bkam.ma OR site:attijariwafabank.com OR site:gbp.ma OR site:cihbank.ma OR site:bmcebank.ma OR site:sgmaroc.com OR site:acaps.ma OR site:casafinancecity.com OR site:gpbm.ma"
+# Sources prioritaires Maroc
+SOURCES_MAROC = [
+    "medias24.com", "leconomiste.com", "financesnews.press.ma",
+    "ledesk.ma", "lavieeco.com", "lematin.ma", "lnt.ma",
+    "aujourdhui.ma", "telquel.ma", "hespress.com",
+    "bkam.ma", "attijariwafabank.com", "gbp.ma",
+    "cihbank.ma", "bmcebank.ma", "sgmaroc.com",
+    "acaps.ma", "casafinancecity.com", "gpbm.ma"
+]
 
-# Sources International
-SOURCES_INTL = "site:finextra.com OR site:elearningindustry.com OR site:venturebeat.com OR site:reuters.com OR site:esgtoday.com OR site:ft.com OR site:thefintechtimes.com OR site:td.org OR site:weforum.org"
+# Sources prioritaires International
+SOURCES_INTL = [
+    "finextra.com", "elearningindustry.com", "venturebeat.com",
+    "reuters.com", "esgtoday.com", "ft.com",
+    "thefintechtimes.com", "td.org", "weforum.org"
+]
 
 DOMAINES = [
-    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": f"formation bancaire banque Maroc {SOURCES_MAROC}"},
-    {"id": "M2", "label": "Reglementation BAM ACAPS",        "couleur": "#8b1a2f", "query": f"Bank Al-Maghrib reglementation bancaire {SOURCES_MAROC}"},
-    {"id": "M3", "label": "Fintech Startups Maroc",          "couleur": "#c04a00", "query": f"fintech startup paiement digital Maroc {SOURCES_MAROC}"},
-    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": f"transformation digitale banque numerique Maroc {SOURCES_MAROC}"},
-    {"id": "M5", "label": "Politiques Formation Emploi",     "couleur": "#2d6a4f", "query": f"formation professionnelle emploi competences Maroc {SOURCES_MAROC}"},
-    {"id": "M6", "label": "IA Tech Banques Marocaines",      "couleur": "#5c1a8b", "query": f"intelligence artificielle IA banque technologie Maroc {SOURCES_MAROC}"},
-    {"id": "M7", "label": "RSE Finance Durable Maroc",       "couleur": "#1a6b4a", "query": f"finance verte ESG RSE developpement durable Maroc {SOURCES_MAROC}"},
-    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": f"competences futur metiers reskilling emploi Maroc {SOURCES_MAROC}"},
-    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": f"learning innovation microlearning LXP elearning {SOURCES_INTL}"},
-    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": f"AI artificial intelligence corporate training learning {SOURCES_INTL}"},
-    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": f"fintech open banking embedded finance neobank {SOURCES_INTL}"},
-    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": f"artificial intelligence banking AI use cases finance {SOURCES_INTL}"},
-    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": f"banking regulation compliance Basel AML DORA {SOURCES_INTL}"},
-    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": f"banking finance certification CISI CFA ACAMS {SOURCES_INTL}"},
-    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": f"bank training best practices financial services learning {SOURCES_INTL}"},
-    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": f"AI artificial intelligence GPT LLM news {SOURCES_INTL}"},
-    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": f"ESG sustainable finance green banking climate {SOURCES_INTL}"},
-    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": f"future of work skills workforce reskilling WEF {SOURCES_INTL}"},
+    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": "formation bancaire banque Maroc",                    "sources": SOURCES_MAROC},
+    {"id": "M2", "label": "Reglementation BAM ACAPS",        "couleur": "#8b1a2f", "query": "Bank Al-Maghrib reglementation bancaire Maroc",       "sources": SOURCES_MAROC},
+    {"id": "M3", "label": "Fintech Startups Maroc",          "couleur": "#c04a00", "query": "fintech startup paiement digital Maroc",              "sources": SOURCES_MAROC},
+    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": "transformation digitale banque numerique Maroc",       "sources": SOURCES_MAROC},
+    {"id": "M5", "label": "Politiques Formation Emploi",     "couleur": "#2d6a4f", "query": "formation professionnelle emploi competences Maroc",   "sources": SOURCES_MAROC},
+    {"id": "M6", "label": "IA Tech Banques Marocaines",      "couleur": "#5c1a8b", "query": "intelligence artificielle IA banque Maroc",            "sources": SOURCES_MAROC},
+    {"id": "M7", "label": "RSE Finance Durable Maroc",       "couleur": "#1a6b4a", "query": "finance verte ESG RSE developpement durable Maroc",   "sources": SOURCES_MAROC},
+    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": "competences futur metiers reskilling emploi Maroc",   "sources": SOURCES_MAROC},
+    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": "learning innovation microlearning LXP elearning",     "sources": SOURCES_INTL},
+    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": "AI artificial intelligence corporate training",       "sources": SOURCES_INTL},
+    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": "fintech open banking embedded finance neobank",       "sources": SOURCES_INTL},
+    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": "artificial intelligence banking AI use cases",        "sources": SOURCES_INTL},
+    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": "banking regulation compliance Basel AML DORA",        "sources": SOURCES_INTL},
+    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": "banking finance certification CISI CFA ACAMS",        "sources": SOURCES_INTL},
+    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": "bank training best practices financial services",     "sources": SOURCES_INTL},
+    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": "AI artificial intelligence GPT LLM news",             "sources": SOURCES_INTL},
+    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": "ESG sustainable finance green banking climate",       "sources": SOURCES_INTL},
+    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": "future of work skills workforce reskilling WEF",      "sources": SOURCES_INTL},
 ]
 
 # ============================================================
 # RECHERCHE TAVILY AVEC FILTRE DATE STRICT
 # ============================================================
-def rechercher_articles(query, jours, max_results):
+def rechercher_articles(query, jours, max_results, include_domains=None):
     """
     Recherche Tavily avec filtre date strict.
+    Utilise les parametres officiels Tavily : topic, time_range, include_domains.
     Rejette tout article plus ancien que la periode demandee.
-    Retourne liste vide si rien de recent.
     """
+    # Mapping jours -> time_range Tavily
+    time_range = "day" if jours == 1 else ("week" if jours == 7 else "month")
+
+    payload = {
+        "api_key": TAVILY_API_KEY,
+        "query": query,
+        "search_depth": "basic",
+        "topic": "news",
+        "time_range": time_range,
+        "max_results": max_results,
+        "include_answer": False,
+        "include_raw_content": False,
+    }
+    if include_domains:
+        payload["include_domains"] = include_domains
+
     try:
         response = requests.post(
             "https://api.tavily.com/search",
-            json={
-                "api_key": TAVILY_API_KEY,
-                "query": query,
-                "search_depth": "advanced",
-                "max_results": max_results,
-                "include_answer": False,
-                "include_raw_content": False,
-                "days": jours,
-            },
+            json=payload,
             timeout=15
         )
         data = response.json()
@@ -390,7 +409,7 @@ def main():
 
     for domaine in DOMAINES:
         log.info(f"Traitement {domaine['id']} — {domaine['label']}...")
-        articles = rechercher_articles(domaine["query"], config["jours"], config["max_results"])
+        articles = rechercher_articles(domaine["query"], config["jours"], config["max_results"], domaine.get("sources"))
         resultat = analyser(client, domaine, articles, mode, config)
         if domaine["id"].startswith("M"):
             maroc.append(resultat)

@@ -1,10 +1,11 @@
 # VEILLE STRATEGIQUE — GitHub Actions Workflow
+# 3 modes : Quotidien / Hebdomadaire / Mensuel
 
-name: Veille Stratégique Quotidienne
+name: Veille Stratégique
 
 on:
   schedule:
-    - cron: "0 6 * * *"
+    - cron: "0 6 * * *"    # Quotidien — 7h00 Casablanca tous les jours
   workflow_dispatch:
     inputs:
       mode:
@@ -14,7 +15,8 @@ on:
         type: choice
         options:
           - quotidien
-          - quinzaine
+          - hebdomadaire
+          - mensuel
 
 jobs:
   generer-rapport:
@@ -40,7 +42,7 @@ jobs:
           EMAIL_EXPEDITEUR:    ${{ secrets.EMAIL_EXPEDITEUR }}
           EMAIL_MOT_DE_PASSE:  ${{ secrets.EMAIL_MOT_DE_PASSE }}
           EMAIL_DESTINATAIRES: ${{ secrets.EMAIL_DESTINATAIRES }}
-          MODE: ${{ github.event.inputs.mode || 'quotidien' }}
+          MODE: ${{ github.event.inputs.mode || 'auto' }}
         run: python scripts/veille.py
 
       - name: Alerte en cas d'erreur

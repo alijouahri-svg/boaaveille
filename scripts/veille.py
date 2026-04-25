@@ -76,25 +76,31 @@ CONFIGS = {
 # ============================================================
 # 18 DOMAINES
 # ============================================================
+# Sources Maroc
+SOURCES_MAROC = "site:medias24.com OR site:leconomiste.com OR site:financesnews.press.ma OR site:ledesk.ma OR site:lavieeco.com OR site:lematin.ma OR site:lnt.ma OR site:aujourdhui.ma OR site:telquel.ma OR site:hespress.com OR site:bkam.ma OR site:attijariwafabank.com OR site:gbp.ma OR site:cihbank.ma OR site:bmcebank.ma OR site:sgmaroc.com OR site:acaps.ma OR site:casafinancecity.com OR site:gpbm.ma"
+
+# Sources International
+SOURCES_INTL = "site:finextra.com OR site:elearningindustry.com OR site:venturebeat.com OR site:reuters.com OR site:esgtoday.com OR site:ft.com OR site:thefintechtimes.com OR site:td.org OR site:weforum.org"
+
 DOMAINES = [
-    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": f"formation bancaire Maroc {ANNEE}"},
-    {"id": "M2", "label": "Reglementation BAM ACAPS",        "couleur": "#8b1a2f", "query": f"Bank Al-Maghrib BAM réglementation bancaire Maroc {ANNEE}"},
-    {"id": "M3", "label": "Fintech Startups Maroc",          "couleur": "#c04a00", "query": f"fintech startup paiement Maroc {ANNEE}"},
-    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": f"transformation digitale banque Maroc {ANNEE}"},
-    {"id": "M5", "label": "Politiques Formation Emploi",     "couleur": "#2d6a4f", "query": f"formation professionnelle emploi Maroc {ANNEE}"},
-    {"id": "M6", "label": "IA Tech Banques Marocaines",      "couleur": "#5c1a8b", "query": f"intelligence artificielle IA banque Maroc {ANNEE}"},
-    {"id": "M7", "label": "RSE Finance Durable Maroc",       "couleur": "#1a6b4a", "query": f"finance verte ESG banque Maroc {ANNEE}"},
-    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": f"compétences futur reskilling Maroc {ANNEE}"},
-    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": f"innovation learning microlearning LXP {ANNEE}"},
-    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": f"AI learning training corporate {ANNEE}"},
-    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": f"fintech open banking neobank {ANNEE}"},
-    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": f"AI banking fraud detection credit {ANNEE}"},
-    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": f"banking regulation Basel DORA AML {ANNEE}"},
-    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": f"banking certification CISI CFA ACAMS {ANNEE}"},
-    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": f"bank training best practices learning {ANNEE}"},
-    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": f"AI GPT Claude Gemini LLM {ANNEE}"},
-    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": f"ESG sustainable finance green banking {ANNEE}"},
-    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": f"future skills workforce reskilling {ANNEE}"},
+    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c", "query": f"formation bancaire banque Maroc {SOURCES_MAROC}"},
+    {"id": "M2", "label": "Reglementation BAM ACAPS",        "couleur": "#8b1a2f", "query": f"Bank Al-Maghrib reglementation bancaire {SOURCES_MAROC}"},
+    {"id": "M3", "label": "Fintech Startups Maroc",          "couleur": "#c04a00", "query": f"fintech startup paiement digital Maroc {SOURCES_MAROC}"},
+    {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b", "query": f"transformation digitale banque numerique Maroc {SOURCES_MAROC}"},
+    {"id": "M5", "label": "Politiques Formation Emploi",     "couleur": "#2d6a4f", "query": f"formation professionnelle emploi competences Maroc {SOURCES_MAROC}"},
+    {"id": "M6", "label": "IA Tech Banques Marocaines",      "couleur": "#5c1a8b", "query": f"intelligence artificielle IA banque technologie Maroc {SOURCES_MAROC}"},
+    {"id": "M7", "label": "RSE Finance Durable Maroc",       "couleur": "#1a6b4a", "query": f"finance verte ESG RSE developpement durable Maroc {SOURCES_MAROC}"},
+    {"id": "M8", "label": "Competences du Futur Maroc",      "couleur": "#4a7a1a", "query": f"competences futur metiers reskilling emploi Maroc {SOURCES_MAROC}"},
+    {"id": "I1",  "label": "Innovation Pedagogique Learning", "couleur": "#1a4a7a", "query": f"learning innovation microlearning LXP elearning {SOURCES_INTL}"},
+    {"id": "I2",  "label": "IA dans la Formation",            "couleur": "#6b1a7a", "query": f"AI artificial intelligence corporate training learning {SOURCES_INTL}"},
+    {"id": "I3",  "label": "Fintech Mondiale Open Banking",   "couleur": "#7a3d1a", "query": f"fintech open banking embedded finance neobank {SOURCES_INTL}"},
+    {"id": "I4",  "label": "IA en Banque Cas Usage",          "couleur": "#1a6b6b", "query": f"artificial intelligence banking AI use cases finance {SOURCES_INTL}"},
+    {"id": "I5",  "label": "Reglementation Financiere Intl",  "couleur": "#4a1a5c", "query": f"banking regulation compliance Basel AML DORA {SOURCES_INTL}"},
+    {"id": "I6",  "label": "Certifications Standards",        "couleur": "#5c3d1a", "query": f"banking finance certification CISI CFA ACAMS {SOURCES_INTL}"},
+    {"id": "I7",  "label": "Benchmarks Pedagogiques Banque",  "couleur": "#1a5c3d", "query": f"bank training best practices financial services learning {SOURCES_INTL}"},
+    {"id": "I8",  "label": "IA Generale Tendances Mondiales", "couleur": "#3d1a5c", "query": f"AI artificial intelligence GPT LLM news {SOURCES_INTL}"},
+    {"id": "I9",  "label": "RSE Finance Durable Mondiale",    "couleur": "#1a5c1a", "query": f"ESG sustainable finance green banking climate {SOURCES_INTL}"},
+    {"id": "I10", "label": "Future Skills International",     "couleur": "#7a6b1a", "query": f"future of work skills workforce reskilling WEF {SOURCES_INTL}"},
 ]
 
 # ============================================================

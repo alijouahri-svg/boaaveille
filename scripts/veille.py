@@ -62,22 +62,22 @@ SOURCES_RSS_INTL = [
 # DOMAINES ET MOTS-CLES
 # ============================================================
 DOMAINES_MAROC = [
-    {"id": "M1", "label": "Formation Bancaire Maroc",        "couleur": "#1a3a5c",
-     "keywords": ["formation", "formateur", "apprentissage", "e-learning", "LMS", "compétences bancaires", "GPBM formation", "Institut bancaire", "OFPPT"]},
-    {"id": "M2", "label": "Réglementation BAM & ACAPS",      "couleur": "#8b1a2f",
-     "keywords": ["Bank Al-Maghrib", "BAM", "ACAPS", "circulaire", "réglementation bancaire", "conformité", "compliance", "supervision bancaire"]},
-    {"id": "M3", "label": "Fintech & Startups Maroc",        "couleur": "#c04a00",
-     "keywords": ["fintech", "startup", "paiement mobile", "mobile money", "néobanque", "CasaFinance", "innovation financière"]},
+    {"id": "M1", "label": "Formation Bancaire Maroc", "couleur": "#1a3a5c",
+     "keywords": ["formation bancaire", "formation banque", "e-learning banque", "LMS bancaire", "GPBM formation", "Institut Bancaire Marocain", "OFPPT banque", "competences bancaires"]},
+    {"id": "M2", "label": "Reglementation BAM ACAPS", "couleur": "#8b1a2f",
+     "keywords": ["Bank Al-Maghrib", "BAM circulaire", "ACAPS", "reglementation bancaire maroc", "supervision bancaire", "formation BAM", "formation Bank Al-Maghrib"]},
+    {"id": "M3", "label": "Fintech Startups Maroc", "couleur": "#c04a00",
+     "keywords": ["fintech maroc", "paiement mobile maroc", "neobanque maroc", "startup fintech maroc", "portefeuille electronique", "paiement digital maroc"]},
     {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b",
-     "keywords": ["digital", "numérique", "transformation", "Attijariwafa", "CIH Bank", "Banque Populaire", "BMCE", "Bank of Africa", "application bancaire"]},
-    {"id": "M5", "label": "Politiques Formation & Emploi",   "couleur": "#2d6a4f",
-     "keywords": ["OFPPT", "emploi", "formation professionnelle", "compétences", "ANAPEC", "ressources humaines", "Plan Maroc"]},
-    {"id": "M6", "label": "IA & Tech Banques Marocaines",    "couleur": "#5c1a8b",
-     "keywords": ["intelligence artificielle", "IA", "machine learning", "chatbot", "automatisation", "algorithme", "technologie bancaire"]},
-    {"id": "M7", "label": "RSE & Finance Durable Maroc",     "couleur": "#1a6b4a",
-     "keywords": ["RSE", "ESG", "finance verte", "green bonds", "durable", "environnement", "CDG", "développement durable", "taxonomie"]},
-    {"id": "M8", "label": "Compétences du Futur Maroc",      "couleur": "#4a7a1a",
-     "keywords": ["futur", "compétences 2030", "métiers émergents", "reskilling", "upskilling", "avenir du travail"]},
+     "keywords": ["digitalisation banque", "banque digitale", "banque numerique", "application bancaire", "banque en ligne maroc", "formation en ligne", "e-learning"]},
+    {"id": "M5", "label": "Politiques Formation Emploi", "couleur": "#2d6a4f",
+     "keywords": ["formation professionnelle maroc", "OFPPT", "ANAPEC", "emploi banque maroc", "competences professionnelles maroc"]},
+    {"id": "M6", "label": "IA Tech Banques Marocaines", "couleur": "#5c1a8b",
+     "keywords": ["intelligence artificielle banque", "IA banque maroc", "machine learning finance", "chatbot bancaire", "intelligence artificielle maroc"]},
+    {"id": "M7", "label": "RSE Finance Durable Maroc", "couleur": "#1a6b4a",
+     "keywords": ["finance verte maroc", "green bonds maroc", "ESG maroc", "obligations vertes maroc", "RSE maroc", "green finance", "formation RSE", "formation finance verte", "formation green business"]},
+    {"id": "M8", "label": "Competences du Futur Maroc", "couleur": "#4a7a1a",
+     "keywords": ["Future Skills", "nouvelles competences", "new skills", "competences futur maroc", "metiers avenir maroc", "reskilling maroc", "upskilling maroc"]},
 ]
 
 DOMAINES_INTL = [
@@ -232,12 +232,12 @@ def collecter_articles_rss(sources_rss, jours):
 
 
 def filtrer_par_keywords(articles, keywords):
-    """Filtre les articles par mots-clés dans le titre ou la description."""
+    """Filtre les articles par mots-cles dans le TITRE uniquement - strict."""
     articles_pertinents = []
     for article in articles:
-        texte = (article.get("titre", "") + " " + article.get("description", "")).lower()
+        titre = article.get("titre", "").lower()
         for kw in keywords:
-            if kw.lower() in texte:
+            if kw.lower() in titre:
                 articles_pertinents.append(article)
                 break
     return articles_pertinents

@@ -63,21 +63,21 @@ SOURCES_RSS_INTL = [
 # ============================================================
 DOMAINES_MAROC = [
     {"id": "M1", "label": "Formation Bancaire Maroc", "couleur": "#1a3a5c",
-     "keywords": ["formation bancaire", "formation banque", "e-learning banque", "LMS bancaire", "GPBM formation", "Institut Bancaire Marocain", "OFPPT banque", "competences bancaires"]},
+     "keywords": ["formation bancaire", "formation banque", "e-learning banque", "LMS bancaire", "GPBM formation", "Institut Bancaire Marocain", "OFPPT banque", "competences bancaires", "formation secteur bancaire", "formation financiere"]},
     {"id": "M2", "label": "Reglementation BAM ACAPS", "couleur": "#8b1a2f",
-     "keywords": ["Bank Al-Maghrib", "BAM circulaire", "ACAPS", "reglementation bancaire maroc", "supervision bancaire", "formation BAM", "formation Bank Al-Maghrib"]},
+     "keywords": ["Bank Al-Maghrib", "BAM", "ACAPS", "reglementation bancaire", "supervision bancaire", "formation BAM", "formation Bank Al-Maghrib", "circulaire bancaire", "banque centrale maroc"]},
     {"id": "M3", "label": "Fintech Startups Maroc", "couleur": "#c04a00",
-     "keywords": ["fintech maroc", "paiement mobile maroc", "neobanque maroc", "startup fintech maroc", "portefeuille electronique", "paiement digital maroc"]},
+     "keywords": ["fintech maroc", "fintech marocain", "paiement mobile", "paiement digital", "neobanque", "startup fintech", "portefeuille electronique", "wave maroc", "HPS maroc", "CIH pay"]},
     {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b",
-     "keywords": ["digitalisation banque", "banque digitale", "banque numerique", "application bancaire", "banque en ligne maroc", "formation en ligne", "e-learning"]},
+     "keywords": ["banque digitale", "banque numerique", "application bancaire", "banque en ligne", "formation en ligne", "e-learning", "digitalisation bancaire", "digital banking", "services bancaires digitaux"]},
     {"id": "M5", "label": "Politiques Formation Emploi", "couleur": "#2d6a4f",
-     "keywords": ["formation professionnelle maroc", "OFPPT", "ANAPEC", "emploi banque maroc", "competences professionnelles maroc"]},
+     "keywords": ["formation professionnelle", "OFPPT", "ANAPEC", "emploi maroc", "marche emploi maroc", "ressources humaines maroc", "insertion professionnelle", "qualification maroc"]},
     {"id": "M6", "label": "IA Tech Banques Marocaines", "couleur": "#5c1a8b",
-     "keywords": ["intelligence artificielle banque", "IA banque maroc", "machine learning finance", "chatbot bancaire", "intelligence artificielle maroc"]},
+     "keywords": ["intelligence artificielle", "IA maroc", "machine learning", "chatbot", "automatisation bancaire", "algorithme banque", "deep learning maroc", "AI maroc"]},
     {"id": "M7", "label": "RSE Finance Durable Maroc", "couleur": "#1a6b4a",
-     "keywords": ["finance verte maroc", "green bonds maroc", "ESG maroc", "obligations vertes maroc", "RSE maroc", "green finance", "formation RSE", "formation finance verte", "formation green business"]},
+     "keywords": ["finance verte", "green bonds", "ESG maroc", "RSE maroc", "green finance", "formation RSE", "formation finance verte", "formation green business", "obligations vertes", "developpement durable maroc"]},
     {"id": "M8", "label": "Competences du Futur Maroc", "couleur": "#4a7a1a",
-     "keywords": ["Future Skills", "nouvelles competences", "new skills", "competences futur maroc", "metiers avenir maroc", "reskilling maroc", "upskilling maroc"]},
+     "keywords": ["Future Skills", "nouvelles competences", "new skills", "competences futur", "metiers avenir", "reskilling", "upskilling", "competences numeriques", "formation metiers futur"]},
 ]
 
 DOMAINES_INTL = [
@@ -232,12 +232,15 @@ def collecter_articles_rss(sources_rss, jours):
 
 
 def filtrer_par_keywords(articles, keywords):
-    """Filtre les articles par mots-cles dans le TITRE uniquement - strict."""
+    """Filtre les articles par mots-cles dans titre ET description.
+    Priorite au titre : un match titre compte double."""
     articles_pertinents = []
     for article in articles:
         titre = article.get("titre", "").lower()
+        description = article.get("description", "").lower()
         for kw in keywords:
-            if kw.lower() in titre:
+            kw_lower = kw.lower()
+            if kw_lower in titre or kw_lower in description:
                 articles_pertinents.append(article)
                 break
     return articles_pertinents

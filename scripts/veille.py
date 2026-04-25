@@ -35,39 +35,22 @@ ANNEE       = AUJOURD_HUI.strftime("%Y")
 # SOURCES RSS VERIFIEES
 # ============================================================
 SOURCES_RSS_MAROC = [
-    "https://www.leconomiste.com/rss-leconomiste",
-    "https://www.lavieeco.com/feed/",
-    "https://lnt.ma/feed/",
-    "https://aujourdhui.ma/feed",
-    "https://www.hespress.com/feed",
-    "https://www.libe.ma/xml/syndication.rss",
-    "https://www.mapnews.ma/en/actualites/general/rss",
-    "https://www.moroccoworldnews.com/feed/",
-    "https://www.medias24.com/feed/",
-    "https://financesnews.press.ma/feed/",
+    # Google News RSS - couvre TOUS les sites marocains indexes par Google
+    # Un flux par domaine pour cibler precisement
+    "https://news.google.com/rss/search?q=banque+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=formation+bancaire+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Bank+Al-Maghrib+BAM&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=fintech+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=intelligence+artificielle+banque+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=transformation+digitale+banque+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=RSE+finance+verte+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=competences+formation+emploi+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=Attijariwafa+CIH+Banque+Populaire+BMCE&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=ACAPS+reglementation+bancaire+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=e-learning+formation+Maroc&hl=fr&gl=MA&ceid=MA:fr",
+    "https://news.google.com/rss/search?q=future+skills+competences+Maroc&hl=fr&gl=MA&ceid=MA:fr",
 ]
 
-SOURCES_RSS_MAROC = [
-    "https://www.leconomiste.com/rss-leconomiste",
-    "https://www.lavieeco.com/feed/",
-    "https://lnt.ma/feed/",
-    "https://aujourdhui.ma/feed",
-    "https://www.hespress.com/feed",
-    "https://www.libe.ma/xml/syndication.rss",
-    "https://www.mapnews.ma/en/actualites/general/rss",
-    "https://www.moroccoworldnews.com/feed/",
-    "https://www.medias24.com/feed/",
-    "https://financesnews.press.ma/feed/",
-    "https://lematin.ma/rss",
-    "https://challenge.ma/feed/",
-    "https://ledesk.ma/feed/",
-    "https://telquel.ma/feed/",
-    "https://lopinion.ma/feed/",
-    "https://ecoactu.com/feed/",
-    "https://www.akhbarona.com/feed/index.rss",
-    "https://alyaoum24.com/feed",
-    "https://maroc-diplomatique.net/feed/",
-]
 
 SOURCES_RSS_INTL = [
     # Fintech & Banque
@@ -134,19 +117,19 @@ SOURCES_RSS_INTL = [
 # ============================================================
 DOMAINES_MAROC = [
     {"id": "M1", "label": "Formation Bancaire Maroc", "couleur": "#1a3a5c",
-     "keywords": ["formation bancaire", "formation banque", "e-learning banque", "LMS bancaire", "GPBM formation", "Institut Bancaire Marocain", "OFPPT banque", "competences bancaires", "formation secteur bancaire", "formation financiere"]},
+     "keywords": ["formation bancaire", "formation banque", "e-learning banque", "LMS bancaire", "GPBM formation", "Institut Bancaire", "OFPPT banque", "formation financiere", "formation secteur bancaire"]},
     {"id": "M2", "label": "Reglementation BAM ACAPS", "couleur": "#8b1a2f",
-     "keywords": ["Bank Al-Maghrib", "BAM", "ACAPS", "reglementation bancaire", "supervision bancaire", "formation BAM", "formation Bank Al-Maghrib", "circulaire bancaire", "banque centrale maroc"]},
+     "keywords": ["Bank Al-Maghrib", "BAM", "ACAPS", "reglementation bancaire", "supervision bancaire", "circulaire banque", "banque centrale", "formation BAM", "formation Bank Al-Maghrib"]},
     {"id": "M3", "label": "Fintech Startups Maroc", "couleur": "#c04a00",
-     "keywords": ["fintech maroc", "fintech marocain", "paiement mobile", "paiement digital", "neobanque", "startup fintech", "portefeuille electronique", "wave maroc", "HPS maroc", "CIH pay"]},
+     "keywords": ["fintech", "paiement mobile", "paiement digital", "neobanque", "startup fintech", "portefeuille electronique", "paiement instantane", "inclusion financiere"]},
     {"id": "M4", "label": "Transformation Digitale Banques", "couleur": "#0e5c8b",
-     "keywords": ["banque digitale", "banque numerique", "application bancaire", "banque en ligne", "formation en ligne", "e-learning", "digitalisation bancaire", "digital banking", "services bancaires digitaux"]},
+     "keywords": ["banque digitale", "banque numerique", "application bancaire", "banque en ligne", "formation en ligne", "e-learning", "digitalisation bancaire", "digital banking", "services bancaires digitaux", "Attijariwafa", "CIH", "Banque Populaire", "BMCE"]},
     {"id": "M5", "label": "Politiques Formation Emploi", "couleur": "#2d6a4f",
-     "keywords": ["formation professionnelle", "OFPPT", "ANAPEC", "emploi maroc", "marche emploi maroc", "ressources humaines maroc", "insertion professionnelle", "qualification maroc"]},
+     "keywords": ["formation professionnelle", "OFPPT", "ANAPEC", "emploi", "marche travail", "insertion professionnelle", "qualification", "competences professionnelles"]},
     {"id": "M6", "label": "IA Tech Banques Marocaines", "couleur": "#5c1a8b",
-     "keywords": ["intelligence artificielle", "IA maroc", "machine learning", "chatbot", "automatisation bancaire", "algorithme banque", "deep learning maroc", "AI maroc"]},
+     "keywords": ["intelligence artificielle", "IA", "machine learning", "chatbot", "automatisation", "algorithme", "AI", "deep learning", "scoring credit", "detection fraude"]},
     {"id": "M7", "label": "RSE Finance Durable Maroc", "couleur": "#1a6b4a",
-     "keywords": ["finance verte", "green bonds", "ESG maroc", "RSE maroc", "green finance", "formation RSE", "formation finance verte", "formation green business", "obligations vertes", "developpement durable maroc"]},
+     "keywords": ["finance verte", "green bonds", "ESG", "RSE", "green finance", "formation RSE", "formation finance verte", "formation green business", "obligations vertes", "developpement durable", "finance durable"]},
     {"id": "M8", "label": "Competences du Futur Maroc", "couleur": "#4a7a1a",
      "keywords": ["Future Skills", "nouvelles competences", "new skills", "competences futur", "metiers avenir", "reskilling", "upskilling", "competences numeriques", "formation metiers futur"]},
 ]

@@ -213,6 +213,25 @@ def determiner_mode():
 # ============================================================
 # LECTURE DES FLUX RSS
 # ============================================================
+def decoder_url_google_news(url):
+    """Extrait la vraie URL depuis un lien Google News."""
+    if "news.google.com" in url:
+        try:
+            # Google News encode l URL dans le parametre
+            import urllib.parse
+            parsed = urllib.parse.urlparse(url)
+            params = urllib.parse.parse_qs(parsed.query)
+            # Essayer de recuperer l URL reelle
+            response = requests.get(url, timeout=8, 
+                headers={"User-Agent": "Mozilla/5.0"},
+                allow_redirects=True)
+            if response.url and "news.google.com" not in response.url:
+                return response.url
+        except Exception:
+            pass
+    return url
+
+
 def lire_flux_rss(url, jours):
     """Lit un flux RSS et retourne les articles dans la période demandée."""
     articles = []
@@ -246,6 +265,9 @@ def lire_flux_rss(url, jours):
             lien = lien_el.text if lien_el is not None else ""
             if not lien and lien_el is not None:
                 lien = lien_el.get("href", "")
+            # Decoder les URLs Google News
+            if lien and "news.google.com" in lien:
+                lien = decoder_url_google_news(lien)
 
             # Description
             desc_el = item.find("description")

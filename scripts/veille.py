@@ -769,30 +769,70 @@ def main():
     )
     log.info(f"Email International envoye — {total_i} articles")
 
-    # Generer veille-data.json pour la PWA
+    # Generer veille-data.json pour la PWA — avec historique 30 jours
     try:
+        # Charger l historique existant depuis GitHub
+        historique = {"maroc": {}, "international": {}}
+        if GITHUB_TOKEN and GITHUB_REPO:
+            try:
+                import base64
+                url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
+                headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+                response = requests.get(url_api, headers=headers, timeout=10)
+                if response.status_code == 200:
+                    ancien = json.loads(base64.b64decode(response.json()["content"]).decode("utf-8"))
+                    for d in ancien.get("maroc", []):
+                        historique["maroc"][d["id"]] = d.get("actualites", [])
+                    for d in ancien.get("international", []):
+                        historique["international"][d["id"]] = d.get("actualites", [])
+            except Exception as e:
+                log.warning(f"Erreur chargement historique : {e}")
+
+        # Fusionner nouveaux articles avec historique — max 10 par domaine — 30 jours
+        date_limite_30j = (AUJOURD_HUI - timedelta(days=30)).strftime("%d/%m/%Y")
+
+        def fusionner(nouveaux, anciens, max_articles=10):
+            urls_vus = set()
+            fusion = []
+            # Nouveaux en premier
+            for a in nouveaux:
+                if a.get("url") and a["url"] not in urls_vus:
+                    urls_vus.add(a["url"])
+                    fusion.append(a)
+            # Anciens ensuite si pas deja vus et pas trop vieux
+            for a in anciens:
+                if len(fusion) >= max_articles:
+                    break
+                if a.get("url") and a["url"] not in urls_vus:
+                    # Verifier que l article n est pas trop vieux
+                    date_art = a.get("date", "")[:10]
+                    if date_art >= date_limite_30j:
+                        urls_vus.add(a["url"])
+                        fusion.append(a)
+            return fusion[:max_articles]
+
+        maroc_pwa = []
+        for d in resultats_maroc:
+            nouveaux  = d.get("actualites", [])
+            anciens   = historique["maroc"].get(d["id"], [])
+            fusion    = fusionner(nouveaux, anciens)
+            maroc_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
+
+        intl_pwa = []
+        for d in resultats_intl:
+            nouveaux  = d.get("actualites", [])
+            anciens   = historique["international"].get(d["id"], [])
+            fusion    = fusionner(nouveaux, anciens)
+            intl_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
+
         data_pwa = {
             "date": DATE_LABEL,
             "mode": prefixe,
-            "maroc": [
-                {
-                    "id": d["id"],
-                    "label": d["label"],
-                    "couleur": d["couleur"],
-                    "actualites": d.get("actualites", [])
-                } for d in resultats_maroc
-            ],
-            "international": [
-                {
-                    "id": d["id"],
-                    "label": d["label"],
-                    "couleur": d["couleur"],
-                    "actualites": d.get("actualites", [])
-                } for d in resultats_intl
-            ],
+            "maroc": maroc_pwa,
+            "international": intl_pwa,
             "stats": {
-                "total_maroc": total_m,
-                "total_intl": total_i,
+                "total_maroc": sum(len(d["actualites"]) for d in maroc_pwa),
+                "total_intl": sum(len(d["actualites"]) for d in intl_pwa),
                 "genere_le": AUJOURD_HUI.strftime("%Y-%m-%d %H:%M")
             }
         }

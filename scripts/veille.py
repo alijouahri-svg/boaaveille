@@ -372,9 +372,9 @@ def filtrer_articles_nouveaux(articles, urls_deja_envoyees, mode):
 # DETERMINATION DU MODE
 # ============================================================
 CONFIGS = {
-    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernières heures", "nb_articles": 2},
-    "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours",    "nb_articles": 3},
-    "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours",   "nb_articles": 4},
+    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernières heures", "nb_articles": 2,  "nb_articles_pwa": 10},
+    "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours",    "nb_articles": 3,  "nb_articles_pwa": 15},
+    "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours",   "nb_articles": 4,  "nb_articles_pwa": 20},
 }
 
 def determiner_mode():
@@ -799,26 +799,36 @@ def main():
         with open("veille-data.json", "w", encoding="utf-8") as f:
             json.dump(data_pwa, f, ensure_ascii=False, indent=2)
 
-        # Pousser vers GitHub Pages via API
-        if GITHUB_TOKEN and GITHUB_REPO:
-            import base64
-            contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
-            contenu_b64 = base64.b64encode(contenu_json.encode("utf-8")).decode("utf-8")
-            url_api = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
-            headers = {
-                "Authorization": f"token {GITHUB_TOKEN}",
-                "Accept": "application/vnd.github.v3+json"
-            }
-            response = requests.get(url_api, headers=headers, timeout=10)
-            payload = {
-                "message": f"Mise a jour veille PWA - {DATE_LABEL}",
-                "content": contenu_b64,
-                "branch": "gh-pages"
-            }
-            if response.status_code == 200:
-                payload["sha"] = response.json()["sha"]
-            requests.put(url_api, headers=headers, json=payload, timeout=10)
-            log.info("veille-data.json pousse sur gh-pages pour la PWA")
+        # Pousser vers Netlify via API
+        NETLIFY_SITE_ID = os.environ.get("NETLIFY_SITE_ID", "")
+        NETLIFY_TOKEN   = os.environ.get("NETLIFY_TOKEN", "")
+
+        if NETLIFY_SITE_ID and NETLIFY_TOKEN:
+            try:
+                import base64, zipfile, io
+
+                # Creer un zip contenant veille-data.json
+                zip_buffer = io.BytesIO()
+                with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+                    zf.writestr("veille-data.json", json.dumps(data_pwa, ensure_ascii=False, indent=2))
+                zip_buffer.seek(0)
+
+                # Deployer via API Netlify
+                netlify_response = requests.post(
+                    f"https://api.netlify.com/api/v1/sites/{NETLIFY_SITE_ID}/deploys",
+                    headers={
+                        "Authorization": f"Bearer {NETLIFY_TOKEN}",
+                        "Content-Type": "application/zip"
+                    },
+                    data=zip_buffer.read(),
+                    timeout=30
+                )
+                if netlify_response.status_code in [200, 201]:
+                    log.info("veille-data.json deploye sur Netlify avec succes")
+                else:
+                    log.warning(f"Erreur Netlify : {netlify_response.status_code}")
+            except Exception as ne:
+                log.warning(f"Erreur push Netlify : {ne}")
     except Exception as e:
         log.warning(f"Erreur generation PWA data : {e}")
 

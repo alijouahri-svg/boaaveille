@@ -805,28 +805,21 @@ def main():
 
         if NETLIFY_SITE_ID and NETLIFY_TOKEN:
             try:
-                import base64, zipfile, io
-
-                # Creer un zip contenant veille-data.json
-                zip_buffer = io.BytesIO()
-                with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-                    zf.writestr("veille-data.json", json.dumps(data_pwa, ensure_ascii=False, indent=2))
-                zip_buffer.seek(0)
-
-                # Deployer via API Netlify
-                netlify_response = requests.post(
-                    f"https://api.netlify.com/api/v1/sites/{NETLIFY_SITE_ID}/deploys",
+                # Pousser veille-data.json via API Netlify Files
+                contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
+                netlify_response = requests.put(
+                    f"https://api.netlify.com/api/v1/sites/{NETLIFY_SITE_ID}/files/veille-data.json",
                     headers={
                         "Authorization": f"Bearer {NETLIFY_TOKEN}",
-                        "Content-Type": "application/zip"
+                        "Content-Type": "application/octet-stream"
                     },
-                    data=zip_buffer.read(),
+                    data=contenu_json.encode("utf-8"),
                     timeout=30
                 )
                 if netlify_response.status_code in [200, 201]:
-                    log.info("veille-data.json deploye sur Netlify avec succes")
+                    log.info("veille-data.json mis a jour sur Netlify avec succes")
                 else:
-                    log.warning(f"Erreur Netlify : {netlify_response.status_code}")
+                    log.warning(f"Erreur Netlify {netlify_response.status_code}: {netlify_response.text[:200]}")
             except Exception as ne:
                 log.warning(f"Erreur push Netlify : {ne}")
     except Exception as e:

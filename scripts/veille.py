@@ -803,25 +803,22 @@ def main():
         NETLIFY_SITE_ID = os.environ.get("NETLIFY_SITE_ID", "")
         NETLIFY_TOKEN   = os.environ.get("NETLIFY_TOKEN", "")
 
-        if NETLIFY_SITE_ID and NETLIFY_TOKEN:
+        # Pousser veille-data.json sur GitHub main — Netlify se met a jour automatiquement
+        if GITHUB_TOKEN and GITHUB_REPO:
             try:
-                # Pousser veille-data.json via API Netlify Files
+                import base64
                 contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
-                netlify_response = requests.put(
-                    f"https://api.netlify.com/api/v1/sites/{NETLIFY_SITE_ID}/files/veille-data.json",
-                    headers={
-                        "Authorization": f"Bearer {NETLIFY_TOKEN}",
-                        "Content-Type": "application/octet-stream"
-                    },
-                    data=contenu_json.encode("utf-8"),
-                    timeout=30
-                )
-                if netlify_response.status_code in [200, 201]:
-                    log.info("veille-data.json mis a jour sur Netlify avec succes")
-                else:
-                    log.warning(f"Erreur Netlify {netlify_response.status_code}: {netlify_response.text[:200]}")
-            except Exception as ne:
-                log.warning(f"Erreur push Netlify : {ne}")
+                contenu_b64  = base64.b64encode(contenu_json.encode("utf-8")).decode("utf-8")
+                url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
+                headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+                response = requests.get(url_api, headers=headers, timeout=10)
+                payload  = {"message": f"veille-data {DATE_LABEL}", "content": contenu_b64}
+                if response.status_code == 200:
+                    payload["sha"] = response.json()["sha"]
+                requests.put(url_api, headers=headers, json=payload, timeout=10)
+                log.info("veille-data.json pousse sur GitHub main — Netlify va se mettre a jour")
+            except Exception as e:
+                log.warning(f"Erreur push GitHub : {e}")
     except Exception as e:
         log.warning(f"Erreur generation PWA data : {e}")
 

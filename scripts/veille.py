@@ -3,6 +3,7 @@ VEILLE STRATEGIQUE - Basée sur flux RSS
 Sources marocaines et internationales vérifiées
 Filtre date strict : 24h / 7 jours / 30 jours
 Zéro hallucination — uniquement vrais articles
+VERSION REFERENCE — 26 Avril 2026
 """
 
 import os
@@ -17,12 +18,16 @@ from email.mime.text import MIMEText
 from anthropic import Anthropic
 import requests
 from email.utils import parsedate_to_datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 ANTHROPIC_API_KEY   = os.environ["ANTHROPIC_API_KEY"]
 EMAIL_EXPEDITEUR    = os.environ["EMAIL_EXPEDITEUR"]
 EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
 MODE_DEMANDE        = os.environ.get("MODE", "auto")
+GITHUB_TOKEN        = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_REPO         = os.environ.get("GITHUB_REPOSITORY", "")  # ex: username/boaaveille
+DEDUP_FILE          = "urls_deja_envoyees.json"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 log = logging.getLogger(__name__)
@@ -32,7 +37,7 @@ DATE_LABEL  = AUJOURD_HUI.strftime("%A %d %B %Y")
 ANNEE       = AUJOURD_HUI.strftime("%Y")
 
 # ============================================================
-# SOURCES RSS VERIFIEES
+# SOURCES RSS
 # ============================================================
 SOURCES_RSS_MAROC = [
     # ── GOOGLE NEWS MAROC - THEMES CIBLES ──
@@ -92,7 +97,6 @@ SOURCES_RSS_MAROC = [
     "https://www.jeuneafrique.com/rss/economie",
     "https://african.business/feed",
 ]
-
 
 SOURCES_RSS_INTL = [
     # ── FINTECH & BANQUE INTERNATIONALE ──
@@ -169,7 +173,7 @@ SOURCES_RSS_INTL = [
     "https://news.google.com/rss/search?q=future+skills+reskilling+upskilling+workforce&hl=en&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=competences+futur+travail+reskilling&hl=fr&gl=FR&ceid=FR:fr",
 
-    # ── GRANDES BANQUES - ACTUALITES ──
+    # ── GRANDES BANQUES ──
     "https://news.google.com/rss/search?q=BNP+Paribas+formation+IA+RSE&hl=fr&gl=FR&ceid=FR:fr",
     "https://news.google.com/rss/search?q=JPMorgan+Goldman+HSBC+training+AI&hl=en&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=Societe+Generale+Credit+Agricole+formation+digital&hl=fr&gl=FR&ceid=FR:fr",
@@ -180,7 +184,6 @@ SOURCES_RSS_INTL = [
     "https://www.afdb.org/en/rss/news-events",
     "https://www.cgap.org/rss/",
 ]
-
 
 # ============================================================
 # DOMAINES ET MOTS-CLES
@@ -227,46 +230,118 @@ DOMAINES_INTL = [
      "keywords": ["future of work", "reskilling", "upskilling", "WEF skills", "skills gap", "workforce transformation", "talent development", "skills of the future", "digital skills", "human skills", "21st century skills", "workforce 2030"]},
     {"id": "I11", "label": "Formation dans les Grandes Banques Mondiales", "couleur": "#2a4a7a",
      "keywords": [
-        # France
         "BNP Paribas training", "BNP Paribas formation", "BNP Paribas learning",
         "Societe Generale training", "Societe Generale formation",
         "Credit Agricole training", "Credit Agricole formation",
         "Natixis training", "BPCE formation",
-        # USA
         "JPMorgan training", "JPMorgan learning", "JPMorgan Chase upskilling",
         "Bank of America training", "Goldman Sachs learning", "Goldman Sachs training",
         "Citibank training", "Wells Fargo training", "Morgan Stanley learning",
-        # UK
         "HSBC training", "HSBC learning", "HSBC formation",
         "Barclays training", "Standard Chartered training",
         "Lloyds Bank training", "NatWest training",
-        # Allemagne
         "Deutsche Bank training", "Deutsche Bank learning",
         "Commerzbank training",
-        # Chine
         "ICBC training", "Bank of China learning",
         "Ping An training", "Ping An AI",
-        # Japon
         "Mitsubishi UFJ training", "MUFG learning",
-        # Suisse
         "UBS training", "UBS learning",
-        # Golfe
         "Al Rajhi training", "Emirates NBD training", "QNB training",
-        # Mots-cles generiques grandes banques
         "global bank training", "investment bank learning", "tier 1 bank upskilling",
         "bank AI training", "bank ESG training", "bank reskilling",
         "bank future skills", "bank digital training",
      ]},
 ]
 
+# ============================================================
+# DEDUPLICATION — Memoire des URLs deja envoyees
+# ============================================================
+def charger_urls_deja_envoyees():
+    """Charge la liste des URLs deja envoyees depuis GitHub."""
+    if not GITHUB_TOKEN or not GITHUB_REPO:
+        log.warning("GITHUB_TOKEN non configure - deduplication desactivee")
+        return set()
+    try:
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{DEDUP_FILE}"
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code == 200:
+            import base64
+            contenu = base64.b64decode(response.json()["content"]).decode("utf-8")
+            data = json.loads(contenu)
+            urls = set(data.get("urls", []))
+            log.info(f"Deduplication : {len(urls)} URLs deja envoyees chargees")
+            return urls
+        elif response.status_code == 404:
+            log.info("Fichier deduplication non trouve - premier lancement")
+            return set()
+    except Exception as e:
+        log.warning(f"Erreur chargement deduplication : {e}")
+    return set()
+
+
+def sauvegarder_urls_envoyees(urls_existantes, nouvelles_urls):
+    """Sauvegarde les URLs envoyees dans GitHub."""
+    if not GITHUB_TOKEN or not GITHUB_REPO:
+        return
+    try:
+        # Garder seulement les 2000 dernieres URLs pour ne pas surcharger
+        toutes_urls = list(urls_existantes | nouvelles_urls)[-2000:]
+        contenu = json.dumps({
+            "urls": toutes_urls,
+            "derniere_mise_a_jour": AUJOURD_HUI.strftime("%Y-%m-%d %H:%M"),
+            "total": len(toutes_urls)
+        }, ensure_ascii=False, indent=2)
+
+        import base64
+        contenu_b64 = base64.b64encode(contenu.encode("utf-8")).decode("utf-8")
+
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{DEDUP_FILE}"
+        headers = {
+            "Authorization": f"token {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+
+        # Verifier si le fichier existe deja pour avoir son SHA
+        response = requests.get(url, headers=headers, timeout=10)
+        payload = {
+            "message": f"Mise a jour deduplication - {AUJOURD_HUI.strftime('%Y-%m-%d')}",
+            "content": contenu_b64
+        }
+        if response.status_code == 200:
+            payload["sha"] = response.json()["sha"]
+
+        requests.put(url, headers=headers, json=payload, timeout=10)
+        log.info(f"Deduplication sauvegardee : {len(toutes_urls)} URLs au total")
+    except Exception as e:
+        log.warning(f"Erreur sauvegarde deduplication : {e}")
+
+
+def filtrer_articles_nouveaux(articles, urls_deja_envoyees, mode):
+    """
+    Filtre les articles deja envoyes.
+    En mode quotidien : strict - exclut tout article deja envoye.
+    En mode hebdo/mensuel : moins strict - garde les articles de la periode.
+    """
+    if mode != "quotidien" or not urls_deja_envoyees:
+        return articles
+    articles_nouveaux = [a for a in articles if a.get("url") not in urls_deja_envoyees]
+    nb_exclus = len(articles) - len(articles_nouveaux)
+    if nb_exclus > 0:
+        log.info(f"  Deduplication : {nb_exclus} articles deja envoyes exclus")
+    return articles_nouveaux
+
 
 # ============================================================
 # DETERMINATION DU MODE
 # ============================================================
 CONFIGS = {
-    "quotidien":     {"jours": 1,  "label": "Rapport Quotidien",     "periode": "24 dernières heures",   "nb_articles": 2},
-    "hebdomadaire":  {"jours": 7,  "label": "Rapport Hebdomadaire",  "periode": "7 derniers jours",      "nb_articles": 3},
-    "mensuel":       {"jours": 30, "label": "Rapport Mensuel",       "periode": "30 derniers jours",     "nb_articles": 4},
+    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernières heures", "nb_articles": 2},
+    "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours",    "nb_articles": 3},
+    "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours",   "nb_articles": 4},
 }
 
 def determiner_mode():
@@ -287,12 +362,7 @@ def decoder_url_google_news(url):
     """Extrait la vraie URL depuis un lien Google News."""
     if "news.google.com" in url:
         try:
-            # Google News encode l URL dans le parametre
-            import urllib.parse
-            parsed = urllib.parse.urlparse(url)
-            params = urllib.parse.parse_qs(parsed.query)
-            # Essayer de recuperer l URL reelle
-            response = requests.get(url, timeout=8, 
+            response = requests.get(url, timeout=5,
                 headers={"User-Agent": "Mozilla/5.0"},
                 allow_redirects=True)
             if response.url and "news.google.com" not in response.url:
@@ -304,19 +374,18 @@ def decoder_url_google_news(url):
 
 def lire_flux_rss(url, jours):
     """Lit un flux RSS et retourne les articles dans la période demandée."""
+    import re
     articles = []
     date_limite = AUJOURD_HUI - timedelta(days=jours)
 
     try:
         headers = {"User-Agent": "Mozilla/5.0 (compatible; VeilleStrategique/1.0)"}
-        response = requests.get(url, timeout=10, headers=headers)
+        response = requests.get(url, timeout=5, headers=headers)
         if response.status_code != 200:
             log.warning(f"  RSS non accessible ({response.status_code}): {url}")
             return []
 
         root = ET.fromstring(response.content)
-
-        # Trouver tous les items (RSS 2.0 et Atom)
         items = root.findall(".//item")
         if not items:
             items = root.findall(".//{http://www.w3.org/2005/Atom}entry")
@@ -335,7 +404,6 @@ def lire_flux_rss(url, jours):
             lien = lien_el.text if lien_el is not None else ""
             if not lien and lien_el is not None:
                 lien = lien_el.get("href", "")
-            # Decoder les URLs Google News
             if lien and "news.google.com" in lien:
                 lien = decoder_url_google_news(lien)
 
@@ -345,8 +413,6 @@ def lire_flux_rss(url, jours):
                 desc_el = item.find("{http://www.w3.org/2005/Atom}summary")
             description = desc_el.text if desc_el is not None else ""
             if description:
-                # Nettoyer les balises HTML basiques
-                import re
                 description = re.sub(r'<[^>]+>', ' ', description)
                 description = re.sub(r'\s+', ' ', description).strip()[:400]
 
@@ -360,32 +426,26 @@ def lire_flux_rss(url, jours):
             date_pub = None
             if date_el is not None and date_el.text:
                 try:
-                    # Format RSS standard
                     date_pub = parsedate_to_datetime(date_el.text).replace(tzinfo=None)
                 except Exception:
                     try:
-                        # Format ISO
-                        date_str = date_el.text[:19]
-                        date_pub = datetime.fromisoformat(date_str)
+                        date_pub = datetime.fromisoformat(date_el.text[:19])
                     except Exception:
                         pass
 
-            # Filtre date strict
             if date_pub is None:
                 continue
             if date_pub < date_limite:
                 continue
 
-            # Source
             source = url.split("/")[2].replace("www.", "")
-
             articles.append({
-                "titre": titre.strip() if titre else "",
-                "url": lien.strip() if lien else "",
-                "source": source,
-                "description": description,
-                "date": date_pub.strftime("%d/%m/%Y %H:%M"),
-                "date_obj": date_pub,
+                "titre":       (titre or "").strip(),
+                "url":         (lien or "").strip(),
+                "source":      source,
+                "description": description or "",
+                "date":        date_pub.strftime("%d/%m/%Y %H:%M"),
+                "date_obj":    date_pub,
             })
 
     except Exception as e:
@@ -395,17 +455,27 @@ def lire_flux_rss(url, jours):
 
 
 def collecter_articles_rss(sources_rss, jours):
-    """Collecte tous les articles de toutes les sources RSS."""
+    """Collecte tous les articles en parallele."""
     tous_articles = []
-    for url in sources_rss:
+
+    def lire_une_source(url):
         try:
             articles = lire_flux_rss(url, jours)
-            log.info(f"  {url.split('/')[2]} : {len(articles)} articles")
-            tous_articles.extend(articles)
+            log.info(f"  {url.split('//')[-1].split('/')[0]} : {len(articles)} articles")
+            return articles
         except Exception as e:
-            log.warning(f"  Erreur {url}: {e}")
+            log.warning(f"  Erreur {url[:50]}: {e}")
+            return []
 
-    # Trier par date décroissante
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {executor.submit(lire_une_source, url): url for url in sources_rss}
+        for future in as_completed(futures):
+            try:
+                articles = future.result(timeout=15)
+                tous_articles.extend(articles)
+            except Exception:
+                pass
+
     tous_articles.sort(key=lambda x: x.get("date_obj", datetime.min), reverse=True)
     return tous_articles
 
@@ -414,11 +484,10 @@ def filtrer_par_keywords(articles, keywords):
     """Filtre les articles par mots-cles dans titre ET description."""
     articles_pertinents = []
     for article in articles:
-        titre = (article.get("titre") or "").lower()
+        titre       = (article.get("titre") or "").lower()
         description = (article.get("description") or "").lower()
         for kw in keywords:
-            kw_lower = kw.lower()
-            if kw_lower in titre or kw_lower in description:
+            if kw.lower() in titre or kw.lower() in description:
                 articles_pertinents.append(article)
                 break
     return articles_pertinents
@@ -433,14 +502,14 @@ def analyser_avec_claude(client, domaine, articles, nb_max):
 
     articles_str = "\n\n".join([
         f"ARTICLE {i+1}:\nTitre: {a['titre']}\nSource: {a['source']}\nURL: {a['url']}\nDate: {a['date']}\nExtrait: {a['description']}"
-        for i, a in enumerate(articles[:nb_max * 2])  # On lui donne plus pour qu'il choisisse les meilleurs
+        for i, a in enumerate(articles[:nb_max * 2])
     ])
 
     prompt = f"""Tu es un analyste expert en veille strategique bancaire et formation.
 Domaine : {domaine['label']}
 Date : {DATE_LABEL}
 
-Voici des articles REELS trouves dans les flux RSS de presse. Analyse UNIQUEMENT ces articles.
+Voici des articles REELS trouves dans les flux RSS. Analyse UNIQUEMENT ces articles.
 Ne fabrique rien. Ne complete pas avec tes propres connaissances.
 
 {articles_str}
@@ -469,16 +538,16 @@ Reponds UNIQUEMENT avec ce JSON brut sans backticks :
         )
         raw = message.content[0].text.strip()
         debut = raw.find("{")
-        fin = raw.rfind("}")
+        fin   = raw.rfind("}")
         if debut >= 0 and fin >= 0:
             raw = raw[debut:fin+1]
         result = json.loads(raw)
         return {
-            "id": domaine["id"],
-            "label": domaine["label"],
-            "couleur": domaine["couleur"],
+            "id":        domaine["id"],
+            "label":     domaine["label"],
+            "couleur":   domaine["couleur"],
             "actualites": result.get("actualites", [])[:nb_max],
-            "vide": False
+            "vide":      False
         }
     except Exception as e:
         log.warning(f"Erreur Claude {domaine['id']}: {e}")
@@ -565,7 +634,7 @@ def envoyer(sujet, html):
     msg["Subject"] = sujet
     msg["From"]    = f"Veille Strategique <{EMAIL_EXPEDITEUR}>"
     msg["To"]      = ", ".join(EMAIL_DESTINATAIRES)
-    msg.attach(MIMEText(html, "html", "utf-8"))
+    msg.attach(MIMEText(html, "utf-8"))
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_EXPEDITEUR, EMAIL_MOT_DE_PASSE)
         server.sendmail(EMAIL_EXPEDITEUR, EMAIL_DESTINATAIRES, msg.as_string())
@@ -576,23 +645,28 @@ def envoyer(sujet, html):
 # MAIN
 # ============================================================
 def main():
-    mode = determiner_mode()
+    mode   = determiner_mode()
     config = CONFIGS[mode]
     log.info(f"Mode : {mode} — Periode : {config['periode']}")
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    # Collecte RSS Maroc
+    # Charger URLs deja envoyees (deduplication)
+    urls_deja_envoyees = charger_urls_deja_envoyees()
+    nouvelles_urls = set()
+
+    # Collecte RSS
     log.info("Collecte flux RSS Maroc...")
     articles_maroc = collecter_articles_rss(SOURCES_RSS_MAROC, config["jours"])
-    log.info(f"Total articles Maroc bruts : {len(articles_maroc)}")
+    articles_maroc = filtrer_articles_nouveaux(articles_maroc, urls_deja_envoyees, mode)
+    log.info(f"Total articles Maroc apres deduplication : {len(articles_maroc)}")
 
-    # Collecte RSS International
     log.info("Collecte flux RSS International...")
     articles_intl = collecter_articles_rss(SOURCES_RSS_INTL, config["jours"])
-    log.info(f"Total articles International bruts : {len(articles_intl)}")
+    articles_intl = filtrer_articles_nouveaux(articles_intl, urls_deja_envoyees, mode)
+    log.info(f"Total articles International apres deduplication : {len(articles_intl)}")
 
-    # Traitement domaines Maroc
+    # Traitement Maroc
     resultats_maroc = []
     for domaine in DOMAINES_MAROC:
         log.info(f"Traitement {domaine['id']} - {domaine['label']}...")
@@ -600,12 +674,16 @@ def main():
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
             resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
+            # Collecter les URLs envoyees
+            for a in resultat.get("actualites", []):
+                if a.get("url"):
+                    nouvelles_urls.add(a["url"])
         else:
             resultat = {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
         resultats_maroc.append(resultat)
         time.sleep(0.5)
 
-    # Traitement domaines International
+    # Traitement International
     resultats_intl = []
     for domaine in DOMAINES_INTL:
         log.info(f"Traitement {domaine['id']} - {domaine['label']}...")
@@ -613,18 +691,21 @@ def main():
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
             resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
+            # Collecter les URLs envoyees
+            for a in resultat.get("actualites", []):
+                if a.get("url"):
+                    nouvelles_urls.add(a["url"])
         else:
             resultat = {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
         resultats_intl.append(resultat)
         time.sleep(0.5)
 
     # Stats
-    total_m = sum(len(d.get("actualites", [])) for d in resultats_maroc)
-    total_i = sum(len(d.get("actualites", [])) for d in resultats_intl)
-    vides_m = sum(1 for d in resultats_maroc if d.get("vide"))
-    vides_i = sum(1 for d in resultats_intl if d.get("vide"))
-
-    prefixe = {"quotidien": "Quotidien", "hebdomadaire": "Hebdo", "mensuel": "Mensuel"}[mode]
+    total_m  = sum(len(d.get("actualites", [])) for d in resultats_maroc)
+    total_i  = sum(len(d.get("actualites", [])) for d in resultats_intl)
+    vides_m  = sum(1 for d in resultats_maroc if d.get("vide"))
+    vides_i  = sum(1 for d in resultats_intl  if d.get("vide"))
+    prefixe  = {"quotidien": "Quotidien", "hebdomadaire": "Hebdo", "mensuel": "Mensuel"}[mode]
 
     # Email 1 — Maroc
     contenu_m = "".join(html_domaine(d, config) for d in resultats_maroc)
@@ -632,10 +713,10 @@ def main():
         f"1/2 Veille {prefixe} Maroc — {DATE_LABEL}",
         construire_email(
             f"{config['label']} — Veille Maroc",
-            f"Sources RSS : leconomiste.com · lavieeco.com · medias24.com · lematin.ma · lnt.ma et plus",
-            f"Articles verifies directement depuis les flux RSS — {config['periode']} uniquement",
+            "Sources : leconomiste · lavieeco · medias24 · lematin · ledesk · telquel · yabiladi · Google News Maroc et plus",
+            f"Articles verifies flux RSS — {config['periode']} uniquement",
             contenu_m,
-            f"{total_m} articles · {vides_m} domaine(s) sans info cette periode"
+            f"{total_m} articles · {vides_m} domaine(s) sans info"
         )
     )
     log.info(f"Email Maroc envoye — {total_m} articles")
@@ -647,13 +728,19 @@ def main():
         f"2/2 Veille {prefixe} Internationale — {DATE_LABEL}",
         construire_email(
             f"{config['label']} — Veille Internationale",
-            f"Sources RSS : finextra.com · reuters.com · venturebeat.com · esgtoday.com · weforum.org et plus",
-            f"Articles verifies directement depuis les flux RSS — {config['periode']} uniquement",
+            "Sources : finextra · reuters · lesechos · lemonde · lebigdata · novethic · weforum · Google News FR/EN et plus",
+            f"Articles verifies flux RSS — {config['periode']} uniquement",
             contenu_i,
-            f"{total_i} articles · {vides_i} domaine(s) sans info cette periode"
+            f"{total_i} articles · {vides_i} domaine(s) sans info"
         )
     )
     log.info(f"Email International envoye — {total_i} articles")
+
+    # Sauvegarder les nouvelles URLs (deduplication)
+    if nouvelles_urls:
+        sauvegarder_urls_envoyees(urls_deja_envoyees, nouvelles_urls)
+        log.info(f"Deduplication : {len(nouvelles_urls)} nouvelles URLs sauvegardees")
+
     log.info("Veille terminee avec succes !")
 
 

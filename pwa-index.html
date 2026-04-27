@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Veille">
+  <meta name="theme-color" content="#0f2540">
+  <title>Veille Stratégique</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0f2540;
+      --gold: #c8a96e;
+      --bg: #f7f4ef;
+      --white: #ffffff;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: #e8e2da;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      padding: 52px 20px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    .logo { font-family: 'Playfair Display', serif; }
+    .logo-main { font-size: 22px; font-weight: 900; color: white; line-height: 1; }
+    .logo-sub { font-size: 13px; font-weight: 700; color: var(--gold); }
+    .date-badge {
+      background: rgba(200,169,110,0.15);
+      border: 1px solid rgba(200,169,110,0.3);
+      color: var(--gold);
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 20px;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+    .tab {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.6);
+    }
+    .tab.active {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    /* MAIN CONTENT */
+    .content { padding: 16px; }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      border-top: 3px solid var(--navy);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .stat-card.gold { border-top-color: var(--gold); }
+    .stat-card.green { border-top-color: #1a6b4a; }
+    .stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+    .stat-value { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+    .stat-card.gold .stat-value { color: #8b6914; }
+    .stat-card.green .stat-value { color: #1a6b4a; }
+
+    /* DOMAIN CARDS */
+    .domain-card {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .domain-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+    }
+    .domain-header-left { display: flex; align-items: center; gap: 10px; }
+    .domain-id {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .domain-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .domain-count {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .chevron {
+      font-size: 12px;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .domain-card.open .chevron { transform: rotate(180deg); }
+
+    .domain-body { display: none; border-top: 1px solid var(--border); }
+    .domain-card.open .domain-body { display: block; }
+
+    /* ARTICLE */
+    .article {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .article:last-child { border-bottom: none; }
+    .article-source-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .article-source {
+      font-size: 10px;
+      background: var(--bg);
+      color: var(--muted);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .article-date {
+      font-size: 10px;
+      color: #1a6b4a;
+      font-weight: 600;
+    }
+    .article-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 8px;
+      text-decoration: none;
+      display: block;
+    }
+    .article-resume {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .article-analyse {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .article-implication {
+      font-size: 11px;
+      color: #444;
+      line-height: 1.5;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .article-link {
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* EMPTY STATE */
+    .empty {
+      padding: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding: 8px 0 20px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px;
+      border: none;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .nav-icon { font-size: 20px; }
+    .nav-label { font-size: 10px; font-weight: 600; color: var(--muted); }
+    .nav-item.active .nav-label { color: var(--navy); }
+
+    /* LOADING */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      gap: 16px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(15,37,64,0.15);
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 14px; color: var(--muted); }
+
+    /* REFRESH BTN */
+    .refresh-btn {
+      background: var(--navy);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* MODE SELECTOR */
+    .mode-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .mode-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      border-color: var(--navy);
+      background: var(--navy);
+      color: white;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    .no-data-icon { font-size: 40px; margin-bottom: 12px; }
+    .no-data-text { font-size: 14px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">
+        <div class="logo-main">VEILLE</div>
+        <div class="logo-sub">STRATÉGIQUE</div>
+      </div>
+      <div class="date-badge" id="dateBadge">—</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('maroc')">🇲🇦 Maroc</button>
+      <button class="tab" onclick="switchTab('intl')">🌍 International</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div id="mainContent">
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Chargement de la veille...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="showView('home')">
+      <span class="nav-icon">📰</span>
+      <span class="nav-label">Veille</span>
+    </button>
+    <button class="nav-item" onclick="showView('search')">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Recherche</span>
+    </button>
+    <button class="nav-item" onclick="showView('settings')">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Paramètres</span>
+    </button>
+  </div>
+
+  <script>
+    // ─── COULEURS PAR DOMAINE ───────────────────────────────
+    const COULEURS = {
+      M1:"#1a3a5c",M2:"#8b1a2f",M3:"#c04a00",M4:"#0e5c8b",
+      M5:"#2d6a4f",M6:"#5c1a8b",M7:"#1a6b4a",M8:"#4a7a1a",
+      I1:"#1a4a7a",I2:"#6b1a7a",I3:"#7a3d1a",I4:"#1a6b6b",
+      I5:"#4a1a5c",I6:"#5c3d1a",I7:"#1a5c3d",I8:"#3d1a5c",
+      I9:"#1a5c1a",I10:"#7a6b1a",I11:"#2a4a7a",
+    };
+
+    let currentTab = 'maroc';
+    let currentData = null;
+
+    // ─── CHARGER LES DONNÉES ────────────────────────────────
+    async function chargerDonnees() {
+      try {
+        const res = await fetch('veille-data.json?t=' + Date.now());
+        if (!res.ok) throw new Error('Pas de données');
+        currentData = await res.json();
+        afficherVeille();
+      } catch(e) {
+        document.getElementById('mainContent').innerHTML = `
+          <div class="no-data">
+            <div class="no-data-icon">📭</div>
+            <div class="no-data-text">
+              Aucune donnée disponible.<br>
+              Le rapport sera disponible après la prochaine génération automatique.
+            </div>
+            <br>
+            <button class="refresh-btn" onclick="chargerDonnees()">
+              🔄 Actualiser
+            </button>
+          </div>`;
+      }
+    }
+
+    // ─── AFFICHER LA VEILLE ─────────────────────────────────
+    function afficherVeille() {
+      if (!currentData) return;
+
+      // Date
+      document.getElementById('dateBadge').textContent = currentData.date || '—';
+
+      const domaines = currentTab === 'maroc'
+        ? currentData.maroc || []
+        : currentData.international || [];
+
+      const total = domaines.reduce((s,d) => s + (d.actualites||[]).length, 0);
+      const vides = domaines.filter(d => !d.actualites || d.actualites.length === 0).length;
+
+      // Stats
+      const statsHTML = `
+        <div class="stats-bar">
+          <div class="stat-card">
+            <div class="stat-label">Articles</div>
+            <div class="stat-value">${total} trouvés</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-label">Domaines</div>
+            <div class="stat-value">${domaines.length} couverts</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Mode</div>
+            <div class="stat-value">${currentData.mode || 'Auto'}</div>
+          </div>
+        </div>`;
+
+      // Domaines
+      const domainesHTML = domaines.map(d => {
+        const color = COULEURS[d.id] || '#1a3a5c';
+        const actualites = d.actualites || [];
+        const nb = actualites.length;
+
+        const articlesHTML = nb === 0
+          ? `<div class="empty">Aucun article publié sur ce domaine durant cette période.</div>`
+          : actualites.map(a => `
+            <div class="article">
+              <div class="article-source-row">
+                <span class="article-source">${a.source || ''}</span>
+                <span class="article-date">📅 ${a.date || ''}</span>
+              </div>
+              <a href="${a.url || '#'}" target="_blank" class="article-title">${a.titre || ''}</a>
+              <div class="article-resume">${a.resume || ''}</div>
+              <div class="article-analyse">
+                <strong style="color:${color}">Analyse : </strong>${a.analyse || ''}
+              </div>
+              <div class="article-implication" style="background:${color}12;border-left:3px solid ${color}">
+                → ${a.implication || ''}
+              </div>
+              <a href="${a.url || '#'}" target="_blank" class="article-link" style="color:${color}">
+                🔗 Lire l'article
+              </a>
+            </div>`).join('');
+
+        return `
+          <div class="domain-card" id="card-${d.id}">
+            <div class="domain-header" onclick="toggleCard('${d.id}')">
+              <div class="domain-header-left">
+                <span class="domain-id" style="background:${color}">${d.id}</span>
+                <span class="domain-label">${d.label}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="domain-count">${nb} art.</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="domain-body">${articlesHTML}</div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('mainContent').innerHTML = statsHTML + domainesHTML;
+
+      // Ouvrir les domaines qui ont des articles
+      domaines.forEach(d => {
+        if ((d.actualites||[]).length > 0) {
+          const card = document.getElementById('card-' + d.id);
+          if (card) card.classList.add('open');
+        }
+      });
+    }
+
+    // ─── TOGGLE CARD ────────────────────────────────────────
+    function toggleCard(id) {
+      const card = document.getElementById('card-' + id);
+      card.classList.toggle('open');
+    }
+
+    // ─── SWITCH TAB ─────────────────────────────────────────
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach((t,i) => {
+        t.classList.toggle('active', (i===0 && tab==='maroc') || (i===1 && tab==='intl'));
+      });
+      if (currentData) afficherVeille();
+    }
+
+    // ─── VIEWS ──────────────────────────────────────────────
+    function showView(view) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      if (view === 'home') {
+        chargerDonnees();
+      } else if (view === 'search') {
+        document.getElementById('mainContent').innerHTML = `
+          <div style="padding:20px 0">
+            <input type="search" placeholder="Rechercher dans la veille..." 
+              style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-family:DM Sans,sans-serif;outline:none"
+              oninput="rechercherArticles(this.value)">
+            <div id="searchResults" style="margin-top:16px"></div>
+          </div>`;
+      } else if (view === 'settings') {
+        document.getElementById('mainContent').innerHTML = `
+          <div style="padding:20px 0">
+            <div class="section-title">⚙️ Paramètres</div>
+            <div class="domain-card">
+              <div style="padding:16px">
+                <div style="font-size:13px;font-weight:600;margin-bottom:4px">Version</div>
+                <div style="font-size:12px;color:var(--muted)">Veille Stratégique PWA v1.0</div>
+              </div>
+            </div>
+            <div class="domain-card">
+              <div style="padding:16px">
+                <div style="font-size:13px;font-weight:600;margin-bottom:4px">Données</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Dernière mise à jour : ${currentData?.date || '—'}</div>
+                <button class="refresh-btn" onclick="chargerDonnees();showView('home')">🔄 Actualiser</button>
+              </div>
+            </div>
+            <div class="domain-card">
+              <div style="padding:16px">
+                <div style="font-size:13px;font-weight:600;margin-bottom:4px">18 domaines configurés</div>
+                <div style="font-size:12px;color:var(--muted)">8 Maroc · 11 International</div>
+              </div>
+            </div>
+          </div>`;
+      }
+    }
+
+    // ─── RECHERCHE ───────────────────────────────────────────
+    function rechercherArticles(query) {
+      if (!currentData || query.length < 2) {
+        document.getElementById('searchResults').innerHTML = '';
+        return;
+      }
+      const q = query.toLowerCase();
+      const tous = [
+        ...(currentData.maroc || []),
+        ...(currentData.international || [])
+      ];
+      const resultats = [];
+      tous.forEach(d => {
+        (d.actualites || []).forEach(a => {
+          const texte = ((a.titre||'') + ' ' + (a.resume||'')).toLowerCase();
+          if (texte.includes(q)) {
+            resultats.push({...a, domaine: d.label, id: d.id});
+          }
+        });
+      });
+
+      if (resultats.length === 0) {
+        document.getElementById('searchResults').innerHTML = `
+          <div class="no-data"><div class="no-data-text">Aucun résultat pour "${query}"</div></div>`;
+        return;
+      }
+
+      document.getElementById('searchResults').innerHTML = `
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${resultats.length} résultat(s)</div>
+        ${resultats.map(a => {
+          const color = COULEURS[a.id] || '#1a3a5c';
+          return `
+          <div class="domain-card" style="margin-bottom:10px">
+            <div style="background:${color};padding:6px 12px;border-radius:0">
+              <span style="font-size:10px;color:white;font-weight:600">${a.id} — ${a.domaine}</span>
+            </div>
+            <div class="article">
+              <a href="${a.url||'#'}" target="_blank" class="article-title">${a.titre||''}</a>
+              <div class="article-source-row">
+                <span class="article-source">${a.source||''}</span>
+                <span class="article-date">📅 ${a.date||''}</span>
+              </div>
+              <div class="article-resume">${a.resume||''}</div>
+              <a href="${a.url||'#'}" target="_blank" class="article-link" style="color:${color}">🔗 Lire</a>
+            </div>
+          </div>`;
+        }).join('')}`;
+    }
+
+    // ─── SERVICE WORKER ──────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    // ─── INIT ────────────────────────────────────────────────
+    chargerDonnees();
+  </script>
+</body>
+</html>

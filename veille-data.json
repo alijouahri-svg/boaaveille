@@ -1,0 +1,166 @@
+{
+  "date": "Monday 27 April 2026",
+  "mode": "Quotidien",
+  "maroc": [
+    {
+      "id": "M1",
+      "label": "Formation Bancaire Maroc",
+      "couleur": "#1a3a5c",
+      "actualites": []
+    },
+    {
+      "id": "M2",
+      "label": "Reglementation BAM ACAPS",
+      "couleur": "#8b1a2f",
+      "actualites": []
+    },
+    {
+      "id": "M3",
+      "label": "Fintech Startups Maroc",
+      "couleur": "#c04a00",
+      "actualites": []
+    },
+    {
+      "id": "M4",
+      "label": "Transformation Digitale Banques",
+      "couleur": "#0e5c8b",
+      "actualites": []
+    },
+    {
+      "id": "M5",
+      "label": "Politiques Formation Emploi",
+      "couleur": "#2d6a4f",
+      "actualites": []
+    },
+    {
+      "id": "M6",
+      "label": "IA Tech Banques Marocaines",
+      "couleur": "#5c1a8b",
+      "actualites": [
+        {
+          "titre": "Aucun article pertinent disponible",
+          "source": "N/A",
+          "url": "N/A",
+          "date": "27/04/2026",
+          "resume": "Les 4 articles fournis portent sur le football (Julian Alvarez, Neymar, Modrić) et la coopération judiciaire maroco-autrichienne. Aucun de ces articles ne traite de l'IA, de la technologie bancaire ou des banques marocaines.",
+          "analyse": "Les flux RSS analysés ce jour ne contiennent aucun contenu pertinent pour le domaine IA Tech Banques Marocaines.",
+          "implication": "Aucune implication actionnable ne peut être dérivée de ces articles pour un responsable formation en banque. Il est recommandé de diversifier les sources RSS vers des médias spécialisés finance/tech comme Medias24, L'Economiste, ou Fintech Africa."
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "label": "RSE Finance Durable Maroc",
+      "couleur": "#1a6b4a",
+      "actualites": []
+    },
+    {
+      "id": "M8",
+      "label": "Competences du Futur Maroc",
+      "couleur": "#4a7a1a",
+      "actualites": []
+    }
+  ],
+  "international": [
+    {
+      "id": "I1",
+      "label": "Innovation Pedagogique Learning",
+      "couleur": "#1a4a7a",
+      "actualites": [
+        {
+          "titre": "How To Choose An LMS: Avoid Costly Mistakes And Find The Right Fit",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/elearning-events/how-to-choose-an-lms-avoid-costly-mistakes-and-find-the-right-fit-apr-27-2026",
+          "date": "27/04/2026",
+          "resume": "Cette session explore le processus de sélection d'un LMS en conditions réelles, en abordant la définition préalable des besoins et l'approche des exigences fonctionnelles. Elle propose également une comparaison des différentes plateformes sur la base d'implémentations concrètes.",
+          "analyse": "La mise en avant des erreurs coûteuses dans le choix d'un LMS souligne la complexité croissante des décisions d'investissement technologique en formation, nécessitant une méthodologie rigoureuse en amont.",
+          "implication": "Un responsable formation en banque devra structurer un cahier des charges précis intégrant les contraintes réglementaires (conformité, traçabilité) et les spécificités métier avant toute évaluation de plateforme LMS, afin d'éviter des coûts de migration ou de reconfiguration ultérieurs."
+        }
+      ]
+    },
+    {
+      "id": "I2",
+      "label": "IA dans la Formation",
+      "couleur": "#6b1a7a",
+      "actualites": []
+    },
+    {
+      "id": "I3",
+      "label": "Fintech Mondiale Open Banking",
+      "couleur": "#7a3d1a",
+      "actualites": []
+    },
+    {
+      "id": "I4",
+      "label": "IA en Banque Cas Usage",
+      "couleur": "#1a6b6b",
+      "actualites": []
+    },
+    {
+      "id": "I5",
+      "label": "Reglementation Financiere Intl",
+      "couleur": "#4a1a5c",
+      "actualites": []
+    },
+    {
+      "id": "I6",
+      "label": "Certifications Standards Bancaires",
+      "couleur": "#5c3d1a",
+      "actualites": []
+    },
+    {
+      "id": "I7",
+      "label": "Benchmarks Pedagogiques Banque",
+      "couleur": "#1a5c3d",
+      "actualites": []
+    },
+    {
+      "id": "I8",
+      "label": "IA Generale Tendances Mondiales",
+      "couleur": "#3d1a5c",
+      "actualites": [
+        {
+          "titre": "OpenAI prêt à tuer l'iPhone ? Son mystérieux smartphone 100 % IA intrigue déjà",
+          "source": "lebigdata.fr",
+          "url": "https://www.lebigdata.fr/openai-pret-a-tuer-liphone-son-mysterieux-smartphone-100-ia-intrigue-deja",
+          "date": "27/04/2026 17:52",
+          "resume": "OpenAI serait en train de développer un smartphone entièrement orienté IA, selon des rumeurs relayées par LeBigData. Cet appareil se distinguerait fondamentalement des smartphones traditionnels comme l'iPhone.",
+          "analyse": "L'entrée d'OpenAI sur le marché du hardware mobile signale une volonté d'intégrer l'IA générative directement dans les usages quotidiens, accélérant la banalisation des interfaces conversationnelles.",
+          "implication": "Un responsable formation en banque doit anticiper que les collaborateurs accéderont à des outils IA de plus en plus intégrés dans leurs appareils personnels, rendant urgent le développement de compétences en usage critique et sécurisé de l'IA au quotidien."
+        },
+        {
+          "titre": "Markets Are Ignoring Rising War Risks: Patterson",
+          "source": "Bloomberg",
+          "url": "https://www.bloomberg.com/news/videos/2026-04-27/markets-are-ignoring-rising-war-risks-patterson-video",
+          "date": "27/04/2026 16:56",
+          "resume": "Rebecca Patterson, ancienne stratégiste en chef chez Bridgewater et senior fellow au Council on Foreign Relations, alerte sur le fait que les marchés atteignent des sommets historiques tout en ignorant des risques géopolitiques sérieux. Elle pointe notamment la fragilité du boom de l'IA et les risques de disruption sur l'offre pétrolière comme facteurs pouvant provoquer une correction soudaine.",
+          "analyse": "La convergence entre la surchauffe des marchés liés à l'IA et les tensions géopolitiques mondiales crée un environnement de risque systémique que les acteurs financiers sous-estiment collectivement.",
+          "implication": "Les responsables formation en banque doivent renforcer les modules de gestion des risques et d'analyse géopolitique, en intégrant spécifiquement les risques liés à la valorisation des actifs IA dans les cursus dédiés aux métiers de la finance de marché."
+        }
+      ]
+    },
+    {
+      "id": "I9",
+      "label": "RSE Finance Durable Mondiale",
+      "couleur": "#1a5c1a",
+      "actualites": []
+    },
+    {
+      "id": "I10",
+      "label": "Future Skills International",
+      "couleur": "#7a6b1a",
+      "actualites": []
+    },
+    {
+      "id": "I11",
+      "label": "Formation dans les Grandes Banques Mondiales",
+      "couleur": "#2a4a7a",
+      "actualites": []
+    }
+  ],
+  "stats": {
+    "total_maroc": 1,
+    "total_intl": 3,
+    "genere_le": "2026-04-27 23:03"
+  }
+}

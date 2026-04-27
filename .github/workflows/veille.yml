@@ -1,12 +1,12 @@
 # VEILLE STRATEGIQUE — GitHub Actions Workflow
-# Veille quotidienne + hebdomadaire + mensuelle
-# Avec deduplication des articles deja envoyes
+# Execution toutes les 6h + quotidien + hebdo + mensuel
 
 name: Veille Stratégique
 
 on:
   schedule:
-    - cron: "0 6 * * *"    # 7h00 Casablanca tous les jours
+    - cron: "0 6 * * *"     # 07h00 Casablanca
+    - cron: "0 17 * * *"    # 18h00 Casablanca
   workflow_dispatch:
     inputs:
       mode:
@@ -24,7 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    # Permission pour lire/ecrire dans le repo (deduplication)
     permissions:
       contents: write
 
@@ -47,9 +46,10 @@ jobs:
           EMAIL_MOT_DE_PASSE:  ${{ secrets.EMAIL_MOT_DE_PASSE }}
           EMAIL_DESTINATAIRES: ${{ secrets.EMAIL_DESTINATAIRES }}
           MODE: ${{ github.event.inputs.mode || 'auto' }}
-          # Token GitHub automatique pour la deduplication
           GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY:   ${{ github.repository }}
+          NETLIFY_SITE_ID:     ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_TOKEN:       ${{ secrets.NETLIFY_TOKEN }}
         run: python scripts/veille.py
 
       - name: Alerte en cas d'erreur

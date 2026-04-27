@@ -111,15 +111,24 @@ SOURCES_RSS_INTL = [
     "https://paymentscardsandmobile.com/feed/",
     "https://globalbankingandfinance.com/feed/",
     "https://bankingjournal.aba.com/feed/",
+    "https://www.thepaypers.com/rss",
+    "https://paymentsdive.com/feeds/news/",
+    "https://fintechweekly.com/feed",
 
     # ── FINANCE & BANQUE FRANCE ──
     "https://www.lesechos.fr/rss/rss_finance.xml",
     "https://www.lemonde.fr/economie/rss_full.xml",
     "https://finyear.com/feed/",
     "https://www.lafinancepourtous.com/feed",
-    "https://www.optionfinance.fr/rss",
     "https://revue-banque.fr/feed",
     "https://finance-innovation.org/feed",
+    "https://maddyness.com/feed/",
+    "https://group.bnpparibas/rss",
+    "https://larevuedudigital.com/feed",
+    "https://cfnews.net/rss/list",
+    "https://forbes.fr/feed",
+    "https://feeds.bloomberg.com/technology/news.rss",
+    "https://feeds.bbci.co.uk/news/business/rss.xml",
     "https://news.google.com/rss/search?q=banque+formation+finance+France&hl=fr&gl=FR&ceid=FR:fr",
     "https://news.google.com/rss/search?q=formation+bancaire+banque+France&hl=fr&gl=FR&ceid=FR:fr",
     "https://news.google.com/rss/search?q=banque+innovation+digitale+France&hl=fr&gl=FR&ceid=FR:fr",
@@ -132,8 +141,45 @@ SOURCES_RSS_INTL = [
     "https://theconversation.com/fr/rss",
     "https://aibusiness.com/rss.xml",
     "https://towardsdatascience.com/feed",
+    "https://marktechpost.com/feed",
+    "https://avenuedelia.com/feed",
+    "https://blog.google/technology/ai/rss",
     "https://news.google.com/rss/search?q=intelligence+artificielle+IA+banque+France&hl=fr&gl=FR&ceid=FR:fr",
     "https://news.google.com/rss/search?q=AI+artificial+intelligence+banking+2026&hl=en&gl=US&ceid=US:en",
+
+    # ── EDTECH & FORMATION ANGLAIS ──
+    "https://edsurge.com/articles_rss",
+    "https://gettingsmart.com/feed",
+    "https://d2l.com/blog/feed",
+    "https://talentlms.com/blog/feed",
+    "https://shiftelearning.com/blog/rss.xml",
+    "https://skillcast.com/blog/rss.xml",
+    "https://elearninginside.com/feed",
+    "https://jarche.com/blog/feed",
+    "https://transferoflearning.com/feed",
+    "https://growthengineering.co.uk/blog/feed",
+    "https://theelearningcoach.com/feed",
+    "https://insidehighered.com/rss.xml",
+
+    # ── EDTECH & FORMATION FRANCE ──
+    "https://cursus.edu/rss",
+    "https://www.centre-inffo.fr/rss.xml",
+    "https://www.rhinfo.com/feed",
+    "https://news.google.com/rss/search?q=edtech+formation+numerique+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=e-learning+formation+professionnelle+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=innovation+pedagogique+formation+France&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=edtech+LMS+apprentissage+digital&hl=fr&gl=FR&ceid=FR:fr",
+
+    # ── FORMATION L&D INTERNATIONAL ──
+    "https://feeds.feedburner.com/elearningindustry",
+    "https://trainingindustry.com/feed/",
+    "https://www.clomedia.com/feed/",
+    "https://hrdive.com/feeds/news/",
+    "https://joshbersin.com/feed/",
+    "https://trainingjournal.com/feed/",
+    "https://hrvoice.org/feed",
+    "https://news.google.com/rss/search?q=formation+professionnelle+competences+futur&hl=fr&gl=FR&ceid=FR:fr",
+    "https://news.google.com/rss/search?q=corporate+training+learning+development+2026&hl=en&gl=US&ceid=US:en",
 
     # ── RSE & FINANCE DURABLE ──
     "https://esgtoday.com/feed/",
@@ -146,20 +192,6 @@ SOURCES_RSS_INTL = [
     "https://news.google.com/rss/search?q=green+finance+sustainable+banking+ESG&hl=en&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=finance+responsable+impact+investing&hl=fr&gl=FR&ceid=FR:fr",
 
-    # ── FORMATION & L&D ──
-    "https://feeds.feedburner.com/elearningindustry",
-    "https://trainingindustry.com/feed/",
-    "https://www.clomedia.com/feed/",
-    "https://hrdive.com/feeds/news/",
-    "https://joshbersin.com/feed/",
-    "https://trainingjournal.com/feed/",
-    "https://www.centre-inffo.fr/rss.xml",
-    "https://www.rhinfo.com/feed",
-    "https://hrvoice.org/feed",
-    "https://news.google.com/rss/search?q=formation+professionnelle+competences+futur&hl=fr&gl=FR&ceid=FR:fr",
-    "https://news.google.com/rss/search?q=elearning+formation+digitale+LMS&hl=fr&gl=FR&ceid=FR:fr",
-    "https://news.google.com/rss/search?q=corporate+training+learning+development+2026&hl=en&gl=US&ceid=US:en",
-
     # ── IA GENERALE ──
     "https://venturebeat.com/feed/",
     "https://technologyreview.com/topnews.rss",
@@ -168,7 +200,7 @@ SOURCES_RSS_INTL = [
     "https://news.google.com/rss/search?q=large+language+model+LLM+AI+GPT&hl=en&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=intelligence+artificielle+generative+IA&hl=fr&gl=FR&ceid=FR:fr",
 
-    # ── FUTURES SKILLS & TRAVAIL ──
+    # ── FUTURES SKILLS ──
     "https://www.weforum.org/agenda/feed/",
     "https://news.google.com/rss/search?q=future+skills+reskilling+upskilling+workforce&hl=en&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=competences+futur+travail+reskilling&hl=fr&gl=FR&ceid=FR:fr",
@@ -184,6 +216,7 @@ SOURCES_RSS_INTL = [
     "https://www.afdb.org/en/rss/news-events",
     "https://www.cgap.org/rss/",
 ]
+
 
 # ============================================================
 # DOMAINES ET MOTS-CLES
@@ -735,6 +768,59 @@ def main():
         )
     )
     log.info(f"Email International envoye — {total_i} articles")
+
+    # Generer veille-data.json pour la PWA
+    try:
+        data_pwa = {
+            "date": DATE_LABEL,
+            "mode": prefixe,
+            "maroc": [
+                {
+                    "id": d["id"],
+                    "label": d["label"],
+                    "couleur": d["couleur"],
+                    "actualites": d.get("actualites", [])
+                } for d in resultats_maroc
+            ],
+            "international": [
+                {
+                    "id": d["id"],
+                    "label": d["label"],
+                    "couleur": d["couleur"],
+                    "actualites": d.get("actualites", [])
+                } for d in resultats_intl
+            ],
+            "stats": {
+                "total_maroc": total_m,
+                "total_intl": total_i,
+                "genere_le": AUJOURD_HUI.strftime("%Y-%m-%d %H:%M")
+            }
+        }
+        with open("veille-data.json", "w", encoding="utf-8") as f:
+            json.dump(data_pwa, f, ensure_ascii=False, indent=2)
+
+        # Pousser vers GitHub Pages via API
+        if GITHUB_TOKEN and GITHUB_REPO:
+            import base64
+            contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
+            contenu_b64 = base64.b64encode(contenu_json.encode("utf-8")).decode("utf-8")
+            url_api = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
+            headers = {
+                "Authorization": f"token {GITHUB_TOKEN}",
+                "Accept": "application/vnd.github.v3+json"
+            }
+            response = requests.get(url_api, headers=headers, timeout=10)
+            payload = {
+                "message": f"Mise a jour veille PWA - {DATE_LABEL}",
+                "content": contenu_b64,
+                "branch": "gh-pages"
+            }
+            if response.status_code == 200:
+                payload["sha"] = response.json()["sha"]
+            requests.put(url_api, headers=headers, json=payload, timeout=10)
+            log.info("veille-data.json pousse sur gh-pages pour la PWA")
+    except Exception as e:
+        log.warning(f"Erreur generation PWA data : {e}")
 
     # Sauvegarder les nouvelles URLs (deduplication)
     if nouvelles_urls:

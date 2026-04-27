@@ -38,13 +38,13 @@
       "couleur": "#5c1a8b",
       "actualites": [
         {
-          "titre": "Aucun article pertinent disponible",
+          "titre": "Aucun article pertinent trouvé",
           "source": "N/A",
           "url": "N/A",
           "date": "27/04/2026",
-          "resume": "Les 4 articles fournis portent exclusivement sur des sujets de football (Julian Alvarez, Neymar, Modrić) et de coopération judiciaire maroco-autrichienne. Aucun de ces articles ne traite de l'IA, de la technologie bancaire ou des banques marocaines.",
-          "analyse": "Les flux RSS analysés ne contiennent aucun contenu pertinent pour le domaine 'IA Tech Banques Marocaines' à la date du 27 avril 2026.",
-          "implication": "Aucune implication exploitable pour un responsable formation en banque ne peut être dérivée de ces articles ; il est recommandé de diversifier les sources RSS vers des médias spécialisés en fintech et banque africaine."
+          "resume": "Les 4 articles disponibles dans les flux RSS analysés portent exclusivement sur des sujets footballistiques (Julian Alvarez, Neymar, Modrić) et sur une coopération judiciaire Maroc-Autriche. Aucun de ces articles ne traite de l'IA, de la technologie bancaire ou des banques marocaines.",
+          "analyse": "Les flux RSS fournis ne contiennent aucun contenu en lien avec le domaine 'IA Tech Banques Marocaines' défini pour cette veille stratégique.",
+          "implication": "Aucune implication exploitable pour un responsable formation en banque ne peut être déduite de ces articles ; il est recommandé d'élargir ou de reconfigurer les sources RSS surveillées pour couvrir des médias spécialisés en fintech, banque et IA au Maroc."
         }
       ]
     },
@@ -66,17 +66,7 @@
       "id": "I1",
       "label": "Innovation Pedagogique Learning",
       "couleur": "#1a4a7a",
-      "actualites": [
-        {
-          "titre": "How Promova Is Expanding From Consumer Language Learning Into Corporate Training",
-          "source": "citybiz (via news.google.com)",
-          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQTDRVQjVxS2hDcS0xY1NHc2tiX2FEejljcFZIRW84cVhla1ByS0tScmxjWlVla003Wi1jYnppbXJxSmpXTFVLYXlZdkZkZ2x3MVBhTHktdXh3d2R1VVBVMnkycnZQdlV6eC1Iekh3aG1RQVk2RVNIdGtVS2gxeHNLMWs3RzdEeTF0dkZleUVUckNYV3pzd01PYTB1akF3N2pRVzNsR2Z0NER4TGdjb3ZlcE52N2Vid3UwVURJ?oc=5",
-          "date": "27/04/2026 14:17",
-          "resume": "Promova, plateforme initialement positionnée sur l'apprentissage des langues pour les consommateurs, étend désormais son offre vers la formation en entreprise. Cette expansion signale une tendance de plateformes grand public qui pivotent vers le marché B2B de la formation professionnelle.",
-          "analyse": "Ce mouvement illustre la convergence croissante entre les outils d'apprentissage digital grand public et les dispositifs de formation corporate, accélérée par la demande des entreprises pour des solutions d'apprentissage des langues scalables et engageantes.",
-          "implication": "Un responsable formation en banque peut s'appuyer sur l'émergence de ces acteurs hybrides pour enrichir son offre de développement des compétences linguistiques de ses collaborateurs, notamment dans un contexte de mobilité internationale ou de clientèle multilingue, à des coûts potentiellement compétitifs par rapport aux solutions traditionnelles."
-        }
-      ]
+      "actualites": []
     },
     {
       "id": "I2",
@@ -120,22 +110,22 @@
       "couleur": "#3d1a5c",
       "actualites": [
         {
-          "titre": "Build a Reinforcement Learning Powered Agent that Learns to Retrieve Relevant Long-Term Memories for Accurate LLM Question Answering",
-          "source": "marktechpost.com",
-          "url": "https://www.marktechpost.com/2026/04/27/build-a-reinforcement-learning-powered-agent-that-learns-to-retrieve-relevant-long-term-memories/",
-          "date": "27/04/2026",
-          "resume": "Un tutoriel présente la construction d'un agent basé sur le Reinforcement Learning capable de récupérer des mémoires pertinentes depuis une banque de mémoire à long terme. L'agent utilise les embeddings OpenAI pour convertir mémoires et requêtes en représentations vectorielles, permettant des signaux de similarité pour améliorer la précision des réponses des LLM.",
-          "analyse": "Cette avancée technique illustre la convergence entre mémoire contextuelle persistante et apprentissage par renforcement, ouvrant la voie à des agents IA capables de personnalisation et de raisonnement cumulatif dans des environnements complexes.",
-          "implication": "Un responsable formation en banque peut envisager d'intégrer ce type d'agent IA dans des dispositifs d'accompagnement apprenant, capable de mémoriser le parcours de chaque collaborateur et de proposer des contenus ciblés selon l'historique de formation."
+          "titre": "From learning to earning: A practical framework for skills-based compensation and workforce agility",
+          "source": "trainingjournal.com",
+          "url": "https://www.trainingjournal.com/2026/content-type/features/from-learning-to-earning-a-practical-framework-for-skills-based-compensation-and-workforce-agility/?utm_source=rss&utm_medium=rss&utm_campaign=from-learning-to-earning-a-practical-framework-for-skills-based-compensation-and-workforce-agility",
+          "date": "27/04/2026 23:28",
+          "resume": "Les organisations adoptent de plus en plus une rémunération basée sur les compétences afin d'obtenir un retour mesurable sur les investissements en formation. Ce modèle relie le développement des compétences, leur évaluation et leur récompense pour renforcer la motivation et ancrer une culture d'apprentissage.",
+          "analyse": "Cette approche illustre une tendance de fond où la formation cesse d'être un coût pour devenir un levier stratégique de rétention et d'agilité organisationnelle.",
+          "implication": "Un responsable formation en banque peut s'appuyer sur ce cadre pour concevoir des parcours certifiants liés à des grilles de rémunération, notamment sur les compétences IA, afin de valoriser concrètement la montée en compétences des collaborateurs."
         },
         {
-          "titre": "OpenMOSS Releases MOSS-Audio: An Open-Source Foundation Model for Speech, Sound, Music, and Time-Aware Audio Reasoning",
-          "source": "marktechpost.com",
-          "url": "https://www.marktechpost.com/2026/04/27/openmoss-releases-moss-audio-an-open-source-foundation-model-for-speech-sound-music-and-time-aware-audio-reasoning/",
-          "date": "27/04/2026",
-          "resume": "OpenMOSS lance MOSS-Audio, un modèle de fondation open-source unifiant la parole, les sons environnementaux, la musique et le raisonnement temporel au sein d'une seule architecture. Ce modèle surpasse tous les modèles open-source testés sur les benchmarks audio généraux, y compris des systèmes quatre fois plus grands.",
-          "analyse": "La disponibilité en open-source d'un modèle audio multimodal de cette performance marque une démocratisation significative des capacités IA avancées, réduisant la dépendance aux solutions propriétaires coûteuses.",
-          "implication": "Pour un responsable formation en banque, MOSS-Audio ouvre des perspectives concrètes pour développer des modules e-learning enrichis de voix synthétiques, d'analyse de conversations clients simulées ou d'évaluation automatique des pitchs commerciaux en formation."
+          "titre": "JBM Packaging celebrates first graduate of in-prison training program",
+          "source": "hrdive.com",
+          "url": "https://www.hrdive.com/news/jbm-packaging-second-chance-hiring-prison-first-graduate/818594/",
+          "date": "27/04/2026 16:22",
+          "resume": "JBM Packaging a formé Billy Campbell sur ses équipements de production pendant son incarcération, lui permettant d'obtenir un emploi à temps plein à sa sortie. Environ 40% des employés de l'entreprise sont d'anciens détenus, illustrant un modèle de recrutement inclusif adossé à la formation.",
+          "analyse": "Ce cas démontre que la formation en contexte contraint peut produire des résultats tangibles en termes d'employabilité, repositionnant la formation comme outil d'inclusion et de sourcing de talents alternatifs.",
+          "implication": "Pour un responsable formation en banque, ce modèle invite à explorer des partenariats avec des dispositifs de formation inclusifs pour élargir le vivier de talents, notamment sur des métiers opérationnels ou de support impactés par l'automatisation IA."
         }
       ]
     },
@@ -160,7 +150,7 @@
   ],
   "stats": {
     "total_maroc": 1,
-    "total_intl": 3,
-    "genere_le": "2026-04-27 23:14"
+    "total_intl": 2,
+    "genere_le": "2026-04-27 23:27"
   }
 }

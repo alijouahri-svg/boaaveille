@@ -42,9 +42,9 @@
           "source": "N/A",
           "url": "N/A",
           "date": "27/04/2026",
-          "resume": "Les 4 articles fournis portent sur le football (Julian Alvarez, Neymar, Modrić) et la coopération judiciaire maroco-autrichienne. Aucun de ces articles ne traite de l'IA, de la technologie bancaire ou des banques marocaines.",
-          "analyse": "Les flux RSS analysés ce jour ne contiennent aucun contenu pertinent pour le domaine IA Tech Banques Marocaines.",
-          "implication": "Aucune implication actionnable ne peut être dérivée de ces articles pour un responsable formation en banque. Il est recommandé de diversifier les sources RSS vers des médias spécialisés finance/tech comme Medias24, L'Economiste, ou Fintech Africa."
+          "resume": "Les 4 articles fournis portent exclusivement sur des sujets de football (Julian Alvarez, Neymar, Modrić) et de coopération judiciaire maroco-autrichienne. Aucun de ces articles ne traite de l'IA, de la technologie bancaire ou des banques marocaines.",
+          "analyse": "Les flux RSS analysés ne contiennent aucun contenu pertinent pour le domaine 'IA Tech Banques Marocaines' à la date du 27 avril 2026.",
+          "implication": "Aucune implication exploitable pour un responsable formation en banque ne peut être dérivée de ces articles ; il est recommandé de diversifier les sources RSS vers des médias spécialisés en fintech et banque africaine."
         }
       ]
     },
@@ -68,13 +68,13 @@
       "couleur": "#1a4a7a",
       "actualites": [
         {
-          "titre": "How To Choose An LMS: Avoid Costly Mistakes And Find The Right Fit",
-          "source": "eLearning Industry",
-          "url": "https://elearningindustry.com/elearning-events/how-to-choose-an-lms-avoid-costly-mistakes-and-find-the-right-fit-apr-27-2026",
-          "date": "27/04/2026",
-          "resume": "Cette session explore le processus de sélection d'un LMS en conditions réelles, en abordant la définition préalable des besoins et l'approche des exigences fonctionnelles. Elle propose également une comparaison des différentes plateformes sur la base d'implémentations concrètes.",
-          "analyse": "La mise en avant des erreurs coûteuses dans le choix d'un LMS souligne la complexité croissante des décisions d'investissement technologique en formation, nécessitant une méthodologie rigoureuse en amont.",
-          "implication": "Un responsable formation en banque devra structurer un cahier des charges précis intégrant les contraintes réglementaires (conformité, traçabilité) et les spécificités métier avant toute évaluation de plateforme LMS, afin d'éviter des coûts de migration ou de reconfiguration ultérieurs."
+          "titre": "How Promova Is Expanding From Consumer Language Learning Into Corporate Training",
+          "source": "citybiz (via news.google.com)",
+          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQTDRVQjVxS2hDcS0xY1NHc2tiX2FEejljcFZIRW84cVhla1ByS0tScmxjWlVla003Wi1jYnppbXJxSmpXTFVLYXlZdkZkZ2x3MVBhTHktdXh3d2R1VVBVMnkycnZQdlV6eC1Iekh3aG1RQVk2RVNIdGtVS2gxeHNLMWs3RzdEeTF0dkZleUVUckNYV3pzd01PYTB1akF3N2pRVzNsR2Z0NER4TGdjb3ZlcE52N2Vid3UwVURJ?oc=5",
+          "date": "27/04/2026 14:17",
+          "resume": "Promova, plateforme initialement positionnée sur l'apprentissage des langues pour les consommateurs, étend désormais son offre vers la formation en entreprise. Cette expansion signale une tendance de plateformes grand public qui pivotent vers le marché B2B de la formation professionnelle.",
+          "analyse": "Ce mouvement illustre la convergence croissante entre les outils d'apprentissage digital grand public et les dispositifs de formation corporate, accélérée par la demande des entreprises pour des solutions d'apprentissage des langues scalables et engageantes.",
+          "implication": "Un responsable formation en banque peut s'appuyer sur l'émergence de ces acteurs hybrides pour enrichir son offre de développement des compétences linguistiques de ses collaborateurs, notamment dans un contexte de mobilité internationale ou de clientèle multilingue, à des coûts potentiellement compétitifs par rapport aux solutions traditionnelles."
         }
       ]
     },
@@ -120,22 +120,22 @@
       "couleur": "#3d1a5c",
       "actualites": [
         {
-          "titre": "OpenAI prêt à tuer l'iPhone ? Son mystérieux smartphone 100 % IA intrigue déjà",
-          "source": "lebigdata.fr",
-          "url": "https://www.lebigdata.fr/openai-pret-a-tuer-liphone-son-mysterieux-smartphone-100-ia-intrigue-deja",
-          "date": "27/04/2026 17:52",
-          "resume": "OpenAI serait en train de développer un smartphone entièrement orienté IA, selon des rumeurs relayées par LeBigData. Cet appareil se distinguerait fondamentalement des smartphones traditionnels comme l'iPhone.",
-          "analyse": "L'entrée d'OpenAI sur le marché du hardware mobile signale une volonté d'intégrer l'IA générative directement dans les usages quotidiens, accélérant la banalisation des interfaces conversationnelles.",
-          "implication": "Un responsable formation en banque doit anticiper que les collaborateurs accéderont à des outils IA de plus en plus intégrés dans leurs appareils personnels, rendant urgent le développement de compétences en usage critique et sécurisé de l'IA au quotidien."
+          "titre": "Build a Reinforcement Learning Powered Agent that Learns to Retrieve Relevant Long-Term Memories for Accurate LLM Question Answering",
+          "source": "marktechpost.com",
+          "url": "https://www.marktechpost.com/2026/04/27/build-a-reinforcement-learning-powered-agent-that-learns-to-retrieve-relevant-long-term-memories/",
+          "date": "27/04/2026",
+          "resume": "Un tutoriel présente la construction d'un agent basé sur le Reinforcement Learning capable de récupérer des mémoires pertinentes depuis une banque de mémoire à long terme. L'agent utilise les embeddings OpenAI pour convertir mémoires et requêtes en représentations vectorielles, permettant des signaux de similarité pour améliorer la précision des réponses des LLM.",
+          "analyse": "Cette avancée technique illustre la convergence entre mémoire contextuelle persistante et apprentissage par renforcement, ouvrant la voie à des agents IA capables de personnalisation et de raisonnement cumulatif dans des environnements complexes.",
+          "implication": "Un responsable formation en banque peut envisager d'intégrer ce type d'agent IA dans des dispositifs d'accompagnement apprenant, capable de mémoriser le parcours de chaque collaborateur et de proposer des contenus ciblés selon l'historique de formation."
         },
         {
-          "titre": "Markets Are Ignoring Rising War Risks: Patterson",
-          "source": "Bloomberg",
-          "url": "https://www.bloomberg.com/news/videos/2026-04-27/markets-are-ignoring-rising-war-risks-patterson-video",
-          "date": "27/04/2026 16:56",
-          "resume": "Rebecca Patterson, ancienne stratégiste en chef chez Bridgewater et senior fellow au Council on Foreign Relations, alerte sur le fait que les marchés atteignent des sommets historiques tout en ignorant des risques géopolitiques sérieux. Elle pointe notamment la fragilité du boom de l'IA et les risques de disruption sur l'offre pétrolière comme facteurs pouvant provoquer une correction soudaine.",
-          "analyse": "La convergence entre la surchauffe des marchés liés à l'IA et les tensions géopolitiques mondiales crée un environnement de risque systémique que les acteurs financiers sous-estiment collectivement.",
-          "implication": "Les responsables formation en banque doivent renforcer les modules de gestion des risques et d'analyse géopolitique, en intégrant spécifiquement les risques liés à la valorisation des actifs IA dans les cursus dédiés aux métiers de la finance de marché."
+          "titre": "OpenMOSS Releases MOSS-Audio: An Open-Source Foundation Model for Speech, Sound, Music, and Time-Aware Audio Reasoning",
+          "source": "marktechpost.com",
+          "url": "https://www.marktechpost.com/2026/04/27/openmoss-releases-moss-audio-an-open-source-foundation-model-for-speech-sound-music-and-time-aware-audio-reasoning/",
+          "date": "27/04/2026",
+          "resume": "OpenMOSS lance MOSS-Audio, un modèle de fondation open-source unifiant la parole, les sons environnementaux, la musique et le raisonnement temporel au sein d'une seule architecture. Ce modèle surpasse tous les modèles open-source testés sur les benchmarks audio généraux, y compris des systèmes quatre fois plus grands.",
+          "analyse": "La disponibilité en open-source d'un modèle audio multimodal de cette performance marque une démocratisation significative des capacités IA avancées, réduisant la dépendance aux solutions propriétaires coûteuses.",
+          "implication": "Pour un responsable formation en banque, MOSS-Audio ouvre des perspectives concrètes pour développer des modules e-learning enrichis de voix synthétiques, d'analyse de conversations clients simulées ou d'évaluation automatique des pitchs commerciaux en formation."
         }
       ]
     },
@@ -161,6 +161,6 @@
   "stats": {
     "total_maroc": 1,
     "total_intl": 3,
-    "genere_le": "2026-04-27 23:03"
+    "genere_le": "2026-04-27 23:14"
   }
 }

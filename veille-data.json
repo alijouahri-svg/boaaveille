@@ -1,6 +1,6 @@
 {
   "date": "Tuesday 28 April 2026",
-  "mode": "Quotidien",
+  "mode": "Hebdo",
   "maroc": [
     {
       "id": "M1",
@@ -12,19 +12,103 @@
       "id": "M2",
       "label": "Reglementation BAM ACAPS",
       "couleur": "#8b1a2f",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "Sogefinancement : Bank Al-Maghrib prolonge d'un an la liquidation de la société",
+          "source": "leseco.ma",
+          "url": "https://leseco.ma/maroc/sogefinancement-bank-al-maghrib-prolonge-dun-an-la-liquidation-de-la-societe.html",
+          "date": "27/04/2026 08:17",
+          "resume": "Bank Al-Maghrib a décidé de prolonger d'un an la période de liquidation de la société Sogefinancement, dont l'échéance initiale était fixée au 19 mars 2026. Cette décision reflète l'exercice par BAM de ses prérogatives de supervision et de gestion des établissements en difficulté.",
+          "analyse": "Cette prolongation illustre la capacité de Bank Al-Maghrib à exercer un contrôle prudentiel actif sur les sociétés de financement, en adaptant les délais réglementaires selon les réalités opérationnelles.",
+          "implication": "Un responsable formation doit intégrer ce cas concret dans les modules sur la supervision bancaire BAM, notamment les procédures de liquidation et de résolution des établissements de crédit sous tutelle réglementaire."
+        },
+        {
+          "titre": "BAD - ACAPS : 510.000 dollars pour démocratiser l'assurance au Maroc",
+          "source": "laquotidienne.ma",
+          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE55X29zNzhTT1dZQ0pnZ3laVHZIdGhfbWhiWWZMWExVNmlsU3VrN2xDSlBxY1dnTnNaeGw4ckV5bTFQZDc1b0ItSWloYzRDVVh4eEVZUWg2VGdhaDJDeEFWZHlhcUFzYUNjQ0NBLVd5bw?oc=5",
+          "date": "25/04/2026 09:45",
+          "resume": "La Banque africaine de développement accorde une subvention de 510.000 dollars à l'ACAPS pour démocratiser l'accès à l'assurance au Maroc. Ce financement s'inscrit dans une démarche d'inclusion assurantielle portée par le régulateur marocain.",
+          "analyse": "Ce partenariat BAD-ACAPS signale une volonté stratégique de renforcer le cadre réglementaire de l'inclusion assurantielle au Maroc avec un appui financier international significatif.",
+          "implication": "Les équipes formation doivent anticiper de nouvelles directives ACAPS en matière d'inclusion assurantielle et préparer des parcours pédagogiques sur la micro-assurance et les obligations réglementaires associées pour les acteurs bancaires et assurantiels."
+        },
+        {
+          "titre": "La Banque africaine de développement accorde 510 000 dollars à l'ACAPS et prévoit 170 000 dollars supplémentaires pour l'inclusion assurantielle au Maroc",
+          "source": "برلمان.كوم",
+          "url": "https://news.google.com/rss/articles/CBMiiAJBVV95cUxNd3RudmdLb25NZnpUVkRic0tuVVFPaG9neF91YWxNeWhvZ2p0Tk9XTE81UVFsaTJGM3l1M0xfcTI5Z0k2MUVueEpEQjFyc0xEUmZhSmpUdnBqY3NJRDlZd3o1cXpWeHNORGhtdVRlX01jNC11VmZSejgyZGg2RnJsWG5yMmptcktybFVXU004X0lHZ0g0emdiOC1XTXVqX2JmNm84VTNWOUNWcHIwVkV6bU9icWFUTkUzN0g3ek1uY0I1Y1VQSHF1LXJRY2syTkZRREhMdTl4UjNhZHZKMW1KOVlUTmZ6ZFo4NzRock9IamJJandlZTVBZU4yOTZ6QXhyTG1fNUpmSUI?oc=5",
+          "date": "24/04/2026 14:55",
+          "resume": "La BAD prévoit d'octroyer 510.000 dollars à l'ACAPS ainsi que 170.000 dollars supplémentaires pour soutenir l'inclusion assurantielle au Maroc. Ce double financement témoigne d'un engagement progressif et structuré en faveur du développement du secteur des assurances.",
+          "analyse": "L'engagement croissant de la BAD aux côtés de l'ACAPS confirme que l'inclusion assurantielle devient un axe réglementaire prioritaire, susceptible de générer de nouvelles obligations pour les établissements financiers marocains.",
+          "implication": "Un responsable formation en banque doit surveiller l'évolution des textes réglementaires ACAPS qui découleront de ce programme et préparer des formations sur la bancassurance inclusive et les nouvelles exigences de conformité associées."
+        }
+      ]
     },
     {
       "id": "M3",
       "label": "Fintech Startups Maroc",
       "couleur": "#c04a00",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "Fintech marocaine : sans croissance, pas de levées de fonds",
+          "source": "L'Economiste",
+          "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOeEpwQUpZMjdVbGFKMzI5R3JzQ3dYRzlGZUtwUUpxSlRueFFhXzBmVmVDU0JZTUt1Wk04S1NmNDlyc0JGOE0wWGpFaG5qYWF4cV9HU25JdUpjSjVTYmJQOWd6aXRwQm5rc3EySThtVzVybkdVTlgtaFc2Vkttb2lCcDlQV2ZLbUQtLXlncFBXSElJUnpxN2c?oc=5",
+          "date": "21/04/2026",
+          "resume": "L'article de L'Economiste traite des difficultés de financement rencontrées par les fintechs marocaines, en liant directement la capacité à lever des fonds à la démonstration d'une croissance tangible. Il met en lumière les défis structurels qui freinent le développement de l'écosystème fintech au Maroc.",
+          "analyse": "Ce constat révèle une maturité encore insuffisante de l'écosystème fintech marocain, où les investisseurs restent prudents faute de métriques de croissance convaincantes.",
+          "implication": "Un responsable formation en banque doit intégrer des modules sur l'analyse de la viabilité et du modèle économique des fintechs partenaires, afin de former les équipes à évaluer les risques de collaboration avec ces acteurs."
+        },
+        {
+          "titre": "Fintech : CIH Bank et Visa enclenchent un chantier stratégique",
+          "source": "Le Nouvelliste Maroc",
+          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNdjl4d0JqMkdOaFBtYjhVYzBxVkdHMVFDa0U4c1p6YjdtNDJZamNpeFNVV1VzdDlUelFGYy1KV3BxUm9KbnhUNUVRYUxiUlJGcWVNQTVVTmFWdlZTSHg1aVRFeERsSXg0aUVqcnN4ZFRWLVRtLU5ybTk2eDU4ZzVrN0xUT3REVnN5V2dkYVZiOVFDM05n?oc=5",
+          "date": "26/04/2026",
+          "resume": "CIH Bank et Visa ont lancé un chantier stratégique commun dans le domaine de la fintech, signalant un rapprochement structuré entre un acteur bancaire établi et un géant international des paiements. Cette initiative illustre la tendance des banques marocaines à s'allier avec des acteurs technologiques pour accélérer leur transformation numérique.",
+          "analyse": "Ce partenariat stratégique entre CIH Bank et Visa traduit une accélération de la bancarisation numérique au Maroc et positionne CIH comme un acteur pionnier dans l'intégration des solutions fintech au sein du système bancaire traditionnel.",
+          "implication": "Les responsables formation en banque doivent anticiper le besoin de montées en compétences sur les nouvelles solutions de paiement digital et les partenariats public-privé, en développant des parcours dédiés aux équipes commerciales et techniques."
+        },
+        {
+          "titre": "Maroc Telecom au SIAM 2026: l'Agritech et la Fintech au service d'une agriculture connectée et durable",
+          "source": "Le360",
+          "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxNSWRtcmktX3J2RXhVbEM2SWZEUks1eXVUazN4SlBJQjhUN0pMaG9lVVJlbE82TXpzQ2JsVUViVWEwNVZPSjVHemxJejJueEVTbEZHc1dLUjN5dkdHMU1DNjdBTjF2QVNGUk9TQVJnUzUzVk14YmFwWm9PZ0E5QXZFT25RVnNHNHFiY0dRR1dZOF9oa2VnODBrNUFKZHJLVGd1MmhOSWhLZUlXeTBfUmhjVllSX2xjbmNJYlg2bU82VEV6bTEzaklrMXluY202emhRRXV1b0tIbHkwbnpPRy12V3hpLWJWeTREOVhKWg?oc=5",
+          "date": "22/04/2026",
+          "resume": "Maroc Telecom a participé au SIAM 2026 en mettant en avant ses solutions Agritech et Fintech destinées à moderniser et connecter le secteur agricole marocain. Cette présence illustre l'élargissement du périmètre d'application des fintechs au-delà des services financiers classiques, vers des secteurs comme l'agriculture.",
+          "analyse": "L'incursion de Maroc Telecom dans la fintech agricole démontre une convergence sectorielle croissante, où les télécoms deviennent des acteurs financiers de fait, élargissant la concurrence pour les banques traditionnelles.",
+          "implication": "Les responsables formation en banque doivent sensibiliser leurs équipes aux nouveaux entrants non-bancaires dans l'espace fintech, notamment les opérateurs télécoms, et former sur les enjeux de compétitivité et de différenciation des offres bancaires."
+        }
+      ]
     },
     {
       "id": "M4",
       "label": "Transformation Digitale Banques",
       "couleur": "#0e5c8b",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "Attijariwafa Bank prépare « Simple », une future super-app bancaire au Maroc",
+          "source": "InfoMagazine Maroc",
+          "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQby1yb1YxRVE4THB2ZnFvWV81WHVkTGl5bV9WNm5HYTVqU01Gclh1T3JjdV9NX2FfZWJQSV8tdzZ3YVRUT2sxalROWUhNYjc0SXZNNFJBUzNRUnFRUFhsWlE4ZDNmcW5lVXdJUUxoekFkcWVubEhKUjlRLThzUVBOd1pZcnlhTTVhb0hNRzd0SmZ3TTViaVQtbFRLM2lnODlJZkU4WDl5ZmozMWI5akt1Q2RNcS14YTJlQWpn?oc=5",
+          "date": "24/04/2026 15:03",
+          "resume": "Attijariwafa Bank prépare le lancement d'une super-application bancaire baptisée 'Simple' au Maroc. Ce projet s'inscrit dans une offensive digitale visant à regrouper les services bancaires dans une interface unifiée.",
+          "analyse": "Cette initiative positionne Attijariwafa Bank comme un acteur majeur de la néobanque au Maroc, en réponse à la montée des fintechs et aux nouvelles attentes des clients en matière d'expérience digitale.",
+          "implication": "Les responsables formation doivent anticiper des besoins en montée en compétences sur les usages des super-apps, l'accompagnement au changement pour les conseillers bancaires et la maîtrise des nouveaux parcours clients digitaux."
+        },
+        {
+          "titre": "Fintech : CIH Bank et Visa enclenchent un chantier stratégique",
+          "source": "Le Nouvelliste Maroc",
+          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNdjl4d0JqMkdOaFBtYjhVYzBxVkdHMVFDa0U4c1p6YjdtNDJZamNpeFNVV1VzdDlUelFGYy1KV3BxUm9KbnhUNUVRYUxiUlJGcWVNQTVVTmFWdlZTSHg1aVRFeERsSXg0aUVqcnN4ZFRWLVRtLU5ybTk2eDU4ZzVrN0xUT3REVnN5V2dkYVZiOVFDM05n?oc=5",
+          "date": "26/04/2026 17:31",
+          "resume": "CIH Bank et Visa ont engagé un partenariat stratégique dans le domaine des fintechs. Ce chantier commun laisse entrevoir des développements significatifs dans les paiements digitaux et l'innovation financière au Maroc.",
+          "analyse": "Ce partenariat entre un acteur bancaire marocain établi et un réseau mondial de paiement signale une accélération de la digitalisation des services de paiement et une volonté de capter de nouveaux segments de clientèle.",
+          "implication": "Les équipes formation devront prévoir des modules dédiés aux nouvelles solutions de paiement digital, aux partenariats fintech et à la réglementation associée pour préparer les collaborateurs aux évolutions des offres."
+        },
+        {
+          "titre": "Attijariwafa bank doublement primée par Global Finance en 2026",
+          "source": "Le Nouvelliste Maroc",
+          "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQUkVKUERLMXlyV09yd3d5WDQwSFpoZjF0RFhHTkVmeGhvNDlTbnNZTFhaOUxtMWEwVFFwWi1INHJfUEQ4YUNvRDhHV3c4OHpYTWNwbzEwYTdzNVdXWTE1MmwwcHJtVUU5YVZaaTFpNlJOWGdxdDhydHhUeldZaGdpeFJSTE9IbzhvaUFCckZkR21IakxqckZR?oc=5",
+          "date": "26/04/2026 15:52",
+          "resume": "Attijariwafa Bank a été doublement récompensée par le magazine Global Finance en 2026, consolidant sa réputation sur la scène bancaire internationale. Cette reconnaissance porte sur des critères d'excellence liés à ses performances et à sa transformation.",
+          "analyse": "Cette double distinction internationale valide la stratégie de transformation digitale et d'innovation d'Attijariwafa Bank, renforçant sa crédibilité auprès des investisseurs et partenaires à l'échelle mondiale.",
+          "implication": "Un responsable formation peut s'appuyer sur cette reconnaissance pour valoriser les programmes de développement des compétences digitales en interne et renforcer l'engagement des collaborateurs autour de la vision de transformation de la banque."
+        }
+      ]
     },
     {
       "id": "M5",
@@ -32,13 +116,31 @@
       "couleur": "#2d6a4f",
       "actualites": [
         {
+          "titre": "L'IA menace plus de 1,3 million d'emplois au Maroc à l'horizon 2030 (Etude)",
+          "source": "Le Matin.ma",
+          "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPZzFkNVQ4S29zVndnNVllVFlPc09kSk5KdE9NMW1oR0FuLVNLM2s5YzV0RHhqbDJ6OUlKZzFVLWZxdDBtSVRCMTZPUHh4N1FwSmI0T19MRWhRSFg1S09GYmxvWEZfN053LUVyclF2ZmdwVnFuR29abm04SzJVdERVQW03RGJkcjdhcXZKY2JBVmlwT094NHpSRWZ3YlRlZ3ZYd3N0Y25n0gGrAUFVX3lxTE5kRjU5Y2YtMFNlQ2ZQRFVmdU43UVBSek51MmhvNDBVdUE0b2RNenV5YVdPUXdZQU9iN195RTVLdHBndFpBSVlURWx6YlFJYllmWS0yMWl2eUFheVM0UUdCN2pkNDAwNlYweDlRT190YW9jWGVHTXc0aDdpeFBfOWxqUWw2aHpXRk1vaUp2RnlNUVJ3OGxIMHRGRWVWaWJDbUJvTkFNQ1pEU054MA",
+          "date": "23/04/2026",
+          "resume": "Une étude révèle que l'intelligence artificielle pourrait menacer plus de 1,3 million d'emplois au Maroc d'ici 2030. Ce risque concerne des secteurs exposés à l'automatisation des tâches cognitives et répétitives.",
+          "analyse": "Cette projection illustre l'urgence d'une transformation structurelle des compétences au Maroc, avec un impact direct sur les métiers à forte composante routinière, notamment dans les services financiers.",
+          "implication": "Un responsable formation en banque doit anticiper dès maintenant la reconversion des collaborateurs exposés à l'automatisation (back-office, traitement de données) en développant des parcours de montée en compétences sur les usages de l'IA et les métiers à valeur ajoutée relationnelle."
+        },
+        {
           "titre": "Dialogue social: 49,7 MMDH mobilisés pour soutenir le pouvoir d'achat d'ici 2027",
           "source": "lnt.ma",
           "url": "https://lnt.ma/dialogue-social-497-mmdh-mobilises-pour-soutenir-le-pouvoir-dachat-dici-2027/",
           "date": "28/04/2026",
-          "resume": "Le ministre de l'Inclusion économique, de la Petite entreprise, de l'Emploi et des Compétences, Younes Sekkouri, a annoncé que le coût global des mesures issues du dialogue social atteindra 49,7 milliards de dirhams d'ici fin 2026 et début 2027. Cet effort financier est directement orienté vers le soutien du pouvoir d'achat des citoyens.",
-          "analyse": "Cet engagement massif de l'État dans le cadre du dialogue social signale une volonté politique forte de revaloriser les conditions salariales et d'emploi, avec des répercussions potentielles sur les grilles de rémunération dans le secteur bancaire.",
-          "implication": "Un responsable formation en banque doit anticiper des ajustements salariaux et des besoins de formation liés à la revalorisation des métiers, notamment pour accompagner les évolutions de postes et les nouvelles exigences de compétences dans un contexte de revalorisation du travail."
+          "resume": "Le ministre de l'Inclusion économique, de la Petite entreprise, de l'Emploi et des Compétences, Younes Sekkouri, a annoncé que le coût global des mesures issues du dialogue social atteindra 49,7 milliards de dirhams d'ici fin 2026 et début 2027. Cet effort financier est orienté vers le soutien du pouvoir d'achat.",
+          "analyse": "L'engagement massif de l'État dans le dialogue social signale une dynamique de revalorisation salariale et de renforcement des compétences qui redéfinit le cadre des relations employeur-employé au Maroc.",
+          "implication": "Les responsables formation en banque doivent intégrer ces évolutions dans leur politique RH, notamment en alignant les grilles de rémunération et les dispositifs de formation sur les nouvelles attentes issues du dialogue social national."
+        },
+        {
+          "titre": "Mohammedia : le 1er Forum des compétences mise sur l'emploi des jeunes et l'entrepreneuriat",
+          "source": "MSN",
+          "url": "https://news.google.com/rss/articles/CBMiqgNBVV95cUxQbk9QNTcxV0NSLTRuVTlsV3YxUWdHR0NiN25Ub3lFQVd2WFdCUFJ4dk9ucjEwaGpJQ3NNVml1SnU0UjhkTzdmNDNSMEtMQWc5bDVvTUJUSmdIaWsySzV0dnE3TkJDZFp2SW5oOVpoTXdoTVVYRldYYmlMRmQxOU9oNktlSFo1TEpWNWRaSlNTejlvOFFJUXhfdnhMOGpUazVkVTRIMGpzWXJoNUdLcnNhSG5vTkxPUXp4Y1ZFZ3hGNlhBTXpVd1ZHUU05ejF4UFJDOGNmVzg4UXpwenBqd0dWNk1JMnU1dVVmRzlVckdYWVVJaXlxS05PVVVHVnUxUDNkNk1wVml2M1N1dEktTHNjRmVySEF0WllZeWtvSFN4b3J4OG5wS0lvcGY4eDdQanJzdXZJZG9zenNWYlpieVJSZlB6bTN6eHF6dzhpVkFWNkdzVzA3Z3B2YW5oME5mX1o3YlJ0LTNDcHlTdEpKYWkzeHlpalcwUVFudURLd3BjbjFueFREUURtdlpXbUE0cXctOVhCcnE4WTAwd3pxYzB4Q3BTZzlsS0thcFE",
+          "date": "26/04/2026",
+          "resume": "La ville de Mohammedia a accueilli son premier Forum des compétences, axé sur l'emploi des jeunes et le développement de l'entrepreneuriat. Cet événement s'inscrit dans une dynamique territoriale de valorisation des talents et d'insertion professionnelle.",
+          "analyse": "L'émergence de forums régionaux dédiés aux compétences témoigne d'une mobilisation croissante des acteurs locaux pour répondre aux défis de l'employabilité des jeunes au Maroc.",
+          "implication": "Les banques peuvent saisir ces forums comme opportunités de sourcing de jeunes talents et de partenariats avec les acteurs de la formation, tout en renforçant leur image employeur auprès des nouvelles générations."
         }
       ]
     },
@@ -48,22 +150,31 @@
       "couleur": "#5c1a8b",
       "actualites": [
         {
-          "titre": "Forum National du Commerce : le négoce peine à entrer dans l'ère du Doing Business",
-          "source": "leseco.ma",
-          "url": "https://leseco.ma/business/forum-national-du-commerce-le-negoce-peine-a-entrer-dans-lere-du-doing-business.html",
-          "date": "28/04/2026 10:19",
-          "resume": "À quatre ans de l'échéance Trade Morocco 2030, le secteur du commerce marocain reste freiné par un environnement administratif, juridique et fiscal peu propice à l'investissement. Cette situation favorise le développement de l'économie informelle au détriment de la transformation numérique et réglementaire du secteur.",
-          "analyse": "Le retard de modernisation du cadre commercial marocain constitue un signal fort sur les limites de l'adoption digitale et IA dans les secteurs économiques clés, y compris bancaire.",
-          "implication": "Un responsable formation en banque devrait intégrer des modules sur la conformité réglementaire et l'accompagnement IA des PME commerciales, pour préparer les banquiers à conseiller des clients opérant dans un environnement juridique complexe."
+          "titre": "Samsung upgrades Calendar with AI search",
+          "source": "lnt.ma",
+          "url": "https://lnt.ma/samsung-upgrades-calendar-with-ai-search/",
+          "date": "28/04/2026 10:31",
+          "resume": "Samsung intègre une fonctionnalité de recherche en langage naturel dans son application Calendar, permettant aux utilisateurs de retrouver des événements via des phrases courantes plutôt que des mots-clés exacts. Cette mise à jour s'inscrit dans une stratégie plus large d'intégration de l'IA dans les outils de productivité quotidienne.",
+          "analyse": "L'adoption de l'IA conversationnelle dans des outils grand public illustre la démocratisation rapide des interfaces en langage naturel, une tendance directement transposable aux outils bancaires internes.",
+          "implication": "Un responsable formation en banque doit anticiper la montée en compétence des collaborateurs sur l'usage des interfaces IA en langage naturel, désormais présentes dans les outils du quotidien, et intégrer ces cas d'usage dans les parcours de formation digitale."
         },
         {
-          "titre": "Dialogue social: 49,7 MMDH mobilisés pour soutenir le pouvoir d'achat d'ici 2027",
+          "titre": "Spotify moves into fitness content with a new wellness strategy",
           "source": "lnt.ma",
-          "url": "https://lnt.ma/dialogue-social-497-mmdh-mobilises-pour-soutenir-le-pouvoir-dachat-dici-2027/",
-          "date": "28/04/2026 10:10",
-          "resume": "Le gouvernement marocain mobilise 49,7 milliards de dirhams dans le cadre du dialogue social pour soutenir le pouvoir d'achat des citoyens d'ici fin 2026 et début 2027. Ces mesures sont pilotées par le ministre de l'Inclusion économique, de la Petite entreprise, de l'Emploi et des Compétences.",
-          "analyse": "Cet afflux massif de financements publics en faveur du pouvoir d'achat et de l'emploi devrait générer une hausse de la demande de services bancaires de détail et de crédit à la consommation, accélérant potentiellement la digitalisation des offres.",
-          "implication": "Les responsables formation en banque doivent anticiper une montée en compétences sur les outils IA d'analyse comportementale client et de scoring crédit, pour répondre à une demande accrue de financement des ménages et petites entreprises."
+          "url": "https://lnt.ma/spotify-moves-into-fitness-content-with-a-new-wellness-strategy/",
+          "date": "28/04/2026 10:32",
+          "resume": "Spotify a annoncé le 27 avril 2026 une expansion majeure vers le contenu fitness, avec la création d'un hub 'Fitness' intégré à son application, en partenariat avec Peloton et des créateurs de contenu bien-être. La plateforme propose désormais des entraînements guidés associés à des sessions musicales et vidéo couvrant musculation, yoga et cardio.",
+          "analyse": "La stratégie d'écosystème de Spotify, qui étend sa plateforme au-delà de son cœur de métier via des partenariats, constitue un modèle de diversification numérique pertinent pour les banques cherchant à élargir leur offre de services digitaux.",
+          "implication": "Les responsables formation en banque peuvent s'inspirer de ce modèle d'écosystème pour concevoir des plateformes de formation modulaires et multipartenaires, intégrant contenus métiers, bien-être des collaborateurs et personnalisation par l'IA."
+        },
+        {
+          "titre": "Le Maroc dénonce à l'ONU l'instrumentalisation des détroits et met en garde contre les menaces sur la navigation",
+          "source": "medias24.com",
+          "url": "https://medias24.com/2026/04/28/le-maroc-denonce-a-lonu-l-instrumentalisation-des-detroits-et-met-en-garde-contre-les-menaces-sur-la-navigation-1667174/",
+          "date": "28/04/2026 10:34",
+          "resume": "Le Conseil de sécurité de l'ONU s'est réuni le 27 avril 2026 en séance de haut niveau sur la sécurité maritime, lors de laquelle l'ambassadeur marocain Omar Hilale a condamné les attaques visant des navires en mer Rouge, dans le golfe d'Aden et en mer d'Arabie. Il a rappelé que plus de 90 % des échanges commerciaux mondiaux transitent par les routes maritimes, soulignant l'enjeu stratégique de leur sécurisation.",
+          "analyse": "Les tensions sur les routes maritimes mondiales génèrent des risques géopolitiques et économiques majeurs qui impactent directement la gestion des risques, le financement du commerce extérieur et la conformité dans les banques marocaines à dimension internationale.",
+          "implication": "Un responsable formation en banque doit renforcer les modules de formation sur la gestion des risques géopolitiques, le financement du commerce international et la conformité liée aux sanctions, en intégrant des scénarios actualisés sur les disruptions des chaînes logistiques mondiales."
         }
       ]
     },
@@ -76,10 +187,28 @@
           "titre": "مكاسب في افتتاح بورصة الدار البيضاء",
           "source": "hespress.com",
           "url": "https://www.hespress.com/%d9%85%d9%83%d8%a7%d8%b3%d8%a8-%d9%81%d9%8a-%d8%a7%d9%81%d8%aa%d8%aa%d8%a7%d8%ad-%d8%a8%d9%88%d8%b1%d8%b5%d8%a9-%d8%a7%d9%84%d8%af%d8%a7%d8%b1-%d8%a7%d9%84%d8%a8%d9%8a%d8%b6%d8%a7%d8%a1-1738219.html",
-          "date": "28/04/2026 10:03",
-          "resume": "La Bourse de Casablanca a ouvert en hausse ce mardi, avec l'indice principal MASI en progression de 0,28% à 18.871,47 points. L'indice MASI.ESG, qui reflète les performances des entreprises les mieux notées en matière de critères ESG, a également progressé de 0,15%.",
-          "analyse": "La progression simultanée du MASI général et du MASI.ESG indique une dynamique favorable aux valeurs responsables sur la place casablancaise, confirmant l'intégration croissante des critères ESG dans les stratégies d'investissement au Maroc.",
-          "implication": "Un responsable formation en banque devrait intégrer le suivi des indices ESG marocains (notamment le MASI.ESG) dans les modules de formation à la finance durable, afin de sensibiliser les collaborateurs à la matérialité financière des critères extra-financiers."
+          "date": "28/04/2026",
+          "resume": "La Bourse de Casablanca a ouvert en territoire positif ce mardi, avec son indice principal MASI en hausse de 0,28% à 18.871,47 points. L'indice MASI.ESG, qui reflète la performance des entreprises ayant les meilleures notations ESG, a également progressé de 0,15%.",
+          "analyse": "La progression simultanée du MASI général et du MASI.ESG indique un intérêt croissant des investisseurs marocains pour les actifs à critères ESG, signal d'une maturité progressive de la finance durable sur la place casablancaise.",
+          "implication": "Un responsable formation en banque devrait intégrer des modules sur l'analyse des indices ESG et leur lecture dans le contexte du marché boursier marocain, afin de préparer les équipes commerciales et analystes à accompagner les clients investisseurs sur ces produits."
+        },
+        {
+          "titre": "Saham Bank accélère sa transformation digitale avec MyFX, première plateforme mobile de change au Maroc",
+          "source": "Boursenews",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE14S2Z1Wm0tZ2dVeHRISGJlenVZZTUySHExOUUzdG1nYnhJVTdNMmxQY1RmZ2hPZXV1YmpOaVhoeS1tVmdnV3NzV292Q1JHWm9jaWZXaEZBVzZ3eVRoTHdyVnQtT0xIdw?oc=5",
+          "date": "27/04/2026",
+          "resume": "Saham Bank lance MyFX, présentée comme la première plateforme mobile dédiée aux opérations de change au Maroc, dans le cadre de l'accélération de sa stratégie de transformation digitale. Cette initiative positionne la banque comme pionnière sur le segment digital du marché des changes retail au Maroc.",
+          "analyse": "Le lancement de MyFX illustre la course à l'innovation digitale dans le secteur bancaire marocain, avec des implications directes sur les pratiques de conformité, de traçabilité des transactions et potentiellement sur les reportings RSE liés à l'inclusion financière numérique.",
+          "implication": "Un responsable formation en banque doit anticiper des besoins de montée en compétences sur les outils digitaux de change, la réglementation associée et les aspects de conformité RSE liés aux plateformes mobiles financières au Maroc."
+        },
+        {
+          "titre": "Defense: Morocco strengthens its cybersecurity against rising threats",
+          "source": "lnt.ma",
+          "url": "https://lnt.ma/defense-morocco-strengthens-its-cybersecurity-against-rising-threats/",
+          "date": "28/04/2026",
+          "resume": "Le Maroc accélère sa stratégie de renforcement de la cybersécurité face à une montée des intrusions malveillantes ciblant les infrastructures sensibles, les réseaux militaires et les systèmes d'information stratégiques. La menace est décrite comme invisible mais constante, touchant des données critiques.",
+          "analyse": "Le renforcement de la cybersécurité au niveau national au Maroc a des répercussions directes sur le secteur bancaire, dont les infrastructures numériques constituent des cibles prioritaires et dont la résilience est un enjeu de gouvernance RSE.",
+          "implication": "Un responsable formation en banque devrait intégrer des parcours de sensibilisation à la cybersécurité et à la gestion des risques numériques dans les plans de formation, en lien avec les exigences de gouvernance et de continuité d'activité inscrites dans les référentiels RSE bancaires marocains."
         }
       ]
     },
@@ -95,19 +224,94 @@
       "id": "I1",
       "label": "Innovation Pedagogique Learning",
       "couleur": "#1a4a7a",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "Harnessing AI For Super High-ROI eLearning",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/harnessing-ai-for-super-high-roi-elearning",
+          "date": "27/04/2026",
+          "resume": "L'article explore comment l'IA permet de réduire les coûts de formation eLearning de 60% tout en améliorant la performance des employés. Il met en avant les parcours personnalisés, les défis adaptatifs et le feedback en temps réel comme leviers d'un ROI exceptionnel.",
+          "analyse": "L'IA s'impose comme un accélérateur structurel du ROI formation, transformant le eLearning d'un coût fixe en investissement à rendement mesurable.",
+          "implication": "Un responsable formation en banque peut s'appuyer sur ces données pour justifier un budget d'implémentation IA auprès de la direction financière, en mettant en avant la réduction des coûts et la montée en compétences accélérée des collaborateurs."
+        },
+        {
+          "titre": "The Corporate Brain Of 2030: AI Rewiring Executive Learning For Explosive ROI",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/the-corporate-brain-of-2030-ai-rewiring-executive-learning-for-explosive-roi",
+          "date": "27/04/2026",
+          "resume": "L'article anticipe qu'à horizon 2030, la formation en entreprise sera vécue de manière immersive via des simulations pilotées par l'IA, des expériences gamifiées et des micro-certifications vérifiées par blockchain obtenues en temps réel. Cette évolution marque un glissement fondamental du modèle de formation présentiel vers un apprentissage continu et intégré au quotidien professionnel.",
+          "analyse": "La convergence IA, gamification et blockchain redéfinit les standards de certification et d'engagement dans la formation executive, avec des implications directes sur la reconnaissance des compétences.",
+          "implication": "Pour une banque, cela ouvre la voie à des parcours de formation certifiants pour les cadres dirigeants, intégrant des simulations de scénarios réglementaires ou de gestion de crise, avec une traçabilité blockchain des acquis compétences."
+        },
+        {
+          "titre": "Effortful Processing In Psychology: A Strategic Guide For L&D Leaders",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/effortful-processing",
+          "date": "27/04/2026",
+          "resume": "L'article propose un guide stratégique destiné aux responsables L&D sur le concept de traitement cognitif effort, issu de la psychologie. Il présente des exemples concrets et des stratégies pour améliorer les résultats d'apprentissage en s'appuyant sur ce mécanisme.",
+          "analyse": "Ancrer la conception pédagogique dans des principes de psychologie cognitive constitue un levier de différenciation pour les équipes formation souhaitant maximiser la rétention des savoirs.",
+          "implication": "Un responsable formation en banque peut intégrer les principes du traitement effortful dans la conception de modules sur des sujets complexes comme la conformité réglementaire ou la gestion des risques, afin d'améliorer durablement la mémorisation et l'application opérationnelle."
+        }
+      ]
     },
     {
       "id": "I2",
       "label": "IA dans la Formation",
       "couleur": "#6b1a7a",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "What AI Will Look Like In 2030 (And What It Means For eLearning)",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/what-ai-will-look-like-in-2030-and-what-it-means-for-elearning",
+          "date": "24/04/2026",
+          "resume": "D'ici 2030, l'IA deviendra le socle central des dispositifs eLearning, avec des tuteurs IA, une création autonome de contenus et des analyses prédictives. Ces évolutions permettront un apprentissage hyper-personnalisé à grande échelle, tandis que le rôle humain se recentrera sur la stratégie et la supervision.",
+          "analyse": "Cette projection confirme une transformation structurelle du métier de formateur, qui passera d'un rôle de producteur de contenu à un rôle d'architecte pédagogique et de garant de la qualité.",
+          "implication": "Un responsable formation en banque doit anticiper dès maintenant la montée en compétences de ses équipes sur la gouvernance IA et la conception de parcours supervisés par l'humain, notamment pour les formations réglementaires (conformité, LCB-FT) où la personnalisation et la traçabilité sont critiques."
+        },
+        {
+          "titre": "AI Assessment Guardrails: How To Use AI Without Breaking Validity And Trust",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/ai-assessment-guardrails-how-to-use-ai-without-breaking-validity-and-trust",
+          "date": "22/04/2026",
+          "resume": "L'utilisation de l'IA pour créer des évaluations peut accélérer le processus, mais sans encadrements appropriés, elle peut introduire des erreurs, des biais et une faible cohérence pédagogique. L'article préconise la mise en place de garde-fous pour préserver la qualité et la fiabilité des évaluations.",
+          "analyse": "La question des garde-fous dans l'évaluation par IA soulève un enjeu de gouvernance pédagogique essentiel, particulièrement dans les secteurs où la certification des compétences a une valeur réglementaire.",
+          "implication": "Dans le secteur bancaire, où les évaluations de formation servent souvent à attester de la conformité réglementaire (DDA, MIF2, RGPD), un responsable formation doit impérativement définir un cadre de validation humaine des évaluations générées par IA pour garantir leur opposabilité juridique et leur fiabilité."
+        }
+      ]
     },
     {
       "id": "I3",
       "label": "Fintech Mondiale Open Banking",
       "couleur": "#7a3d1a",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "UK Government moves to future-proof payments regulation",
+          "source": "paymentscardsandmobile.com",
+          "url": "https://paymentsindustryintelligence.com/uk-government-moves-to-future-proof-payments-regulation/",
+          "date": "27/04/2026",
+          "resume": "Le gouvernement britannique a annoncé un ensemble de réformes réglementaires des paiements visant à préparer le secteur aux stablecoins, dépôts tokenisés, Open Banking et transactions pilotées par l'IA. Cette initiative reflète une volonté de modernisation proactive du cadre réglementaire face aux innovations technologiques émergentes.",
+          "analyse": "Le Royaume-Uni positionne sa réglementation comme un levier compétitif en anticipant la convergence de l'Open Banking, des actifs numériques et de l'IA dans les paiements.",
+          "implication": "Un responsable formation doit rapidement intégrer des modules combinant réglementation Open Banking, stablecoins et IA dans les parcours de formation des équipes conformité, risques et innovation des établissements bancaires."
+        },
+        {
+          "titre": "What drives real-time payment growth",
+          "source": "paymentsdive.com",
+          "url": "https://www.paymentsdive.com/news/what-drives-real-time-payment-growth/818387/",
+          "date": "24/04/2026",
+          "resume": "Selon un dirigeant payments d'HSBC, les entreprises adoptent les paiements numériques instantanés en fonction de leurs priorités stratégiques et de l'essor des actifs numériques. Cette tendance illustre une transformation des comportements corporate dans la gestion des flux financiers.",
+          "analyse": "La montée en puissance des paiements en temps réel, portée par les actifs numériques, redéfinit les attentes des entreprises vis-à-vis de leurs partenaires bancaires et accélère la digitalisation des trésoreries.",
+          "implication": "Les responsables formation doivent concevoir des formations spécifiques aux équipes de banque de transaction et trésorerie corporate sur les paiements instantanés et les actifs numériques pour répondre aux nouvelles exigences des clients entreprises."
+        },
+        {
+          "titre": "BNPL : 69 % des Français utilisateurs, l'outil glisse du paiement vers la gestion budgétaire, selon le baromètre Floa × Kantar",
+          "source": "finyear.com",
+          "url": "https://finyear.com/bnpl-69-des-francais-utilisateurs-loutil-glisse-du-paiement-vers-la-gestion-budgetaire-selon-le-barometre-floa-x-kantar/",
+          "date": "23/04/2026",
+          "resume": "Le baromètre Floa x Kantar révèle que 69 % des Français utilisent désormais le BNPL (Buy Now Pay Later), un outil qui évolue progressivement d'un simple moyen de paiement vers un instrument de gestion budgétaire. Cette évolution des usages signale une transformation profonde dans la relation des consommateurs français au crédit à la consommation.",
+          "analyse": "L'appropriation massive du BNPL en France et son glissement vers la gestion budgétaire indiquent une disruption du crédit traditionnel qui oblige les banques à repenser leur offre et leur approche client.",
+          "implication": "Un responsable formation doit prévoir des formations sur le BNPL, son cadre réglementaire et ses implications en matière de risque crédit et de relation client, notamment pour les conseillers retail et les équipes produits."
+        }
+      ]
     },
     {
       "id": "I4",
@@ -121,13 +325,31 @@
       "couleur": "#4a1a5c",
       "actualites": [
         {
+          "titre": "AU10TIX Partners with Camunda for KYC/KYB Workflow Orchestration",
+          "source": "finovate.com",
+          "url": "https://finovate.com/au10tix-partners-with-camunda-for-kyc-kyb-workflow-orchestration/",
+          "date": "27/04/2026",
+          "resume": "AU10TIX, spécialiste de la vérification d'identité et de la prévention de la fraude, a sélectionné la plateforme Camunda pour orchestrer ses workflows KYC et KYB à grande échelle. La plateforme permet d'externaliser la logique de décision hors du code applicatif, facilitant ainsi la gestion de processus d'identité complexes.",
+          "analyse": "Cette intégration illustre la montée en puissance des solutions d'orchestration agentique dans la conformité réglementaire bancaire, signalant une automatisation croissante des processus KYC/KYB soumis aux exigences de la réglementation financière internationale.",
+          "implication": "Les responsables formation en banque doivent anticiper la montée en compétences des équipes compliance sur les outils d'orchestration de workflows KYC/KYB automatisés et sur la compréhension de la logique de décision externalisée."
+        },
+        {
+          "titre": "How AI Is Transforming eLearning: From Personalization To Automation",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/how-ai-is-transforming-elearning-from-personalization-to-automation",
+          "date": "25/04/2026",
+          "resume": "L'IA transforme le secteur du eLearning en permettant une personnalisation dynamique des parcours d'apprentissage, adaptée au rythme, aux points forts et aux lacunes de chaque apprenant. Les plateformes pilotées par l'IA remplacent les formations standardisées par des expériences individualisées en temps réel.",
+          "analyse": "L'automatisation et la personnalisation par l'IA dans le eLearning offrent aux institutions financières une opportunité concrète de moderniser la formation réglementaire en la rendant plus efficace et ciblée.",
+          "implication": "Un responsable formation en banque devrait évaluer l'adoption de plateformes eLearning basées sur l'IA pour déployer des formations réglementaires personnalisées, notamment sur des thématiques à fort enjeu de mise à jour normative."
+        },
+        {
           "titre": "Shin-Etsu Withholds Outlook Due to Iran War Price Disruption",
           "source": "Bloomberg",
           "url": "https://www.bloomberg.com/news/articles/2026-04-28/shin-etsu-withholds-annual-outlook-due-to-iran-war-disruptions",
           "date": "28/04/2026",
-          "resume": "Shin-Etsu Chemical a refusé de publier ses prévisions annuelles en raison des perturbations causées par le conflit au Moyen-Orient. La société cite des contraintes d'approvisionnement et des fluctuations de prix liées à la guerre en Iran.",
-          "analyse": "Ce retrait de guidance illustre l'impact direct des risques géopolitiques sur la visibilité financière des entreprises cotées, un signal pertinent pour les équipes de conformité et de gestion des risques bancaires.",
-          "implication": "Un responsable formation en banque devrait intégrer ce cas concret dans les modules sur le risque géopolitique, la gestion du risque de marché et les obligations de transparence financière (disclosure) dans un contexte de crise internationale."
+          "resume": "Shin-Etsu Chemical a refusé de publier ses prévisions annuelles en raison de contraintes d'approvisionnement et de fluctuations de prix liées au conflit en cours au Moyen-Orient. Cette incertitude géopolitique affecte directement la visibilité financière de l'entreprise.",
+          "analyse": "L'impact du conflit au Moyen-Orient sur les chaînes d'approvisionnement mondiales souligne les risques géopolitiques que les institutions financières doivent intégrer dans leurs cadres de gestion des risques et de conformité internationale.",
+          "implication": "Les responsables formation en banque doivent s'assurer que les équipes risques et conformité sont formées aux implications réglementaires des sanctions et des risques géopolitiques liés aux conflits régionaux affectant les marchés financiers mondiaux."
         }
       ]
     },
@@ -152,19 +374,28 @@
           "titre": "« Vibe mathing » : un amateur armé de ChatGPT a craqué une énigme mathématique vieille de 60 ans",
           "source": "numerama.com",
           "url": "https://www.numerama.com/tech/2242081-vibe-mathing-un-amateur-arme-de-chatgpt-a-craque-une-enigme-mathematique-vieille-de-60-ans.html",
-          "date": "28/04/2026 10:04",
-          "resume": "Un amateur de 23 ans a résolu une énigme mathématique vieille de 60 ans en collaborant avec GPT-5.4 Pro via une simple conversation. Le modèle aurait permis de contourner les biais académiques traditionnels en faisant preuve de capacités créatives inédites.",
-          "analyse": "Cet événement illustre que l'IA générative dépasse désormais le cadre de l'assistance basique pour atteindre un niveau de raisonnement complexe jusqu'ici réservé aux experts, démocratisant l'accès à la résolution de problèmes avancés.",
-          "implication": "Les responsables formation en banque doivent intégrer des modules sur la collaboration humain-IA pour la résolution de problèmes complexes (risque, conformité, modélisation financière), en montrant que des collaborateurs non experts peuvent produire des analyses de haut niveau avec les bons outils."
+          "date": "28/04/2026",
+          "resume": "Un amateur de 23 ans a résolu une énigme mathématique vieille de 60 ans en utilisant ChatGPT (GPT-5.4 Pro) via une simple conversation. Cette réussite illustre la capacité de l'IA à contourner les biais académiques traditionnels et à produire des fulgurances créatives.",
+          "analyse": "Ce cas emblématique démontre que des utilisateurs non experts peuvent, grâce aux LLM avancés, rivaliser avec des spécialistes sur des problèmes complexes, remettant en question la valeur exclusive de l'expertise académique formelle.",
+          "implication": "Les responsables formation en banque doivent intégrer des modules sur l'usage avancé des LLM pour résoudre des problèmes complexes (modélisation de risque, conformité), en valorisant l'approche exploratoire augmentée par l'IA plutôt que la seule expertise technique traditionnelle."
+        },
+        {
+          "titre": "L'essor de ChatGPT associé à un recul marqué de l'embauche de développeurs, selon une étude de la Fed",
+          "source": "TradingView / news.google.com",
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9kcGhPWmdjRGNPZUhfVm5GWmdBSWs0Y2FTaGluTUFZU0dIaWYwSWxoell0dWF6Uk83Ymc3SG95UDk4dXN3cTVtN1RueXlEWEtXNmtseF9KU2NTZUZYeFdTb2VPR3FXeUk3dktPRQ?oc=5",
+          "date": "28/04/2026",
+          "resume": "Une étude de la Réserve Fédérale américaine établit un lien entre la montée en puissance de ChatGPT et une baisse significative des recrutements de développeurs. Ce signal macroéconomique confirme l'impact structurel de l'IA générative sur les marchés de l'emploi tech.",
+          "analyse": "La validation par une institution aussi sérieuse que la Fed d'un effet de substitution de l'IA sur l'emploi qualifié marque un tournant dans la prise de conscience institutionnelle de la transformation des métiers technologiques.",
+          "implication": "Les responsables formation en banque doivent anticiper la recomposition des équipes IT et data internes, en redessinant les parcours de montée en compétence vers des rôles d'orchestration IA plutôt que de développement pur, et en sensibilisant les RH à ces nouvelles réalités du marché du travail."
         },
         {
           "titre": "Classements Arena AI : GPT-5.5 explose les scores avec +50 points en code",
           "source": "lebigdata.fr",
           "url": "https://www.lebigdata.fr/classements-arena-ai-gpt-5-5-explose-les-scores-avec-50-points-en-code",
-          "date": "28/04/2026 07:26",
-          "resume": "Le dernier modèle d'OpenAI, GPT-5.5, affiche une progression de +50 points dans les classements Arena AI, notamment sur les tâches de code. OpenAI confirme que ce modèle représente une avancée significative en termes de puissance et de performance.",
-          "analyse": "La progression spectaculaire de GPT-5.5 sur les benchmarks de code signale une accélération rapide des capacités des LLM, rendant obsolètes très vite les référentiels de compétences IA actuellement enseignés.",
-          "implication": "Les responsables formation en banque doivent mettre en place une veille continue sur l'évolution des modèles IA et réviser régulièrement leurs curricula, notamment sur l'automatisation des tâches analytiques et de reporting, pour maintenir la pertinence des formations dispensées."
+          "date": "28/04/2026",
+          "resume": "Le dernier modèle d'OpenAI, GPT-5.5, enregistre une progression de +50 points dans les classements Arena AI sur les tâches de code, confirmant une accélération notable des performances. OpenAI positionne ce modèle comme une avancée de puissance redoutable.",
+          "analyse": "La progression spectaculaire de GPT-5.5 en coding accélère l'obsolescence des compétences techniques non augmentées par l'IA et intensifie la pression concurrentielle sur les équipes technologiques des établissements financiers.",
+          "implication": "Les responsables formation en banque doivent mettre à jour en urgence leurs référentiels de compétences digitales, en intégrant l'évaluation et l'usage des modèles de dernière génération dans les formations destinées aux profils IT, data science et conformité automatisée."
         }
       ]
     },
@@ -172,13 +403,42 @@
       "id": "I9",
       "label": "RSE Finance Durable Mondiale",
       "couleur": "#1a5c1a",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "Amundi to Manage New €3 Billion EU-backed Green Bond Blended Finance Fund",
+          "source": "esgtoday.com",
+          "url": "https://www.esgtoday.com/amundi-to-manage-new-e3-billion-eu-backed-green-bond-blended-finance-fund/?utm_source=rss&utm_medium=rss&utm_campaign=amundi-to-manage-new-e3-billion-eu-backed-green-bond-blended-finance-fund",
+          "date": "27/04/2026",
+          "resume": "Amundi a annoncé qu'il gérera le Global Green Bond Initiative (GGBI), un fonds de finance mixte adossé à l'UE doté de 3 milliards d'euros. Ce fonds est structuré autour d'obligations vertes et bénéficie d'un soutien institutionnel européen.",
+          "analyse": "Ce dispositif illustre la montée en puissance de la blended finance comme levier stratégique pour mobiliser des capitaux privés au service de la transition écologique à l'échelle mondiale.",
+          "implication": "Un responsable formation en banque doit intégrer dans ses parcours les mécanismes de blended finance et de green bonds soutenus par des institutions publiques, compétences désormais indispensables pour les équipes en gestion d'actifs et financement de projets ESG."
+        }
+      ]
     },
     {
       "id": "I10",
       "label": "Future Skills International",
       "couleur": "#7a6b1a",
-      "actualites": []
+      "actualites": [
+        {
+          "titre": "The Smart Learning Revolution: How AI Is Reshaping Corporate Education",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/the-smart-learning-revolution-how-ai-is-reshaping-corporate-education",
+          "date": "25/04/2026",
+          "resume": "La formation en entreprise a évolué d'une réponse d'urgence post-pandémie vers un levier stratégique de transformation des effectifs. Les organisations migrent vers des écosystèmes d'apprentissage basés sur les compétences et alimentés par l'IA, en rupture avec les diplômes traditionnels et la simple diffusion de contenus.",
+          "analyse": "Cette transition vers des écosystèmes IA-driven orientés compétences signale une maturité croissante du marché de la formation corporate, où l'alignement sur les besoins métiers réels devient le critère central de performance.",
+          "implication": "Un responsable formation en banque doit repositionner son offre autour de parcours compétences-driven pilotés par l'IA, en lien direct avec les priorités stratégiques de l'établissement, plutôt que de maintenir des catalogues de formations standardisées."
+        },
+        {
+          "titre": "Why AI-Enabled Training Is Becoming A Business Imperative Across Many Industries",
+          "source": "eLearning Industry",
+          "url": "https://elearningindustry.com/why-ai-enabled-training-is-becoming-a-business-imperative-across-many-industries",
+          "date": "21/04/2026",
+          "resume": "Seulement 5% des organisations disposent des talents nécessaires pour atteindre leurs priorités stratégiques de 2026. La formation et la certification activées par l'IA sont présentées comme des leviers essentiels pour combler les écarts de compétences, réduire les risques et développer les capacités des effectifs à grande échelle.",
+          "analyse": "Le chiffre de 5% de maturité talent révèle un déficit systémique critique qui confère à la formation IA-enabled un statut d'impératif business et non plus d'investissement optionnel, particulièrement dans les secteurs hautement régulés.",
+          "implication": "Face à ce déficit massif de compétences, un responsable formation en banque doit argumenter l'intégration de solutions de formation IA-enabled auprès de la direction générale comme un outil de gestion des risques opérationnels et de conformité, en s'appuyant sur des métriques de certification mesurables."
+        }
+      ]
     },
     {
       "id": "I11",
@@ -188,8 +448,8 @@
     }
   ],
   "stats": {
-    "total_maroc": 4,
-    "total_intl": 3,
-    "genere_le": "2026-04-28 10:27"
+    "total_maroc": 18,
+    "total_intl": 17,
+    "genere_le": "2026-04-28 10:35"
   }
 }

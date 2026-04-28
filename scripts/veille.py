@@ -350,9 +350,9 @@ def filtrer_articles_nouveaux(articles, urls_deja_envoyees, mode):
 # DETERMINATION DU MODE
 # ============================================================
 CONFIGS = {
-    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernieres heures", "nb_articles": 2,  "nb_articles_pwa": 10},
-    "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours",    "nb_articles": 3,  "nb_articles_pwa": 15},
-    "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours",   "nb_articles": 4,  "nb_articles_pwa": 20},
+    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernieres heures"},
+    "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours"},
+    "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours"},
 }
 
 def determiner_mode():
@@ -498,13 +498,16 @@ def filtrer_par_keywords(articles, keywords):
 # ============================================================
 # ANALYSE CLAUDE
 # ============================================================
-def analyser_avec_claude(client, domaine, articles, nb_max):
+def analyser_avec_claude(client, domaine, articles):
     if not articles:
         return {"id": domaine["id"], "label": domaine["label"], "couleur": domaine["couleur"], "actualites": [], "vide": True}
 
+    # Max 20 articles envoyes a Claude pour maitriser les tokens
+    articles_a_analyser = articles[:20]
+
     articles_str = "\n\n".join([
         f"ARTICLE {i+1}:\nTitre: {a['titre']}\nSource: {a['source']}\nURL: {a['url']}\nDate: {a['date']}\nExtrait: {a['description']}"
-        for i, a in enumerate(articles[:nb_max * 2])
+        for i, a in enumerate(articles_a_analyser)
     ])
 
     prompt = f"""Tu es un analyste expert en veille strategique bancaire et formation.
@@ -516,7 +519,7 @@ Ne fabrique rien. Ne complete pas avec tes propres connaissances.
 
 {articles_str}
 
-Selectionne les {nb_max} articles les plus pertinents pour ce domaine.
+Selectionne TOUS les articles vraiment pertinents pour ce domaine. Exclus uniquement ceux qui sont completement hors sujet.
 Reponds UNIQUEMENT avec ce JSON brut sans backticks :
 {{
   "actualites": [
@@ -535,7 +538,7 @@ Reponds UNIQUEMENT avec ce JSON brut sans backticks :
     try:
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2000,
+            max_tokens=4000,
             messages=[{"role": "user", "content": prompt}],
         )
         raw = message.content[0].text.strip()
@@ -548,7 +551,7 @@ Reponds UNIQUEMENT avec ce JSON brut sans backticks :
             "id":         domaine["id"],
             "label":      domaine["label"],
             "couleur":    domaine["couleur"],
-            "actualites": result.get("actualites", [])[:nb_max],
+            "actualites": result.get("actualites", []),
             "vide":       False
         }
     except Exception as e:
@@ -646,7 +649,7 @@ def envoyer(sujet, html):
 # ============================================================
 # PWA — Historique 30 jours glissants
 # ============================================================
-def fusionner_historique(nouveaux, anciens, max_articles=10):
+def fusionner_historique(nouveaux, anciens):
     """Fusionne nouveaux et anciens — sans doublon — max articles — 30 jours."""
     date_limite = (AUJOURD_HUI - timedelta(days=30)).strftime("%Y-%m-%d")
     urls_vus = set()
@@ -663,7 +666,7 @@ def fusionner_historique(nouveaux, anciens, max_articles=10):
             if date_iso >= date_limite:
                 urls_vus.add(a["url"])
                 fusion.append(a)
-    return fusion[:max_articles]
+    return fusion
 
 
 def charger_historique_pwa():
@@ -739,7 +742,7 @@ def main():
         articles_filtres = filtrer_par_keywords(articles_maroc, domaine["keywords"])
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
-            resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
+            resultat = analyser_avec_claude(client, domaine, articles_filtres)
             for a in resultat.get("actualites", []):
                 if a.get("url"):
                     nouvelles_urls.add(a["url"])
@@ -755,7 +758,7 @@ def main():
         articles_filtres = filtrer_par_keywords(articles_intl, domaine["keywords"])
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
-            resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
+            resultat = analyser_avec_claude(client, domaine, articles_filtres)
             for a in resultat.get("actualites", []):
                 if a.get("url"):
                     nouvelles_urls.add(a["url"])
@@ -771,46 +774,42 @@ def main():
     vides_i  = sum(1 for d in resultats_intl  if d.get("vide"))
     prefixe  = {"quotidien": "Quotidien", "hebdomadaire": "Hebdo", "mensuel": "Mensuel"}[mode]
 
-    # Email 1 — Maroc
-    contenu_m = "".join(html_domaine(d, config) for d in resultats_maroc)
-    envoyer(
-        f"1/2 Veille {prefixe} Maroc — {DATE_LABEL}",
-        construire_email(
-            f"{config['label']} — Veille Maroc",
-            "Sources : leconomiste · lavieeco · medias24 · lematin · ledesk · telquel · yabiladi · Google News Maroc et plus",
-            f"Articles verifies flux RSS — {config['periode']} uniquement",
-            contenu_m,
-            f"{total_m} articles · {vides_m} domaine(s) sans info"
-        )
-    )
-    log.info(f"Email Maroc envoye — {total_m} articles")
-    time.sleep(3)
+    # Email unique — Maroc + International
+    separateur = """
+    <div style="background:#0f2540;padding:10px 26px;margin:20px 0;">
+      <span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#c8a96e;">VEILLE INTERNATIONALE</span>
+    </div>"""
 
-    # Email 2 — International
-    contenu_i = "".join(html_domaine(d, config) for d in resultats_intl)
+    contenu_m = """
+    <div style="background:#0f2540;padding:10px 26px;margin-bottom:16px;">
+      <span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#c8a96e;">VEILLE MAROC</span>
+    </div>""" + "".join(html_domaine(d, config) for d in resultats_maroc)
+
+    contenu_i = separateur + "".join(html_domaine(d, config) for d in resultats_intl)
+
     envoyer(
-        f"2/2 Veille {prefixe} Internationale — {DATE_LABEL}",
+        f"Veille {prefixe} — {DATE_LABEL}",
         construire_email(
-            f"{config['label']} — Veille Internationale",
-            "Sources : finextra · reuters · lesechos · lemonde · lebigdata · novethic · weforum · Google News FR/EN et plus",
+            f"{config['label']} — Maroc & International",
+            "Sources : leconomiste · lavieeco · medias24 · lesechos · finextra · reuters · weforum · Google News et plus",
             f"Articles verifies flux RSS — {config['periode']} uniquement",
-            contenu_i,
-            f"{total_i} articles · {vides_i} domaine(s) sans info"
+            contenu_m + contenu_i,
+            f"{total_m + total_i} articles · {vides_m + vides_i} domaine(s) sans info"
         )
     )
-    log.info(f"Email International envoye — {total_i} articles")
+    log.info(f"Email envoye — {total_m + total_i} articles (Maroc: {total_m} / Intl: {total_i})")
 
     # PWA — Historique 30 jours
     try:
         historique = charger_historique_pwa()
         maroc_pwa = []
         for d in resultats_maroc:
-            fusion = fusionner_historique(d.get("actualites", []), historique["maroc"].get(d["id"], []), config["nb_articles_pwa"])
+            fusion = fusionner_historique(d.get("actualites", []), historique["maroc"].get(d["id"], []))
             maroc_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
 
         intl_pwa = []
         for d in resultats_intl:
-            fusion = fusionner_historique(d.get("actualites", []), historique["international"].get(d["id"], []), config["nb_articles_pwa"])
+            fusion = fusionner_historique(d.get("actualites", []), historique["international"].get(d["id"], []))
             intl_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
 
         data_pwa = {

@@ -3,7 +3,7 @@ VEILLE STRATEGIQUE - Basée sur flux RSS
 Sources marocaines et internationales vérifiées
 Filtre date strict : 24h / 7 jours / 30 jours
 Zéro hallucination — uniquement vrais articles
-VERSION REFERENCE — 26 Avril 2026
+VERSION FINALE — 28 Avril 2026
 """
 
 import os
@@ -11,6 +11,7 @@ import smtplib
 import logging
 import json
 import time
+import base64
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
@@ -26,7 +27,7 @@ EMAIL_MOT_DE_PASSE  = os.environ["EMAIL_MOT_DE_PASSE"]
 EMAIL_DESTINATAIRES = os.environ["EMAIL_DESTINATAIRES"].split(",")
 MODE_DEMANDE        = os.environ.get("MODE", "auto")
 GITHUB_TOKEN        = os.environ.get("GITHUB_TOKEN", "")
-GITHUB_REPO         = os.environ.get("GITHUB_REPOSITORY", "")  # ex: username/boaaveille
+GITHUB_REPO         = os.environ.get("GITHUB_REPOSITORY", "")
 DEDUP_FILE          = "urls_deja_envoyees.json"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
@@ -34,7 +35,6 @@ log = logging.getLogger(__name__)
 
 AUJOURD_HUI = datetime.now()
 DATE_LABEL  = AUJOURD_HUI.strftime("%A %d %B %Y")
-ANNEE       = AUJOURD_HUI.strftime("%Y")
 
 # ============================================================
 # SOURCES RSS
@@ -91,6 +91,8 @@ SOURCES_RSS_MAROC = [
     "https://boursier.ma/feed/",
     "https://boursenews.ma/feed/",
     "https://fnh.ma/feed/",
+
+    "https://www.infomediaire.net/feed/",
 
     # ── AFRIQUE & MAROC - FINANCE ──
     "https://www.agenceecofin.com/rss",
@@ -286,30 +288,25 @@ DOMAINES_INTL = [
      ]},
 ]
 
+
 # ============================================================
-# DEDUPLICATION — Memoire des URLs deja envoyees
+# DEDUPLICATION
 # ============================================================
 def charger_urls_deja_envoyees():
-    """Charge la liste des URLs deja envoyees depuis GitHub."""
     if not GITHUB_TOKEN or not GITHUB_REPO:
         log.warning("GITHUB_TOKEN non configure - deduplication desactivee")
         return set()
     try:
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{DEDUP_FILE}"
-        headers = {
-            "Authorization": f"token {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github.v3+json"
-        }
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
         response = requests.get(url, headers=headers, timeout=10)
         if response.status_code == 200:
-            import base64
             contenu = base64.b64decode(response.json()["content"]).decode("utf-8")
-            data = json.loads(contenu)
-            urls = set(data.get("urls", []))
-            log.info(f"Deduplication : {len(urls)} URLs deja envoyees chargees")
+            urls = set(json.loads(contenu).get("urls", []))
+            log.info(f"Deduplication : {len(urls)} URLs chargees")
             return urls
         elif response.status_code == 404:
-            log.info("Fichier deduplication non trouve - premier lancement")
+            log.info("Deduplication : premier lancement")
             return set()
     except Exception as e:
         log.warning(f"Erreur chargement deduplication : {e}")
@@ -317,54 +314,35 @@ def charger_urls_deja_envoyees():
 
 
 def sauvegarder_urls_envoyees(urls_existantes, nouvelles_urls):
-    """Sauvegarde les URLs envoyees dans GitHub."""
     if not GITHUB_TOKEN or not GITHUB_REPO:
         return
     try:
-        # Garder seulement les 2000 dernieres URLs pour ne pas surcharger
         toutes_urls = list(urls_existantes | nouvelles_urls)[-2000:]
         contenu = json.dumps({
             "urls": toutes_urls,
             "derniere_mise_a_jour": AUJOURD_HUI.strftime("%Y-%m-%d %H:%M"),
             "total": len(toutes_urls)
         }, ensure_ascii=False, indent=2)
-
-        import base64
         contenu_b64 = base64.b64encode(contenu.encode("utf-8")).decode("utf-8")
-
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{DEDUP_FILE}"
-        headers = {
-            "Authorization": f"token {GITHUB_TOKEN}",
-            "Accept": "application/vnd.github.v3+json"
-        }
-
-        # Verifier si le fichier existe deja pour avoir son SHA
+        headers = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
         response = requests.get(url, headers=headers, timeout=10)
-        payload = {
-            "message": f"Mise a jour deduplication - {AUJOURD_HUI.strftime('%Y-%m-%d')}",
-            "content": contenu_b64
-        }
+        payload = {"message": f"Deduplication {AUJOURD_HUI.strftime('%Y-%m-%d')}", "content": contenu_b64}
         if response.status_code == 200:
             payload["sha"] = response.json()["sha"]
-
         requests.put(url, headers=headers, json=payload, timeout=10)
-        log.info(f"Deduplication sauvegardee : {len(toutes_urls)} URLs au total")
+        log.info(f"Deduplication sauvegardee : {len(toutes_urls)} URLs")
     except Exception as e:
         log.warning(f"Erreur sauvegarde deduplication : {e}")
 
 
 def filtrer_articles_nouveaux(articles, urls_deja_envoyees, mode):
-    """
-    Filtre les articles deja envoyes.
-    En mode quotidien : strict - exclut tout article deja envoye.
-    En mode hebdo/mensuel : moins strict - garde les articles de la periode.
-    """
     if mode != "quotidien" or not urls_deja_envoyees:
         return articles
     articles_nouveaux = [a for a in articles if a.get("url") not in urls_deja_envoyees]
     nb_exclus = len(articles) - len(articles_nouveaux)
     if nb_exclus > 0:
-        log.info(f"  Deduplication : {nb_exclus} articles deja envoyes exclus")
+        log.info(f"  Deduplication : {nb_exclus} articles exclus")
     return articles_nouveaux
 
 
@@ -372,7 +350,7 @@ def filtrer_articles_nouveaux(articles, urls_deja_envoyees, mode):
 # DETERMINATION DU MODE
 # ============================================================
 CONFIGS = {
-    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernières heures", "nb_articles": 2,  "nb_articles_pwa": 10},
+    "quotidien":    {"jours": 1,  "label": "Rapport Quotidien",    "periode": "24 dernieres heures", "nb_articles": 2,  "nb_articles_pwa": 10},
     "hebdomadaire": {"jours": 7,  "label": "Rapport Hebdomadaire", "periode": "7 derniers jours",    "nb_articles": 3,  "nb_articles_pwa": 15},
     "mensuel":      {"jours": 30, "label": "Rapport Mensuel",      "periode": "30 derniers jours",   "nb_articles": 4,  "nb_articles_pwa": 20},
 }
@@ -380,24 +358,21 @@ CONFIGS = {
 def determiner_mode():
     if MODE_DEMANDE in CONFIGS:
         return MODE_DEMANDE
-    jour_semaine = AUJOURD_HUI.weekday()
-    jour_mois    = AUJOURD_HUI.day
+    jour_mois = AUJOURD_HUI.day
     if jour_mois == 1:
         return "mensuel"
-    if jour_semaine == 0:
+    if AUJOURD_HUI.weekday() == 0:
         return "hebdomadaire"
     return "quotidien"
+
 
 # ============================================================
 # LECTURE DES FLUX RSS
 # ============================================================
 def decoder_url_google_news(url):
-    """Extrait la vraie URL depuis un lien Google News."""
     if "news.google.com" in url:
         try:
-            response = requests.get(url, timeout=5,
-                headers={"User-Agent": "Mozilla/5.0"},
-                allow_redirects=True)
+            response = requests.get(url, timeout=5, headers={"User-Agent": "Mozilla/5.0"}, allow_redirects=True)
             if response.url and "news.google.com" not in response.url:
                 return response.url
         except Exception:
@@ -406,11 +381,9 @@ def decoder_url_google_news(url):
 
 
 def lire_flux_rss(url, jours):
-    """Lit un flux RSS et retourne les articles dans la période demandée."""
     import re
     articles = []
     date_limite = AUJOURD_HUI - timedelta(days=jours)
-
     try:
         headers = {"User-Agent": "Mozilla/5.0 (compatible; VeilleStrategique/1.0)"}
         response = requests.get(url, timeout=5, headers=headers)
@@ -466,9 +439,7 @@ def lire_flux_rss(url, jours):
                     except Exception:
                         pass
 
-            if date_pub is None:
-                continue
-            if date_pub < date_limite:
+            if date_pub is None or date_pub < date_limite:
                 continue
 
             source = url.split("/")[2].replace("www.", "")
@@ -478,6 +449,7 @@ def lire_flux_rss(url, jours):
                 "source":      source,
                 "description": description or "",
                 "date":        date_pub.strftime("%d/%m/%Y %H:%M"),
+                "date_iso":    date_pub.strftime("%Y-%m-%d"),  # Format ISO pour comparaisons fiables
                 "date_obj":    date_pub,
             })
 
@@ -488,7 +460,6 @@ def lire_flux_rss(url, jours):
 
 
 def collecter_articles_rss(sources_rss, jours):
-    """Collecte tous les articles en parallele."""
     tous_articles = []
 
     def lire_une_source(url):
@@ -504,8 +475,7 @@ def collecter_articles_rss(sources_rss, jours):
         futures = {executor.submit(lire_une_source, url): url for url in sources_rss}
         for future in as_completed(futures):
             try:
-                articles = future.result(timeout=15)
-                tous_articles.extend(articles)
+                tous_articles.extend(future.result(timeout=15))
             except Exception:
                 pass
 
@@ -514,7 +484,6 @@ def collecter_articles_rss(sources_rss, jours):
 
 
 def filtrer_par_keywords(articles, keywords):
-    """Filtre les articles par mots-cles dans titre ET description."""
     articles_pertinents = []
     for article in articles:
         titre       = (article.get("titre") or "").lower()
@@ -576,11 +545,11 @@ Reponds UNIQUEMENT avec ce JSON brut sans backticks :
             raw = raw[debut:fin+1]
         result = json.loads(raw)
         return {
-            "id":        domaine["id"],
-            "label":     domaine["label"],
-            "couleur":   domaine["couleur"],
+            "id":         domaine["id"],
+            "label":      domaine["label"],
+            "couleur":    domaine["couleur"],
             "actualites": result.get("actualites", [])[:nb_max],
-            "vide":      False
+            "vide":       False
         }
     except Exception as e:
         log.warning(f"Erreur Claude {domaine['id']}: {e}")
@@ -588,7 +557,7 @@ Reponds UNIQUEMENT avec ce JSON brut sans backticks :
 
 
 # ============================================================
-# GENERATION HTML
+# GENERATION HTML EMAIL
 # ============================================================
 def html_domaine(d, config):
     color = d.get("couleur", "#1a3a5c")
@@ -600,7 +569,7 @@ def html_domaine(d, config):
             <span style="font-family:Georgia,serif;font-size:13px;font-weight:700;color:white;">{d['id']} — {d['label']}</span>
           </div>
           <div style="padding:10px 16px;font-size:12px;color:#bbb;font-style:italic;">
-            Aucun article publié sur ce domaine durant la période : {config['periode']}.
+            Aucun article publie sur ce domaine durant la periode : {config['periode']}.
           </div>
         </div>"""
 
@@ -617,8 +586,8 @@ def html_domaine(d, config):
           <div style="font-size:10px;color:#1a6b4a;font-weight:600;margin:4px 0;">📅 {a.get('date','')}</div>
           <p style="font-size:12px;color:#555;line-height:1.6;margin:6px 0;">{a.get('resume','')}</p>
           <p style="font-size:12px;color:#333;margin:0 0 6px;"><strong style="color:{color};">Analyse : </strong>{a.get('analyse','')}</p>
-          <div style="padding:5px 10px;border-left:3px solid {color};font-size:11px;color:#444;margin-bottom:7px;">→ {a.get('implication','')}</div>
-          <a href="{url}" style="font-size:11px;color:{color};font-weight:600;text-decoration:none;">🔗 Lire l'article source</a>
+          <div style="padding:5px 10px;border-left:3px solid {color};font-size:11px;color:#444;margin-bottom:7px;">-> {a.get('implication','')}</div>
+          <a href="{url}" style="font-size:11px;color:{color};font-weight:600;text-decoration:none;">Lire l'article source</a>
         </div>"""
 
     return f"""
@@ -643,14 +612,14 @@ def construire_email(titre, sous_titre, badge, contenu, stats):
     <div style="font-size:12px;color:#c8a96e;margin-top:5px;font-weight:600;">{DATE_LABEL}</div>
   </div>
   <div style="background:#1a6b4a;padding:8px 26px;">
-    <span style="font-size:11px;color:white;">✅ {badge} — {stats}</span>
+    <span style="font-size:11px;color:white;">OK {badge} - {stats}</span>
   </div>
   <div style="padding:18px 26px;">
     {contenu}
     <div style="border-top:2px solid #0f2540;padding-top:10px;margin-top:14px;">
       <table width="100%" cellpadding="0" cellspacing="0"><tr>
-        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Veille Strategique · {DATE_LABEL}</td>
-        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Sources RSS verifiees · Confidentiel</td>
+        <td style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Veille Strategique - {DATE_LABEL}</td>
+        <td align="right" style="font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;">Sources RSS verifiees - Confidentiel</td>
       </tr></table>
     </div>
   </div>
@@ -667,11 +636,75 @@ def envoyer(sujet, html):
     msg["Subject"] = sujet
     msg["From"]    = f"Veille Strategique <{EMAIL_EXPEDITEUR}>"
     msg["To"]      = ", ".join(EMAIL_DESTINATAIRES)
-    msg.attach(MIMEText(html, "utf-8"))
+    msg.attach(MIMEText(html, "html", "utf-8"))  # CORRECTION : "html" comme type MIME
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(EMAIL_EXPEDITEUR, EMAIL_MOT_DE_PASSE)
         server.sendmail(EMAIL_EXPEDITEUR, EMAIL_DESTINATAIRES, msg.as_string())
     log.info(f"Email envoye : {sujet}")
+
+
+# ============================================================
+# PWA — Historique 30 jours glissants
+# ============================================================
+def fusionner_historique(nouveaux, anciens, max_articles=10):
+    """Fusionne nouveaux et anciens — sans doublon — max articles — 30 jours."""
+    date_limite = (AUJOURD_HUI - timedelta(days=30)).strftime("%Y-%m-%d")
+    urls_vus = set()
+    fusion = []
+    for a in nouveaux:
+        if a.get("url") and a["url"] not in urls_vus:
+            urls_vus.add(a["url"])
+            fusion.append(a)
+    for a in anciens:
+        if len(fusion) >= max_articles:
+            break
+        if a.get("url") and a["url"] not in urls_vus:
+            date_iso = a.get("date_iso", "")
+            if date_iso >= date_limite:
+                urls_vus.add(a["url"])
+                fusion.append(a)
+    return fusion[:max_articles]
+
+
+def charger_historique_pwa():
+    historique = {"maroc": {}, "international": {}}
+    if not GITHUB_TOKEN or not GITHUB_REPO:
+        return historique
+    try:
+        url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
+        headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+        response = requests.get(url_api, headers=headers, timeout=10)
+        if response.status_code == 200:
+            ancien = json.loads(base64.b64decode(response.json()["content"]).decode("utf-8"))
+            for d in ancien.get("maroc", []):
+                historique["maroc"][d["id"]] = d.get("actualites", [])
+            for d in ancien.get("international", []):
+                historique["international"][d["id"]] = d.get("actualites", [])
+            log.info("Historique PWA charge")
+    except Exception as e:
+        log.warning(f"Erreur chargement historique : {e}")
+    return historique
+
+
+def pousser_veille_data(data_pwa):
+    if not GITHUB_TOKEN or not GITHUB_REPO:
+        return
+    try:
+        contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
+        contenu_b64  = base64.b64encode(contenu_json.encode("utf-8")).decode("utf-8")
+        url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
+        headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
+        response = requests.get(url_api, headers=headers, timeout=10)
+        payload  = {"message": f"veille-data {DATE_LABEL}", "content": contenu_b64}
+        if response.status_code == 200:
+            payload["sha"] = response.json()["sha"]
+        result = requests.put(url_api, headers=headers, json=payload, timeout=10)
+        if result.status_code in [200, 201]:
+            log.info("veille-data.json pousse sur GitHub — Netlify mis a jour")
+        else:
+            log.warning(f"Erreur push GitHub : {result.status_code}")
+    except Exception as e:
+        log.warning(f"Erreur push GitHub : {e}")
 
 
 # ============================================================
@@ -684,7 +717,7 @@ def main():
 
     client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    # Charger URLs deja envoyees (deduplication)
+    # Deduplication
     urls_deja_envoyees = charger_urls_deja_envoyees()
     nouvelles_urls = set()
 
@@ -707,7 +740,6 @@ def main():
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
             resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
-            # Collecter les URLs envoyees
             for a in resultat.get("actualites", []):
                 if a.get("url"):
                     nouvelles_urls.add(a["url"])
@@ -724,7 +756,6 @@ def main():
         log.info(f"  {len(articles_filtres)} articles pertinents")
         if articles_filtres:
             resultat = analyser_avec_claude(client, domaine, articles_filtres, config["nb_articles"])
-            # Collecter les URLs envoyees
             for a in resultat.get("actualites", []):
                 if a.get("url"):
                     nouvelles_urls.add(a["url"])
@@ -769,60 +800,17 @@ def main():
     )
     log.info(f"Email International envoye — {total_i} articles")
 
-    # Generer veille-data.json pour la PWA — avec historique 30 jours
+    # PWA — Historique 30 jours
     try:
-        # Charger l historique existant depuis GitHub
-        historique = {"maroc": {}, "international": {}}
-        if GITHUB_TOKEN and GITHUB_REPO:
-            try:
-                import base64
-                url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
-                headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
-                response = requests.get(url_api, headers=headers, timeout=10)
-                if response.status_code == 200:
-                    ancien = json.loads(base64.b64decode(response.json()["content"]).decode("utf-8"))
-                    for d in ancien.get("maroc", []):
-                        historique["maroc"][d["id"]] = d.get("actualites", [])
-                    for d in ancien.get("international", []):
-                        historique["international"][d["id"]] = d.get("actualites", [])
-            except Exception as e:
-                log.warning(f"Erreur chargement historique : {e}")
-
-        # Fusionner nouveaux articles avec historique — max 10 par domaine — 30 jours
-        date_limite_30j = (AUJOURD_HUI - timedelta(days=30)).strftime("%d/%m/%Y")
-
-        def fusionner(nouveaux, anciens, max_articles=10):
-            urls_vus = set()
-            fusion = []
-            # Nouveaux en premier
-            for a in nouveaux:
-                if a.get("url") and a["url"] not in urls_vus:
-                    urls_vus.add(a["url"])
-                    fusion.append(a)
-            # Anciens ensuite si pas deja vus et pas trop vieux
-            for a in anciens:
-                if len(fusion) >= max_articles:
-                    break
-                if a.get("url") and a["url"] not in urls_vus:
-                    # Verifier que l article n est pas trop vieux
-                    date_art = a.get("date", "")[:10]
-                    if date_art >= date_limite_30j:
-                        urls_vus.add(a["url"])
-                        fusion.append(a)
-            return fusion[:max_articles]
-
+        historique = charger_historique_pwa()
         maroc_pwa = []
         for d in resultats_maroc:
-            nouveaux  = d.get("actualites", [])
-            anciens   = historique["maroc"].get(d["id"], [])
-            fusion    = fusionner(nouveaux, anciens)
+            fusion = fusionner_historique(d.get("actualites", []), historique["maroc"].get(d["id"], []), config["nb_articles_pwa"])
             maroc_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
 
         intl_pwa = []
         for d in resultats_intl:
-            nouveaux  = d.get("actualites", [])
-            anciens   = historique["international"].get(d["id"], [])
-            fusion    = fusionner(nouveaux, anciens)
+            fusion = fusionner_historique(d.get("actualites", []), historique["international"].get(d["id"], []), config["nb_articles_pwa"])
             intl_pwa.append({"id": d["id"], "label": d["label"], "couleur": d["couleur"], "actualites": fusion})
 
         data_pwa = {
@@ -832,37 +820,15 @@ def main():
             "international": intl_pwa,
             "stats": {
                 "total_maroc": sum(len(d["actualites"]) for d in maroc_pwa),
-                "total_intl": sum(len(d["actualites"]) for d in intl_pwa),
-                "genere_le": AUJOURD_HUI.strftime("%Y-%m-%d %H:%M")
+                "total_intl":  sum(len(d["actualites"]) for d in intl_pwa),
+                "genere_le":   AUJOURD_HUI.strftime("%Y-%m-%d %H:%M")
             }
         }
-        with open("veille-data.json", "w", encoding="utf-8") as f:
-            json.dump(data_pwa, f, ensure_ascii=False, indent=2)
-
-        # Pousser vers Netlify via API
-        NETLIFY_SITE_ID = os.environ.get("NETLIFY_SITE_ID", "")
-        NETLIFY_TOKEN   = os.environ.get("NETLIFY_TOKEN", "")
-
-        # Pousser veille-data.json sur GitHub main — Netlify se met a jour automatiquement
-        if GITHUB_TOKEN and GITHUB_REPO:
-            try:
-                import base64
-                contenu_json = json.dumps(data_pwa, ensure_ascii=False, indent=2)
-                contenu_b64  = base64.b64encode(contenu_json.encode("utf-8")).decode("utf-8")
-                url_api  = f"https://api.github.com/repos/{GITHUB_REPO}/contents/veille-data.json"
-                headers  = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
-                response = requests.get(url_api, headers=headers, timeout=10)
-                payload  = {"message": f"veille-data {DATE_LABEL}", "content": contenu_b64}
-                if response.status_code == 200:
-                    payload["sha"] = response.json()["sha"]
-                requests.put(url_api, headers=headers, json=payload, timeout=10)
-                log.info("veille-data.json pousse sur GitHub main — Netlify va se mettre a jour")
-            except Exception as e:
-                log.warning(f"Erreur push GitHub : {e}")
+        pousser_veille_data(data_pwa)
     except Exception as e:
-        log.warning(f"Erreur generation PWA data : {e}")
+        log.warning(f"Erreur PWA : {e}")
 
-    # Sauvegarder les nouvelles URLs (deduplication)
+    # Sauvegarder deduplication
     if nouvelles_urls:
         sauvegarder_urls_envoyees(urls_deja_envoyees, nouvelles_urls)
         log.info(f"Deduplication : {len(nouvelles_urls)} nouvelles URLs sauvegardees")
